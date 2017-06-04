@@ -8,6 +8,10 @@ and open the template in the editor.
     Author     : fabio
 */
 
+body{
+    background-color: #fffff0;
+}
+
 .ibnav{
     margin-bottom: 50px;
 }
@@ -26,4 +30,19 @@ and open the template in the editor.
 
 .assunto{
     color: #761c19
+}
+
+.fio{
+    padding: 20px;
+}
+
+.fio-subpost{
+    padding: 10px;
+    background-color: #e8fdfc;
+    margin: 5px;
+    
+}
+
+.fio-divisor{
+    border: 1px solid #000;
 }

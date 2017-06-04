@@ -3,7 +3,11 @@
 {{  Form::hidden('nomeboard', $nomeBoard) }}
 {{  Form::hidden('insidepost', $insidePost) }}
 {{  Form::text('assunto', null, array('class' => 'novo-post-form-item form-control', 'maxlength' => '255', 'placeholder' => 'Assunto' )) }}
-{{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'required'=>'','multiple' => '')) }}
+@if($insidePost === 'n') 
+    {{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'required'=>'','multiple' => '')) }}
+@else
+    {{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'multiple' => '')) }}
+@endif
 {{  Form::textarea('conteudo', null, array('class' => 'novo-post-form-item form-control', 'placeholder' => 'Mensagem', 'rows'=>'5', 'maxlength' => '65535')) }}
 
 <div class="row">
@@ -13,6 +17,14 @@
     <div class="col-sm-6">
         {{ Form::submit('Postar', array('class' => 'btn btn-primary btn-block form-control') ) }}
     </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 text-center">
+        
+        {!! app('captcha')->display($attributes = ['style'=>'margin-top: 20px;'], $lang = 'pt'); !!}
+    </div>
+        
 </div>
 
 {!! Form::close() !!}

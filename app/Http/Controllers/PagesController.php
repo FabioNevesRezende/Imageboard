@@ -12,7 +12,17 @@ class PagesController extends Controller
     }    
     
     public function getBoard($nomeBoard){
-        switch($nomeBoard){
+        if($nomeBoard === 'b' || $nomeBoard === 'int' || $nomeBoard === 'news'){
+            $posts = Post::orderBy('created_at', 'desc')->where('board', $nomeBoard)->where('lead_id', null)->paginate(2);
+            $subposts = Post::orderBy('created_at', 'asc')->where('board', $nomeBoard)->where('lead_id', '<>', null)->get();
+                
+            return view('pages.board')->with('nomeBoard', $nomeBoard)->with('insidePost', 'n')->withPosts($posts)->with('subPosts', $subposts);
+            
+        } else{
+            return view('pages.indice'); 
+        }
+        
+        /*switch($nomeBoard){
             case 'b':
                 
                 $posts = Post::orderBy('created_at', 'desc')->where('board', 'b')->where('lead_id', null)->paginate(2);
@@ -34,7 +44,7 @@ class PagesController extends Controller
             default:
                 return view('pages.indice');
                 break;
-        }
+        }*/
     }
     
     public function getThread($nomeBoard, $thread){

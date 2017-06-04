@@ -36,17 +36,29 @@ class PostController extends Controller {
      */
     public function store(Request $request) {
         
-        $this->validate($request, array(
-            'arquivos.*' => 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
-            'assunto' => 'max:255',
-            'conteudo' => 'required|max:65535'
-        ));
+        if(strip_tags(Purifier::clean($request->insidepost)) === 'n'){
+            
+            $this->validate($request, array(
+                'arquivos.*' => 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
+                'assunto' => 'max:255',
+                'conteudo' => 'required|max:65535',
+                'g-recaptcha-response' => 'required|captcha'
+            ));
+        } else {
+            
+            $this->validate($request, array(
+                'arquivos.*' => 'mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
+                'assunto' => 'max:255',
+                'conteudo' => 'required|max:65535',
+                'g-recaptcha-response' => 'required|captcha'
+            ));
+        }
         
         $post = new Post;
 
         $post->assunto = strip_tags(Purifier::clean($request->assunto));
         $post->board = strip_tags(Purifier::clean($request->nomeboard));
-        $post->conteudo = strip_tags(Purifier::clean($request->conteudo));
+        $post->conteudo = $this->trataLinks(strip_tags(Purifier::clean($request->conteudo)));
         $post->sage = (strip_tags(Purifier::clean($request->sage)) === 'sage' ? 's' : 'n');
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost)));
         $post->ipposter = \Request::ip();
