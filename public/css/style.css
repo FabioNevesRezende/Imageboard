@@ -1,0 +1,29 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 13, 2017, 9:39:27 PM
+    Author     : fabio
+*/
+
+.ibnav{
+    margin-bottom: 50px;
+}
+
+.ibnavl{
+    float: left;
+}
+
+.ibnavr{
+    float: right;
+}
+
+.novo-post-form-item{
+    margin: 15px;
+}
+
+.assunto{
+    color: #761c19
+}

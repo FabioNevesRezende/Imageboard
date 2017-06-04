@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/PostController.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Controller.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/User.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Post.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/postshow.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_footer.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_05_20_223047_create_posts_table.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/public/css/style.css</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_head.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/routes/web.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/boardbase.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/board.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_nav.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_postposts.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/PagesController.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_boardposts.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_postform.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/indice.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Arquivo.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_boardpostheader.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_05_20_223048_create_arquivos_table.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_jsincludes.blade.php</file>
+        </group>
+    </open-files>
+</project-private>
