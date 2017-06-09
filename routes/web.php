@@ -23,4 +23,16 @@ Route::group(['middleware'=>['web']], function(){
 });
 Auth::routes();
 
+Route::group(['middleware'=>['auth']], function(){
+    
+    Route::get('/deletepost/{post_id}', ['uses' => 'PostController@destroy'])->where('post_id', '[0-9]+');
+    Route::get('/deleteimg/{nomeBoard}/{filename}', ['uses' => 'PostController@destroyArqDb'])->where('filename', '[0-9\-]+\.[a-zA-Z]+')->where('nomeBoard', '(int|b|news)');
+    Route::get('/userban/{nomeBoard}/{post_id}', ['uses' => 'Controller@banirUsuario'])->where('nomeBoard', '(int|b|news)')->where('post_id', '[0-9]+');
+    
+});
+
+
+
+Auth::routes();
+
 Route::get('/home', 'HomeController@index')->name('home');

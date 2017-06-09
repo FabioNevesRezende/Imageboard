@@ -46,3 +46,13 @@ body{
 .fio-divisor{
     border: 1px solid #000;
 }
+
+
+.fio-img-div img{
+    display: block;
+}
+
+.fio-img-div{
+    display: inline-block;
+}
+

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArquivosTable extends Migration
+class CreateBansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateArquivosTable extends Migration
      */
     public function up()
     {
-        Schema::create('arquivos', function(Blueprint $table){
-            $table->string('filename', 40);
-            $table->integer('post_id')->unsigned();
-            $table->primary('filename');
-            $table->foreign('post_id')->references('id')->on('posts');           
+        
+        Schema::create('bans', function(Blueprint $table){
+            $table->string('ip', 15); 
+            $table->dateTime('exp_date');  
+            $table->primary(['ip', 'exp_date']);
         });
     }
 
@@ -28,6 +28,6 @@ class CreateArquivosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('arquivos');
+        Schema::dropIfExists('bans');
     }
 }

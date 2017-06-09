@@ -6,6 +6,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Ibbr\Ban;
+use Carbon\Carbon;
 
 class Controller extends BaseController {
 
@@ -32,6 +34,34 @@ class Controller extends BaseController {
                 '<a href="https://href.li/?$0" ref="nofollow" target="_blank">$0</a>', 
                 $str
                 );
+    }
+    
+    public function banirUsuario($nomeBoard, $post_id){
+        
+        $ban = new Ban;
+        $ban->ip = \Ibbr\Post::find($post_id)->ipposter;
+        $ban->exp_date = Carbon::now()->addMinutes(2);
+        
+        $ban->save();
+        
+        return \Redirect::to('/' . $nomeBoard );
+    }
+    
+    public function estaBanido($ip){
+        $ban = \DB::table('bans')->orderBy('exp_date', 'desc')->first();
+        if($ban == null) {
+            return false;
+        }
+        $banTime = Carbon::parse($ban->exp_date);
+        
+        //$_SESSION['bantime'] = $banTime->toDateTimeString();
+        //$_SESSION['diffbantime'] = Carbon::now()->diffInSeconds($banTime);
+        if( Carbon::now()->gt($banTime) ){
+            return false;
+        } else {
+            return true;
+        }
+        
     }
 
 }

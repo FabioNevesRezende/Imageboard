@@ -13,7 +13,7 @@ class PagesController extends Controller
     
     public function getBoard($nomeBoard){
         if($nomeBoard === 'b' || $nomeBoard === 'int' || $nomeBoard === 'news'){
-            $posts = Post::orderBy('created_at', 'desc')->where('board', $nomeBoard)->where('lead_id', null)->paginate(2);
+            $posts = Post::orderBy('created_at', 'desc')->where('board', $nomeBoard)->where('lead_id', null)->paginate(10);
             $subposts = Post::orderBy('created_at', 'asc')->where('board', $nomeBoard)->where('lead_id', '<>', null)->get();
                 
             return view('pages.board')->with('nomeBoard', $nomeBoard)->with('insidePost', 'n')->withPosts($posts)->with('subPosts', $subposts);
@@ -22,29 +22,6 @@ class PagesController extends Controller
             return view('pages.indice'); 
         }
         
-        /*switch($nomeBoard){
-            case 'b':
-                
-                $posts = Post::orderBy('created_at', 'desc')->where('board', 'b')->where('lead_id', null)->paginate(2);
-                $subposts = Post::orderBy('created_at', 'asc')->where('board', 'b')->where('lead_id', '<>',null)->get();
-                
-                return view('pages.board')->with('nomeBoard', 'b')->with('insidePost', 'n')->withPosts($posts)->with('subPosts', $subposts);
-                break;
-            
-            case 'int':
-                $posts = Post::orderBy('created_at', 'desc')->where('board', 'int')->get();
-                return view('pages.board')->with('nomeBoard', 'int')->with('insidePost', 'n')->withPosts($posts);
-                break;
-            
-            case 'news':
-                $posts = Post::orderBy('created_at', 'desc')->where('board', 'news')->get();
-                return view('pages.board')->with('nomeBoard', 'news')->with('insidePost', 'n')->withPosts($posts);
-                break;
-            
-            default:
-                return view('pages.indice');
-                break;
-        }*/
     }
     
     public function getThread($nomeBoard, $thread){
@@ -55,6 +32,7 @@ class PagesController extends Controller
         return view('pages.postshow')->withPosts($posts)->with('nomeBoard', $nomeBoard)->with('insidePost', $thread);
         
     }
+    
     
     
 }

@@ -8,13 +8,17 @@
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_footer.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_05_20_223047_create_posts_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/public/css/style.css</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/config/filesystems.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/routes/web.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/board.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_nav.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_postposts.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Kernel.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_06_09_014056_create_bans_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_boardpostheader.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_05_20_223048_create_arquivos_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_jsincludes.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/HomeController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/PostController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Controller.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/.env</file>

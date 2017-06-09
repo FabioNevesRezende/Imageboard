@@ -5,6 +5,7 @@ namespace Ibbr\Http\Controllers;
 use Ibbr\Post;
 use Illuminate\Http\Request;
 use Purifier;
+use Storage;
 use Ibbr\Arquivo;
 
 class PostController extends Controller {
@@ -36,6 +37,11 @@ class PostController extends Controller {
      */
     public function store(Request $request) {
         
+        if($this->estaBanido(\Request::ip())){
+            return \Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+     
+        }
+        
         if(strip_tags(Purifier::clean($request->insidepost)) === 'n'){
             
             $this->validate($request, array(
@@ -54,7 +60,9 @@ class PostController extends Controller {
             ));
         }
         
+        
         $post = new Post;
+        $arquivos = $request->file('arquivos');
 
         $post->assunto = strip_tags(Purifier::clean($request->assunto));
         $post->board = strip_tags(Purifier::clean($request->nomeboard));
@@ -62,9 +70,14 @@ class PostController extends Controller {
         $post->sage = (strip_tags(Purifier::clean($request->sage)) === 'sage' ? 's' : 'n');
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost)));
         $post->ipposter = \Request::ip();
+        
+        if(sizeof($arquivos) > 5){
+            return \Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . strip_tags(Purifier::clean($request->insidepost))));
+    
+        }
+        
         $post->save();
 
-        $arquivos = $request->file('arquivos');
         if (!empty($arquivos)) {
             foreach ($arquivos as $arq) {
                 if ($arq->isValid()) {
@@ -76,7 +89,7 @@ class PostController extends Controller {
                         $contador++;
                     }while(\File::exists(public_path() . '/storage/' . $nomeArquivo));
                     
-                    \Storage::putFileAs('/public', $arq, $nomeArquivo);
+                    Storage::putFileAs('/public', $arq, $nomeArquivo);
                     
                     $post->arquivos()->save(new Arquivo(['filename' => $nomeArquivo ]));
                     
@@ -130,14 +143,33 @@ class PostController extends Controller {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \Ibbr\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Post $post) {
-        //
+    public function destroy($post_id) {
+        
+        $post = Post::find($post_id);
+        
+        $arquivos = $post->arquivos;
+
+        foreach($arquivos as $arq){
+            $this->destroyArq($arq->filename);
+            $arq->delete();
+        }
+        $post_board = $post->board;
+        $post->delete();
+
+        
+        return \Redirect::to('/' . $post_board );
+    
+    }
+    
+    public function destroyArq($filename){
+        \File::delete(public_path() . '/storage/' . $filename);
+    }
+    
+    public function destroyArqDb($nomeBoard, $filename){
+        \File::delete(public_path() . '/storage/' . $filename);
+        \DB::table('arquivos')->where('filename', '=', $filename)->delete();
+    
+        return \Redirect::to('/' . $nomeBoard );
     }
 
 }
