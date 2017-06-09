@@ -41,16 +41,16 @@ class PostController extends Controller {
             $this->validate($request, array(
                 'arquivos.*' => 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
                 'assunto' => 'max:255',
-                'conteudo' => 'required|max:65535',
-                'g-recaptcha-response' => 'required|captcha'
+                'conteudo' => 'required|max:65535'//,
+                //'g-recaptcha-response' => 'required|captcha'
             ));
         } else {
             
             $this->validate($request, array(
                 'arquivos.*' => 'mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
                 'assunto' => 'max:255',
-                'conteudo' => 'required|max:65535',
-                'g-recaptcha-response' => 'required|captcha'
+                'conteudo' => 'required|max:65535'//,
+                //'g-recaptcha-response' => 'required|captcha'
             ));
         }
         
@@ -65,19 +65,24 @@ class PostController extends Controller {
         $post->save();
 
         $arquivos = $request->file('arquivos');
-        
         if (!empty($arquivos)) {
             foreach ($arquivos as $arq) {
                 if ($arq->isValid()) {
-                    //\Storage::put($post->id . '.' . $arq->extension() , $arq, 'public');
-                    \Storage::putFileAs('/public', $arq, $post->id . '.' . $arq->extension());
+                                        
+                    $contador = 0;
+                    do{
+                        $nomeArquivo = $post->id . "-{$contador}"  . "." . $arq->extension();
+                        
+                        $contador++;
+                    }while(\File::exists(public_path() . '/storage/' . $nomeArquivo));
                     
-                    $post->arquivos()->save(new Arquivo(['filename' => $post->id . '.' . $arq->extension() ]));
+                    \Storage::putFileAs('/public', $arq, $nomeArquivo);
+                    
+                    $post->arquivos()->save(new Arquivo(['filename' => $nomeArquivo ]));
                     
                 }
             }
         }
-
                 
 
         //$post->datacriacao = Carbon::now();
@@ -91,7 +96,7 @@ class PostController extends Controller {
 
         //return redirect()->route('/{nomeBoard}', $request->nomeboard);
 
-        return \Redirect::to('/' . $post->board);
+        return \Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . strip_tags(Purifier::clean($request->insidepost))));
     }
 
     /**

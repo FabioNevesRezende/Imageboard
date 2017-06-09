@@ -13,7 +13,7 @@
 
 Route::group(['middleware'=>['web']], function(){
     Route::get('/', 'PagesController@getIndex');
-    Route::get('/{nomeBoard}', ['uses' => 'PagesController@getBoard'])->where('nomeBoard', '[0-9\w\d]+');
+    Route::get('/{nomeBoard}', ['uses' => 'PagesController@getBoard'])->where('nomeBoard', '(int|b|news)');
     //Route::get('/{nomeBoard}/{nroPagina?}', ['uses' => 'PagesController@getBoard'])->where('nomeBoard', '(int|b|news)')->where('nroPagina', '[0-9]+');
 
     
@@ -21,3 +21,6 @@ Route::group(['middleware'=>['web']], function(){
     
     Route::resource('posts', 'PostController');
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

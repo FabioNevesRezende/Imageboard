@@ -12,5 +12,5 @@
       href="res/favico.ico" />-->
     @yield('stylesheets')
 
-
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
