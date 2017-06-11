@@ -56,3 +56,6 @@ body{
     display: inline-block;
 }
 
+.a-nro-post:hover{
+    cursor: pointer;
+}

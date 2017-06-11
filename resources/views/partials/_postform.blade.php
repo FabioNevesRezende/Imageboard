@@ -8,7 +8,7 @@
 @else
     {{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'multiple' => '')) }}
 @endif
-{{  Form::textarea('conteudo', null, array('class' => 'novo-post-form-item form-control', 'placeholder' => 'Mensagem', 'rows'=>'5', 'maxlength' => '65535')) }}
+{{  Form::textarea('conteudo', null, array('id' => 'novo-post-conteudo','class' => 'novo-post-form-item form-control', 'placeholder' => 'Mensagem', 'rows'=>'5', 'maxlength' => '65535')) }}
 
 <div class="row">
     <div class="col-sm-6">

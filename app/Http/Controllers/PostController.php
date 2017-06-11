@@ -85,6 +85,7 @@ class PostController extends Controller {
         $post->assunto = strip_tags(Purifier::clean($request->assunto));
         $post->board = strip_tags(Purifier::clean($request->nomeboard));
         $post->conteudo = $this->trataLinks(strip_tags(Purifier::clean($request->conteudo)));
+        $post->conteudo = $this->addRefPosts(\URL::to('/') . '/' . $post->board, $post->conteudo);
         $post->sage = (strip_tags(Purifier::clean($request->sage)) === 'sage' ? 's' : 'n');
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost)));
         $post->ipposter = \Request::ip();

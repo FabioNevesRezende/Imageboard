@@ -38,6 +38,15 @@ class Controller extends BaseController {
                 );
     }
     
+    protected function addRefPosts($url, $str){
+        return preg_replace(
+                
+                '/&gt;&gt;([0-9]+)/s', 
+                '<a href="' . $url . '#$1">&gt;&gt;$1</a>', 
+                $str
+                );
+    }
+    
     public function banirUsuario(Request $request){
         
         $ban = new Ban;
