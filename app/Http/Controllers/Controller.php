@@ -29,23 +29,7 @@ class Controller extends BaseController {
         fclose($logArq);
     }
     
-    protected function trataLinks($str){
-        return preg_replace(
-                // regex para um link https://stackoverflow.com/a/8234912/2414842
-                '/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/s', 
-                '<a href="https://href.li/?$0" ref="nofollow" target="_blank">$0</a>', 
-                $str
-                );
-    }
     
-    protected function addRefPosts($url, $str){
-        return preg_replace(
-                
-                '/&gt;&gt;([0-9]+)/s', 
-                '<a href="' . $url . '#$1">&gt;&gt;$1</a>', 
-                $str
-                );
-    }
     
     public function banirUsuario(Request $request){
         

@@ -9,7 +9,7 @@ use Storage;
 use Session;
 use Config;
 use Ibbr\Arquivo;
-use FFMpeg;
+use Carbon\Carbon;
 
 class PostController extends Controller {
 
@@ -32,6 +32,37 @@ class PostController extends Controller {
       //
       } */
 
+    
+    
+    
+    protected function trataLinks($str){
+        return preg_replace(
+                // regex para um link https://stackoverflow.com/a/8234912/2414842
+                '/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/s', 
+                '<a href="https://href.li/?$0" ref="nofollow" target="_blank">$0</a>', 
+                $str
+                );
+    }
+    
+    protected function addRefPosts($url, $str){
+        return preg_replace(
+                
+                '/&gt;&gt;([0-9]+)/s', 
+                '<a href="' . $url . '#$1">&gt;&gt;$1</a>', 
+                $str
+                );
+    }
+    
+    
+    protected function addGreenText($str){
+        return preg_replace(
+                
+                '/&gt;(.+)/m', 
+                '<p class="green-text">&gt;$1</p>', 
+                $str
+                );
+    }
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -87,7 +118,9 @@ class PostController extends Controller {
         $post->board = strip_tags(Purifier::clean($request->nomeboard));
         $post->conteudo = $this->trataLinks(strip_tags(Purifier::clean($request->conteudo)));
         $post->conteudo = $this->addRefPosts(\URL::to('/') . '/' . $post->board, $post->conteudo);
+        $post->conteudo = $this->addGreenText($post->conteudo);
         $post->sage = (strip_tags(Purifier::clean($request->sage)) === 'sage' ? 's' : 'n');
+        $post->pinado = 'n';
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost)));
         $post->ipposter = \Request::ip();
         
@@ -115,36 +148,32 @@ class PostController extends Controller {
                     
                     $post->arquivos()->save(new Arquivo(['filename' => $nomeArquivo, 'mime' => $arq->getMimeType() ]));
                     
-                    /*if($arq->getMimeType() === 'video/webm' || $arq->getMimeType() === 'video/mp4'){
-                        FFMpeg::fromDisk('public')
-                            ->open($nomeArquivo)
-                            ->getFrameFromSeconds(1)
-                            ->export()
-                            ->toDisk('public')
-                            ->save('FrameAt10sec.png');
-                        
-                    }*/
-                    
                 }
             }
         }
-                
 
-        //$post->datacriacao = Carbon::now();
-        /*
-          $logfile = $this->iniciaLog('logstore');
-          if($post->save()){
-          $this->escreveLog('info', 'registro inserido', $logfile);
-          } else {
-          $this->escreveLog('info', 'erro ao inserir registro', $logfile);
-          } */
-
-        //return redirect()->route('/{nomeBoard}', $request->nomeboard);
-
+        if($post->lead_id){
+            $this->atualizaUpdatedAt($post->lead_id);
+        }
+        
         Session::flash('post_criado', 'Post número ' . $post->id . ' criado');
         return \Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . strip_tags(Purifier::clean($request->insidepost))));
     }
 
+    protected function atualizaUpdatedAt($post_id){
+        $post = Post::find($post_id);
+        $post->updated_at = Carbon::now();
+        $post->save();
+    }
+    
+    public function pinarPost($post_id){
+        $post = Post::find($post_id);
+        $post->pinado = 's';
+        $post->save();
+        return \Redirect::to('/' . $post->board );
+    
+    }
+    
     /**
      * Display the specified resource.
      *

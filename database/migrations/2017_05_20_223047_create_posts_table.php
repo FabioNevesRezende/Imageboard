@@ -19,6 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('board', 10); 
             $table->text('conteudo');
             $table->char('sage', 1);
+            $table->char('pinado', 1);
             $table->integer('lead_id')->unsigned()->nullable();
             $table->string('ipposter', 15);
             $table->timestamps();

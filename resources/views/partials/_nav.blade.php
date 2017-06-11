@@ -1,9 +1,10 @@
 <div class="container-fluid ibnav">
     <div class="ibnavl">
         [
-        <a href="{{ URL::action('PagesController@getBoard', 'b') }}">b</a> /
-        <a href="{{ URL::action('PagesController@getBoard', 'int') }}">int</a> /
-        <a href="{{ URL::action('PagesController@getBoard', 'news') }}">news</a> /
+        @foreach(Config::get('constantes.boards') as $board => $boardnome)
+        <a href="{{ URL::action('PagesController@getBoard', $board) }}">{{ $board }}</a> /
+        @endforeach
+        
         ]
     </div>
 

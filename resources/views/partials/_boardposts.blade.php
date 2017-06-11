@@ -1,10 +1,11 @@
 
-@foreach($posts->getCollection()->all() as $post)
+@foreach($posts as $post)
 @if($post->lead_id === NULL)
 <div id="{{ $post->id }}" class="fio">
-    <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }} | Nro <a class="a-nro-post">{{ $post->id }}</a> | <a href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> 
+    @if($post->pinado === 's') <span class="glyphicon glyphicon-pushpin"></span> @endif Anônimo | <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }} | Nro <a class="a-nro-post">{{ $post->id }}</a> | <a href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> 
     @if(Auth::check()) 
     | <a href="/deletepost/{{ $post->id }}"><button class="btn">Deletar post</button> </a> 
+    | <a href="/pinarpost/{{ $post->id }}"><button class="btn">Pinar post</button> </a> 
     | <button type="button" class="btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan">Banir usuário</button> 
     @endif <br>
     
@@ -37,7 +38,7 @@
     @foreach($subPosts as $subpost)
         @if($subpost->lead_id === $post->id)
             <div class="fio-subpost">
-            <strong class="assunto">{{ $subpost->assunto }}</strong> | Nro {{ $subpost->id }} | <br>
+                Anônimo | <strong class="assunto">{{ $subpost->assunto }}</strong> | | {{ $subpost->created_at->toDayDateTimeString() }}  | Nro <a class="a-nro-post">{{ $subpost->id }}</a> | <br>
                 @foreach ($subpost->arquivos as $sbarq)
                 <a href="/storage/{{ $sbarq->filename }}" target="_blank"><img class="img-responsive img-thumbnail" src="{{ \Storage::url($sbarq->filename) }}" width="150px" height="150px" ></a>
                 @endforeach
@@ -52,4 +53,4 @@
 @endif
 @endforeach
 
-{{ $posts->appends(Request::except('page'))->links() }}
+{{ $paginador }}
