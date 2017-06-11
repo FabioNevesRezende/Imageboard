@@ -8,4 +8,5 @@
 @include('partials._boardpostheader')
 <hr>
 @include('partials._postposts')
+@include('partials._modalban')
 @endsection

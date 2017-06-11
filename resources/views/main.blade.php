@@ -6,6 +6,7 @@
 
         @include('partials._nav')
         
+        @include('partials._msg')
         
         @yield('conteudo')
         

@@ -17,6 +17,8 @@ class CreateBansTable extends Migration
         Schema::create('bans', function(Blueprint $table){
             $table->string('ip', 15); 
             $table->dateTime('exp_date');  
+            $table->string('board', 10)->default('-');
+            $table->string('motivo', 255);
             $table->primary(['ip', 'exp_date']);
         });
     }

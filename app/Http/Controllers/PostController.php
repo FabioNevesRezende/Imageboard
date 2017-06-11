@@ -6,6 +6,8 @@ use Ibbr\Post;
 use Illuminate\Http\Request;
 use Purifier;
 use Storage;
+use Session;
+use Config;
 use Ibbr\Arquivo;
 
 class PostController extends Controller {
@@ -37,10 +39,26 @@ class PostController extends Controller {
      */
     public function store(Request $request) {
         
-        if($this->estaBanido(\Request::ip())){
+        
+        
+        $bantime = $this->estaBanido2(\Request::ip(), strip_tags(Purifier::clean($request->nomeboard)));
+        if($bantime){
+            Session::flash('ban', 'Seu IP ' . \Request::ip() . ' está banido da board ' . strip_tags(Purifier::clean($request->nomeboard)) . ' até: ' . $bantime->toDateTimeString() . ' e não pode postar.');
+        
             return \Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
      
         }
+        
+        $bantime = null;
+        $bantime = $this->estaBanido2(\Request::ip());
+        if($bantime){
+            Session::flash('ban', 'Seu IP ' . \Request::ip() . ' está banido de todas as boards até: ' . $bantime->toDateTimeString() . ' e não pode postar.');
+        
+            return \Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+     
+        }
+        
+        
         
         if(strip_tags(Purifier::clean($request->insidepost)) === 'n'){
             
@@ -71,7 +89,9 @@ class PostController extends Controller {
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost)));
         $post->ipposter = \Request::ip();
         
-        if(sizeof($arquivos) > 5){
+        if(sizeof($arquivos) >  Config::get('constantes.num_max_files') ){
+            Session::flash('erro_upload', 'Número máximo de arquivos permitidos: ' . Config::get('constantes.num_max_files') );
+        
             return \Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . strip_tags(Purifier::clean($request->insidepost))));
     
         }
@@ -109,6 +129,7 @@ class PostController extends Controller {
 
         //return redirect()->route('/{nomeBoard}', $request->nomeboard);
 
+        Session::flash('post_criado', 'Post número ' . $post->id . ' criado');
         return \Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . strip_tags(Purifier::clean($request->insidepost))));
     }
 

@@ -2,7 +2,11 @@
 @foreach($posts->getCollection()->all() as $post)
 @if($post->lead_id === NULL)
 <div class="fio">
-    <strong class="assunto">{{ $post->assunto }}</strong> | Nro {{ $post->id }} | <a href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> @if(Auth::check()) | <a href="/deletepost/{{ $post->id }}"><button class="btn">Deletar post</button> </a> | <a href="/userban/{{ $nomeBoard }}/{{ $post->id }}"><button class="btn">Banir usuário</button> </a>  @endif <br>
+    <strong class="assunto">{{ $post->assunto }}</strong> | Nro {{ $post->id }} | <a href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> 
+    @if(Auth::check()) 
+    | <a href="/deletepost/{{ $post->id }}"><button class="btn">Deletar post</button> </a> 
+    | <button type="button" class="btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan">Banir usuário</button> 
+    @endif <br>
     
     <div class="fio-imgs-div">
     @foreach ($post->arquivos as $arq)

@@ -3,16 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Ban.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/User.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/main.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/postshow.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_footer.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_05_20_223047_create_posts_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/public/css/style.css</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/public/js/pagescript.js</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/ArquivoController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/config/filesystems.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/routes/web.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/auth/login.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/board.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_nav.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_postposts.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/ResetPasswordController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Kernel.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_06_09_014056_create_bans_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_boardpostheader.blade.php</file>
@@ -20,19 +26,27 @@
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_jsincludes.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/HomeController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/PostController.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/config/constantes.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Controller.php</file>
-            <file>file:/home/fabio/criação/imageboard-brasil/.env</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_msg.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/RegisterController.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/config/auth.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Post.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/layouts/app.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/ForgotPasswordController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/config/app.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_modalban.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/composer.json</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_head.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/boardbase.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/home.blade.php</file>
-            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/PagesController.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/auth/passwords/email.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_boardposts.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/PagesController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_postform.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/indice.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Arquivo.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/LoginController.php</file>
         </group>
     </open-files>
 </project-private>
