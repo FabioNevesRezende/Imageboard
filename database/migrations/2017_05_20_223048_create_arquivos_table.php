@@ -16,6 +16,7 @@ class CreateArquivosTable extends Migration
         Schema::create('arquivos', function(Blueprint $table){
             $table->string('filename', 40);
             $table->integer('post_id')->unsigned();
+            $table->string('mime', 15);
             $table->primary('filename');
             $table->foreign('post_id')->references('id')->on('posts');           
         });

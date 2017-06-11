@@ -10,7 +10,8 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html":"^5.3.0",
         "mews/purifier": "~2.0",
-        "anhskohbo/no-captcha": "2.*"
+        "anhskohbo/no-captcha": "2.*",
+        "pbmedia/laravel-ffmpeg" : "1.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

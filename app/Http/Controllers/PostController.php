@@ -9,6 +9,7 @@ use Storage;
 use Session;
 use Config;
 use Ibbr\Arquivo;
+use FFMpeg;
 
 class PostController extends Controller {
 
@@ -41,7 +42,7 @@ class PostController extends Controller {
         
         
         
-        $bantime = $this->estaBanido2(\Request::ip(), strip_tags(Purifier::clean($request->nomeboard)));
+        $bantime = $this->estaBanido(\Request::ip(), strip_tags(Purifier::clean($request->nomeboard)));
         if($bantime){
             Session::flash('ban', 'Seu IP ' . \Request::ip() . ' está banido da board ' . strip_tags(Purifier::clean($request->nomeboard)) . ' até: ' . $bantime->toDateTimeString() . ' e não pode postar.');
         
@@ -50,7 +51,7 @@ class PostController extends Controller {
         }
         
         $bantime = null;
-        $bantime = $this->estaBanido2(\Request::ip());
+        $bantime = $this->estaBanido(\Request::ip());
         if($bantime){
             Session::flash('ban', 'Seu IP ' . \Request::ip() . ' está banido de todas as boards até: ' . $bantime->toDateTimeString() . ' e não pode postar.');
         
@@ -112,7 +113,17 @@ class PostController extends Controller {
                     
                     Storage::putFileAs('/public', $arq, $nomeArquivo);
                     
-                    $post->arquivos()->save(new Arquivo(['filename' => $nomeArquivo ]));
+                    $post->arquivos()->save(new Arquivo(['filename' => $nomeArquivo, 'mime' => $arq->getMimeType() ]));
+                    
+                    /*if($arq->getMimeType() === 'video/webm' || $arq->getMimeType() === 'video/mp4'){
+                        FFMpeg::fromDisk('public')
+                            ->open($nomeArquivo)
+                            ->getFrameFromSeconds(1)
+                            ->export()
+                            ->toDisk('public')
+                            ->save('FrameAt10sec.png');
+                        
+                    }*/
                     
                 }
             }

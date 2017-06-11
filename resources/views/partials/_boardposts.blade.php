@@ -11,8 +11,22 @@
     <div class="fio-imgs-div">
     @foreach ($post->arquivos as $arq)
     <div class="fio-img-div">
-    <a href="/storage/{{ $arq->filename }}" target="_blank"><img class="img-responsive img-thumbnail" src="{{ \Storage::url($arq->filename) }}" width="200px" height="200px" ></a>
-    @if(Auth::check()) <a href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}"><button class="btn">Deletar Imagem</button> </a> @endif
+    @if($arq->mime === 'image/jpeg' || $arq->mime === 'image/png' || $arq->mime === 'image/gif' )
+        <a href="/storage/{{ $arq->filename }}" target="_blank"><img class="img-responsive img-thumbnail" src="{{ \Storage::url($arq->filename) }}" width="200px" height="200px" ></a>
+    @elseif($arq->mime === 'video/mp4')
+     <video width="320" controls>
+        <source src="/storage/{{ $arq->filename }}" type="video/mp4">
+      </video>
+    @elseif($arq->mime === 'video/webm')
+     <video width="320" controls>
+        <source src="/storage/{{ $arq->filename }}" type="video/webm">
+      </video>
+    @elseif($arq->mime === 'audio/mpeg')
+     <audio controls>
+        <source src="/storage/{{ $arq->filename }}" type="audio/mpeg">
+     </audio>
+    @endif
+    @if(Auth::check()) <a href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}"><button class="btn">Deletar Arquivo</button> </a> @endif
     </div>
     @endforeach
     </div>

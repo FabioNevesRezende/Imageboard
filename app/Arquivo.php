@@ -9,7 +9,7 @@ class Arquivo extends Model
     public $timestamps = false;
     
     protected $fillable = [
-        'filename',
+        'filename', 'mime',
     ];
     
     public function post(){

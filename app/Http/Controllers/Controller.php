@@ -63,38 +63,8 @@ class Controller extends BaseController {
         
         return \Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)) );
     }
-        
-    public function estaBanido($ip, $nomeBoard=null){
-        if($nomeBoard===null){
-            $ban = \DB::table('bans')->where('ip', '=', $ip)->orderBy('exp_date', 'desc')->first();
-        } else{
-            $ban = \DB::table('bans')->where('ip', '=', $ip)->where('board', '=', $nomeBoard)->orderBy('exp_date', 'desc')->first();
-            $queryran = \DB::table('bans')->where('ip', '=', $ip)->where('board', '=', $nomeBoard)->orderBy('exp_date', 'desc')->toSql();
-            $_SESSION['bans2'] = var_export($queryran, true);
-            $_SESSION['params'] = var_export(\DB::table('bans')->where('ip', '=', $ip)->where('board', '=', $nomeBoard)->orderBy('exp_date', 'desc')->getBindings(), true);
-            
-        }
-        $_SESSION['bans'] = var_export($ban, true);
-        if($ban === null) {
-            return false;
-        }
-        
-        $banTime = Carbon::parse($ban->exp_date);
-        
-        //$_SESSION['bantime'] = $banTime->toDateTimeString();
-        //$_SESSION['diffbantime'] = Carbon::now()->diffInSeconds($banTime);
-            
-        if( Carbon::now()->gt($banTime) ){
-            return false;
-        } else {
-            dfsdfsd;
-            return $banTime;
-        }
-        
-    }
-
     
-    public function estaBanido2($ip, $nomeBoard=null){
+    public function estaBanido($ip, $nomeBoard=null){
         if($nomeBoard===null){
             $bans = \DB::table('bans')->where('ip', '=', $ip)->where('board', '=', '-')->orderBy('exp_date', 'desc')->get();
         } else{
