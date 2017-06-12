@@ -1,3 +1,5 @@
+
+<h1 class="board-header"> /{{ $nomeBoard }}/ - {{ $descrBoard }} </h1><br>
 {!! Form::open(['route' => 'posts.store', 'enctype' => 'multipart/form-data']) !!}
 {{ csrf_field() }}
 {{  Form::hidden('nomeboard', $nomeBoard) }}
@@ -7,6 +9,11 @@
     {{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'required'=>'','multiple' => '')) }}
 @else
     {{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'multiple' => '')) }}
+@endif
+@if(Auth::check()) 
+<div style="float: left; margin-bottom: 20px; margin-left: 15px;">
+Modpost {{ Form::checkbox('modpost', 'modpost', false,array('class'=>'novo-post-form-item')) }}
+</div>
 @endif
 {{  Form::textarea('conteudo', null, array('id' => 'novo-post-conteudo','class' => 'novo-post-form-item form-control', 'placeholder' => 'Mensagem', 'rows'=>'5', 'maxlength' => '65535')) }}
 

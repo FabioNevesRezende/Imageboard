@@ -35,7 +35,7 @@ class PagesController extends Controller
             $posts = Post::orderBy('updated_at', 'desc')->where('board', $nomeBoard)->where('lead_id', null)->paginate(10);
             $subposts = Post::orderBy('created_at', 'asc')->where('board', $nomeBoard)->where('lead_id', '<>', null)->get();
                 
-            return view('pages.board')->with('nomeBoard', $nomeBoard)->with('insidePost', 'n')->withPosts($this->reordenaPostsPinados($posts))->with('subPosts', $subposts)->with('paginador', $posts->appends(\Request::except('page'))->links());
+            return view('pages.board')->with('nomeBoard', $nomeBoard)->with('descrBoard', \Config::get('constantes.boards.' . $nomeBoard))->with('insidePost', 'n')->withPosts($this->reordenaPostsPinados($posts))->with('subPosts', $subposts)->with('paginador', $posts->appends(\Request::except('page'))->links());
             
         } else{
             return view('pages.indice'); 
@@ -48,7 +48,7 @@ class PagesController extends Controller
         //$posts = \DB::select('select * from posts where id = ? or lead_id = ? order by created_at desc ', [$thread, $thread]);
         $posts = Post::orderBy('created_at', 'asc')->where('id', $thread)->orWhere('lead_id', $thread)->get();
                        
-        return view('pages.postshow')->withPosts($posts)->with('nomeBoard', $nomeBoard)->with('insidePost', $thread);
+        return view('pages.postshow')->withPosts($posts)->with('nomeBoard', $nomeBoard)->with('descrBoard', \Config::get('constantes.boards.' . $nomeBoard))->with('insidePost', $thread);
         
     }
     

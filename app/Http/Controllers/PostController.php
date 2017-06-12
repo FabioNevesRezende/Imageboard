@@ -9,6 +9,7 @@ use Storage;
 use Session;
 use Config;
 use Ibbr\Arquivo;
+use Ibbr\Report;
 use Carbon\Carbon;
 
 class PostController extends Controller {
@@ -124,6 +125,11 @@ class PostController extends Controller {
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost)));
         $post->ipposter = \Request::ip();
         
+        if($request->modpost){
+            $post->modpost = (strip_tags(Purifier::clean($request->modpost)) === 'modpost' ? 's' : 'n');
+        
+        }
+        
         if(sizeof($arquivos) >  Config::get('constantes.num_max_files') ){
             Session::flash('erro_upload', 'Número máximo de arquivos permitidos: ' . Config::get('constantes.num_max_files') );
         
@@ -156,9 +162,26 @@ class PostController extends Controller {
             $this->atualizaUpdatedAt($post->lead_id);
         }
         
-        Session::flash('post_criado', 'Post número ' . $post->id . ' criado');
+        $this->verificaLimitePosts($post->board);
+        
+        Session::flash('post_criado', 'Post número <a target="_blank" href="/' . $post->board . '/' . $post->id . '">' . $post->id . '</a> criado');
         return \Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . strip_tags(Purifier::clean($request->insidepost))));
     }
+
+    protected function verificaLimitePosts($nomeBoard){
+        
+        $posts = \DB::select('select * from posts where pinado <> \'s\' and board = ? order by updated_at desc limit 1 offset ?;', [$nomeBoard, Config::get('constantes.num_max_posts')]);
+        if(count($posts)>0){
+            // destroyArq, destroyArqDb
+            $post_a_deletar = $posts[0]->id;
+            $arqs = \DB::table('arquivos')->where('post_id', $post_a_deletar)->get();
+            foreach($arqs as $arq){
+                $this->destroyArqDb($nomeBoard, $arq->filename, false);
+            }
+            $this->destroy($post_a_deletar);
+        }
+    }
+
 
     protected function atualizaUpdatedAt($post_id){
         $post = Post::find($post_id);
@@ -172,6 +195,21 @@ class PostController extends Controller {
         $post->save();
         return \Redirect::to('/' . $post->board );
     
+    }
+    
+    public function report(Request $request){
+        $this->validate($request, array(
+                'motivo' => 'max:255'
+            ));
+        $report = new Report;
+      
+        $report->motivo = strip_tags(Purifier::clean($request->motivo));
+        $report->post_id = strip_tags(Purifier::clean($request->idpost));
+        $report->visualizado = 'n';
+        
+        $report->save();
+        
+        return \Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));  
     }
     
     /**
@@ -227,11 +265,11 @@ class PostController extends Controller {
         \File::delete(public_path() . '/storage/' . $filename);
     }
     
-    public function destroyArqDb($nomeBoard, $filename){
+    public function destroyArqDb($nomeBoard, $filename, $redirect=true){
         \File::delete(public_path() . '/storage/' . $filename);
         \DB::table('arquivos')->where('filename', '=', $filename)->delete();
     
-        return \Redirect::to('/' . $nomeBoard );
+        if($redirect) return \Redirect::to('/' . $nomeBoard );
     }
 
 }

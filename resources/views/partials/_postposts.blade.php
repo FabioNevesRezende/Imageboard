@@ -2,9 +2,10 @@
 @foreach($posts as $ind=>$post)
 @if($ind !== 0) <div class="fio-subpost"> @endif
 
-Anônimo | <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }}  | Nro <a class="a-nro-post">{{ $post->id }}</a> @if($ind === 0) | <a href="/{{ $nomeBoard }}">Voltar</a>  @endif 
+@if($post->pinado === 's') <span class="glyphicon glyphicon-pushpin"></span> @endif @if($post->modpost === 's') <p class="modpost">### Administrador ###</p>  @else Anônimo @endif | <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }}  | Nro <a class="a-nro-post">{{ $post->id }}</a> @if($ind === 0) |  <button type="button" class="btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <a href="/{{ $nomeBoard }}">Voltar</a>  @endif 
 @if(Auth::check()) 
     | <a href="/deletepost/{{ $post->id }}"><button class="btn">Deletar post</button> </a> 
+    @if($ind === 0) | <a href="/pinarpost/{{ $post->id }}"><button class="btn">Pinar post</button> </a> @endif
     | <button type="button" class="btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan">Banir usuário</button> 
 @endif <br>
 <br>

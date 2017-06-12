@@ -9,4 +9,5 @@
 <hr>
 @include('partials._postposts')
 @include('partials._modalban')
+@include('partials._modalreport')
 @endsection

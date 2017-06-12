@@ -13,7 +13,14 @@ class CreateReportsTable extends Migration
      */
     public function up()
     {
-        //
+        
+        Schema::create('reports', function(Blueprint $table){
+            $table->increments('id');
+            $table->integer('post_id')->unsigned();
+            $table->string('motivo', 255);
+            $table->char('visualizado', 1);
+            $table->foreign('post_id')->references('id')->on('posts');
+        });
     }
 
     /**
@@ -23,6 +30,6 @@ class CreateReportsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('reports');
     }
 }

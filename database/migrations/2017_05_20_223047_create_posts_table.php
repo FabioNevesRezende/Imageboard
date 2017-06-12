@@ -17,6 +17,7 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->string('assunto', 256); 
             $table->string('board', 10); 
+            $table->char('modpost', 1)->nullable(); 
             $table->text('conteudo');
             $table->char('sage', 1);
             $table->char('pinado', 1);

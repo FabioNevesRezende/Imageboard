@@ -64,3 +64,14 @@ body{
     color: #3ffe57;
     
 }
+
+.board-header{
+    font-weight: bold;
+}
+
+.modpost{
+    font-weight: bold;
+    color: #ff0600;
+    display: inline;
+    
+}

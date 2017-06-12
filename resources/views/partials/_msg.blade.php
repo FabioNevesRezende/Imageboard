@@ -2,7 +2,7 @@
 @if (Session::has('post_criado'))
 
     <div class="alert alert-success" role="alert">
-        <p><strong>Post criado:</strong> {{ Session::get('post_criado') }}</p>
+        <p><strong>Post criado:</strong> {!! Session::get('post_criado') !!}</p>
     </div>
 
 @endif

@@ -27,6 +27,8 @@ Route::group(['middleware'=>['web']], function(){
     Route::get('/{nomeBoard}/{thread}', ['as' => 'post.single', 'uses' => 'PagesController@getThread'])->where('nomeBoard', geraRegexBoards())->where('thread', '[0-9]+');
     
     Route::resource('posts', 'PostController');
+    Route::post('/report', ['as' => 'posts.report', 'uses' => 'PostController@report']);
+    
 });
 Auth::routes();
 
