@@ -32,16 +32,18 @@
     </div>
 
 {!! substr($post->conteudo, 0, 500) !!}
+@if($post->ban) <p class="ban-msg">({{ $post->ban->motivo }})</p>  @endif
 <br><br>
 
     @foreach($subPosts as $subpost)
         @if($subpost->lead_id === $post->id)
             <div class="fio-subpost">
-                @if($subpost->modpost === 's') <p class="modpost">### Administrador ###</p>  @else Anônimo @endif | <strong class="assunto">{{ $subpost->assunto }}</strong> | | {{ $subpost->created_at->toDayDateTimeString() }}  | Nro <a class="a-nro-post">{{ $subpost->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $subpost->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <br>
+                @if($subpost->modpost === 's') <p class="modpost">### Administrador ###</p>  @else Anônimo @endif  @if($post->countrycode) |  <img src="/storage/flags/{{ $subpost->countrycode }}.png" alt="{{ $subpost->countrycode }}"> @endif | <strong class="assunto">{{ $subpost->assunto }}</strong> | | {{ $subpost->created_at->toDayDateTimeString() }}  | Nro <a class="a-nro-post">{{ $subpost->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $subpost->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <br>
                 @foreach ($subpost->arquivos as $sbarq)
                 <a href="/storage/{{ $sbarq->filename }}" target="_blank"><img class="img-responsive img-thumbnail" src="{{ \Storage::url($sbarq->filename) }}" width="150px" height="150px" ></a>
                 @endforeach
                 {!! substr($subpost->conteudo, 0, 500) !!}
+                @if($subpost->ban) <p class="ban-msg">({{ $subpost->ban->motivo }})</p>  @endif
                 <br>
             </div>
         @endif

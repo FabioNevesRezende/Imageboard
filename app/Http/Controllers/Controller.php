@@ -36,6 +36,7 @@ class Controller extends BaseController {
         $ban = new Ban;
         $ban->ip = \Ibbr\Post::find(strip_tags(Purifier::clean($request->idpost)))->ipposter;
         $ban->exp_date = strip_tags(Purifier::clean($request->permaban)) === 'permaban' ?  Carbon::now()->addYears(100) : Carbon::now()->addHours(strip_tags(Purifier::clean($request->nro_horas)))->addDays(strip_tags(Purifier::clean($request->nro_dias)));
+        $ban->post_id = strip_tags(Purifier::clean($request->idpost));
         
         if( strip_tags(Purifier::clean($request->board)) !== 'todas'){
             $ban->board = strip_tags(Purifier::clean($request->board));

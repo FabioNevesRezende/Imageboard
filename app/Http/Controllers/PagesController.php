@@ -4,6 +4,7 @@ namespace Ibbr\Http\Controllers;
 
 //use Illuminate\Http\Request;
 use Ibbr\Post;
+use Ibbr\Report;
 
 class PagesController extends Controller
 {
@@ -53,5 +54,11 @@ class PagesController extends Controller
     }
     
     
+    public function getAdmPage(){
+        if(!(\Auth::check())) return view('pages.indice');
+        
+        $reports = Report::orderBy('id', 'desc')->get();
+        return view('pages.admin')->withReports($reports);
+    }
     
 }

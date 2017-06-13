@@ -37,6 +37,7 @@ Route::group(['middleware'=>['auth']], function(){
     Route::get('/deletepost/{post_id}', ['uses' => 'PostController@destroy'])->where('post_id', '[0-9]+');
     Route::get('/pinarpost/{post_id}', ['uses' => 'PostController@pinarPost'])->where('post_id', '[0-9]+');
     Route::get('/deleteimg/{nomeBoard}/{filename}', ['uses' => 'PostController@destroyArqDb'])->where('filename', '[0-9\-]+\.[a-zA-Z]+')->where('nomeBoard', geraRegexBoards());
+    Route::get('/admin', 'PagesController@getAdmPage');
     Route::post('/userban', ['as' => 'bans.userban', 'uses' => 'Controller@banirUsuario']);
     
 });

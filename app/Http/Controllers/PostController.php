@@ -216,7 +216,7 @@ class PostController extends Controller {
       
         $report->motivo = strip_tags(Purifier::clean($request->motivo));
         $report->post_id = strip_tags(Purifier::clean($request->idpost));
-        $report->visualizado = 'n';
+        $report->board = strip_tags(Purifier::clean($request->nomeboard));
         
         $report->save();
         

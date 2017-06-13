@@ -19,7 +19,9 @@ class CreateBansTable extends Migration
             $table->dateTime('exp_date');  
             $table->string('board', 10)->default('-');
             $table->string('motivo', 255);
+            $table->integer('post_id')->unsigned()->nullable();
             $table->primary(['ip', 'exp_date']);
+            $table->foreign('post_id')->references('id')->on('posts');
         });
     }
 

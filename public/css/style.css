@@ -75,3 +75,9 @@ body{
     display: inline;
     
 }
+
+.ban-msg{
+    color: #ff0000;
+    font-weight: bold;
+    font-size: 19px;
+}

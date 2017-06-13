@@ -18,7 +18,7 @@ class CreateReportsTable extends Migration
             $table->increments('id');
             $table->integer('post_id')->unsigned();
             $table->string('motivo', 255);
-            $table->char('visualizado', 1);
+            $table->string('board', 10);
             $table->foreign('post_id')->references('id')->on('posts');
         });
     }
