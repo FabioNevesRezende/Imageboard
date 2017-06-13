@@ -16,6 +16,7 @@
             <file>file:/home/fabio/criação/imageboard-brasil/routes/web.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/auth/login.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/board.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/app/Report.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_nav.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_postposts.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/ResetPasswordController.php</file>
@@ -34,10 +35,10 @@
             <file>file:/home/fabio/criação/imageboard-brasil/app/Post.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/layouts/app.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/ForgotPasswordController.php</file>
-            <file>file:/home/fabio/criação/imageboard-brasil/config/app.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_modalban.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/composer.json</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_head.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_06_10_022138_create_reports_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/boardbase.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/home.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/auth/passwords/email.blade.php</file>
@@ -47,6 +48,7 @@
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/indice.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Arquivo.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/LoginController.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_modalreport.blade.php</file>
         </group>
     </open-files>
 </project-private>

@@ -35,6 +35,15 @@ class PostController extends Controller {
 
     
     
+    protected function obtemCountryCode($ip){
+        if($ip === '127.0.0.1') $ip = '139.82.255.255'; // se teste em localhost, retorna um ip do brasil
+        $iptolocation = 'http://www.geoplugin.net/xml.gp?ip=' . $ip;
+        $creatorlocation = simplexml_load_string(file_get_contents($iptolocation));
+        return strtolower(preg_replace('/<geoplugin_countryCode>([a-zA-Z]+)<\/geoplugin_countryCode>/s', '$1', $creatorlocation->geoplugin_countryCode->asXML()));
+        
+        
+    }
+    
     
     protected function trataLinks($str){
         return preg_replace(
@@ -123,8 +132,10 @@ class PostController extends Controller {
         $post->sage = (strip_tags(Purifier::clean($request->sage)) === 'sage' ? 's' : 'n');
         $post->pinado = 'n';
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost)));
-        $post->ipposter = \Request::ip();
         
+        $post->ipposter = \Request::ip();
+        $post->countrycode = $this->obtemCountryCode($post->ipposter);
+                
         if($request->modpost){
             $post->modpost = (strip_tags(Purifier::clean($request->modpost)) === 'modpost' ? 's' : 'n');
         

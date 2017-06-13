@@ -1,8 +1,7 @@
-
 @foreach($posts as $post)
 @if($post->lead_id === NULL)
 <div id="{{ $post->id }}" class="fio">
-    @if($post->pinado === 's') <span class="glyphicon glyphicon-pushpin"></span> @endif @if($post->modpost === 's') <p class="modpost">### Administrador ###</p>  @else Anônimo @endif | <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }} | Nro <a class="a-nro-post">{{ $post->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <a href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> 
+    @if($post->pinado === 's') <span class="glyphicon glyphicon-pushpin"></span> @endif @if($post->modpost === 's') <p class="modpost">### Administrador ###</p>  @else Anônimo @endif @if($post->countrycode) |  <img src="/storage/flags/{{ $post->countrycode }}.png" alt="{{ $post->countrycode }}"> @endif | <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }} | Nro <a class="a-nro-post">{{ $post->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <a href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> 
     @if(Auth::check()) 
     | <a href="/deletepost/{{ $post->id }}"><button class="btn">Deletar post</button> </a> 
     | <a href="/pinarpost/{{ $post->id }}"><button class="btn">Pinar post</button> </a> 
