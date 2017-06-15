@@ -107,16 +107,16 @@ class PostController extends Controller {
             $this->validate($request, array(
                 'arquivos.*' => 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
                 'assunto' => 'max:255',
-                'conteudo' => 'required|max:65535'//,
-                //'g-recaptcha-response' => 'required|captcha'
+                'conteudo' => 'required|max:65535',
+                'g-recaptcha-response' => 'required|captcha'
             ));
         } else {
             
             $this->validate($request, array(
                 'arquivos.*' => 'mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
                 'assunto' => 'max:255',
-                'conteudo' => 'required|max:65535'//,
-                //'g-recaptcha-response' => 'required|captcha'
+                'conteudo' => 'required|max:65535',
+                'g-recaptcha-response' => 'required|captcha'
             ));
         }
         
@@ -161,7 +161,9 @@ class PostController extends Controller {
                         $contador++;
                     }while(\File::exists(public_path() . '/storage/' . $nomeArquivo));
                     
-                    Storage::putFileAs('/public', $arq, $nomeArquivo);
+                    //Storage::disk('disk2')->putFileAs('/storage', $arq, $nomeArquivo);
+                    
+                    move_uploaded_file($arq, $nomeArquivo);
                     
                     $post->arquivos()->save(new Arquivo(['filename' => $nomeArquivo, 'mime' => $arq->getMimeType() ]));
                     
@@ -257,12 +259,11 @@ class PostController extends Controller {
     public function destroy($post_id) {
         
         $post = Post::find($post_id);
-        
         $arquivos = $post->arquivos;
 
         foreach($arquivos as $arq){
             $this->destroyArq($arq->filename);
-            $arq->delete();
+            \DB::table('arquivos')->where('post_id', '=', $post_id)->delete();
         }
         $post_board = $post->board;
         $post->delete();

@@ -47,8 +47,8 @@
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_postform.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/indice.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Arquivo.php</file>
-            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/LoginController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_modalreport.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/admin.blade.php</file>
         </group>
     </open-files>
 </project-private>
