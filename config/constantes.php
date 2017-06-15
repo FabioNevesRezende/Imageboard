@@ -14,7 +14,7 @@ return [
         'cu' => 'Cultura, música, televisão, literatura',
         'a' => 'Anime'
         ], // lista de boards, para adicionar nova board basta adicionar registro neste array
-    'num_max_posts' => 7, // número máximo de posts por board
+    'num_max_posts' => 100, // número máximo de posts por board
     
     
 ];
