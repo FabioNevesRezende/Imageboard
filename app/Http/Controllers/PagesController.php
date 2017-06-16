@@ -46,9 +46,15 @@ class PagesController extends Controller
     
     public function getThread($nomeBoard, $thread){
         
-        //$posts = \DB::select('select * from posts where id = ? or lead_id = ? order by created_at desc ', [$thread, $thread]);
+        $ver = Post::find($thread);
+        if($ver){
+            if($ver->lead_id){
+                return view('pages.indice'); 
+            }
+        } else return view('pages.indice');
+        
         $posts = Post::orderBy('created_at', 'asc')->where('id', $thread)->orWhere('lead_id', $thread)->get();
-                       
+        
         return view('pages.postshow')->withPosts($posts)->with('nomeBoard', $nomeBoard)->with('descrBoard', \Config::get('constantes.boards.' . $nomeBoard))->with('insidePost', $thread);
         
     }

@@ -12,3 +12,5 @@ npm-debug.log
 *~
 inserts.sql
 infos\ host
+public/*.jpg
+public/*.png

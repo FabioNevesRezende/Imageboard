@@ -20,7 +20,9 @@
         3 - Sem attwhorismo<br>
         4 - Sem descarrilamento de fios<br>
         5 - Sem panelismo<br>
-        
+        <br><br>
+        Doações para pagamento de hospedagem e domínio:<br>
+        <span class="glyphicon glyphicon-bitcoin bitcoin-symbol"></span> 1zHm6j74ZC7BohhkT9f5HW8dnifNzLdoq <span class="glyphicon glyphicon-bitcoin bitcoin-symbol"></span>
         
     </div>
     

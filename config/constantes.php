@@ -5,8 +5,7 @@ return [
     'num_max_files' => 5, // número máximo de arquivos por post
     'boards' => ['b' => 'Aleatorio', 
         'mod' => 'Moderação',
-        'news' => 'Notícias e política', 
-        'int' => 'Internacional',
+        'pol' => 'Notícias e política',
         'tech' => 'Tecnologia e Computação',
         'w' => 'Wallpapers',
         'x' => 'Paranormal, Religiões, Teologia',

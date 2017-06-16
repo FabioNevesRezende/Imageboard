@@ -161,9 +161,8 @@ class PostController extends Controller {
                         $contador++;
                     }while(\File::exists(public_path() . '/storage/' . $nomeArquivo));
                     
-                    //Storage::disk('disk2')->putFileAs('/storage', $arq, $nomeArquivo);
+                    Storage::disk('disk2')->putFileAs('/storage', $arq, $nomeArquivo);
                     
-                    move_uploaded_file($arq, $nomeArquivo);
                     
                     $post->arquivos()->save(new Arquivo(['filename' => $nomeArquivo, 'mime' => $arq->getMimeType() ]));
                     
@@ -171,13 +170,14 @@ class PostController extends Controller {
             }
         }
 
-        if($post->lead_id){
+        if($post->lead_id && $post->sage !== 's'){
             $this->atualizaUpdatedAt($post->lead_id);
         }
         
         $this->verificaLimitePosts($post->board);
         
-        Session::flash('post_criado', 'Post número <a target="_blank" href="/' . $post->board . '/' . $post->id . '">' . $post->id . '</a> criado');
+        $flashmsg = $post->lead_id ? 'Post número ' . $post->id . ' criado' : 'Post número <a target="_blank" href="/' . $post->board . '/' . $post->id . '">' . $post->id . '</a> criado';
+        Session::flash('post_criado', $flashmsg);
         return \Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . strip_tags(Purifier::clean($request->insidepost))));
     }
 
