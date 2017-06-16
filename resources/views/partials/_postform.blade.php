@@ -16,7 +16,7 @@ Modpost {{ Form::checkbox('modpost', 'modpost', false,array('class'=>'novo-post-
 </div>
 @endif
 {{  Form::textarea('conteudo', null, array('id' => 'novo-post-conteudo','class' => 'novo-post-form-item form-control', 'placeholder' => 'Mensagem', 'rows'=>'5', 'maxlength' => '65535')) }}
-
+<p style="margin-left: 15px;">Mime types: image/jpeg, image/png, image/gif, video/webm, video/mp4, audio/mpeg</p>
 <div class="row">
     <div class="col-sm-6">
         Sage {{ Form::checkbox('sage', 'sage', false,array('class'=>'novo-post-form-item')) }}
