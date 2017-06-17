@@ -10,6 +10,7 @@ use Session;
 use Config;
 use Redirect;
 use Ibbr\Arquivo;
+use Ibbr\Ytanexo;
 use Ibbr\Report;
 use Carbon\Carbon;
 
@@ -104,34 +105,55 @@ class PostController extends Controller {
      
         }
         
+        if($request->linkyoutube){
+            if($request->file('arquivos')){
+                Session::flash('erro_upload', 'Sem anexo de arquivos quando há links de youtube');
         
-        
-        if(strip_tags(Purifier::clean($request->insidepost)) === 'n'){
-            
+                return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+     
+            }
             $this->validate($request, array(
-                'arquivos.*' => 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
-                'assunto' => 'max:255',
-                'conteudo' => 'required|max:65535'//,
-                //'g-recaptcha-response' => 'required|captcha'
-            ));
-        } else if( preg_match('/^[0-9]+$/s',strip_tags(Purifier::clean($request->insidepost))) ) {
+                    'linkyoutube' => 'max:255',
+                    'assunto' => 'max:255',
+                    'conteudo' => 'required|max:65535'//,
+                    //'g-recaptcha-response' => 'required|captcha'
+                ));
             
-            $this->validate($request, array(
-                'arquivos.*' => 'mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
-                'assunto' => 'max:255',
-                'conteudo' => 'required|max:65535'//,
-                //'g-recaptcha-response' => 'required|captcha'
-            ));
         } else {
-            Session::flash('erro_upload', 'Input inválido');
-        
-            return Redirect::to('/');
+            if(!$request->file('arquivos') && strip_tags(Purifier::clean($request->insidepost)) === 'n'){
+                Session::flash('erro_upload', 'É necessário postar pelo menos com um arquivo ou um link do youtube');
+                return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+     
+            }
+            if(strip_tags(Purifier::clean($request->insidepost)) === 'n'){
+
+                $this->validate($request, array(
+                    'arquivos.*' => 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
+                    'assunto' => 'max:255',
+                    'conteudo' => 'required|max:65535'//,
+                    //'g-recaptcha-response' => 'required|captcha'
+                ));
+            } else if( preg_match('/^[0-9]+$/s',strip_tags(Purifier::clean($request->insidepost))) ) {
+
+                $this->validate($request, array(
+                    'arquivos.*' => 'mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
+                    'assunto' => 'max:255',
+                    'conteudo' => 'max:65535'//,
+                    //'g-recaptcha-response' => 'required|captcha'
+                ));
+            } else {
+                Session::flash('erro_upload', 'Input inválido');
+
+                return Redirect::to('/');
+            }
         }
-        
         
         $post = new Post;
         $arquivos = $request->file('arquivos');
-
+        $links = null;
+        if($request->linkyoutube){
+            $links = explode('|' ,strip_tags(Purifier::clean($request->linkyoutube)));
+        }
         $post->assunto = strip_tags(Purifier::clean($request->assunto));
         $post->board = strip_tags(Purifier::clean($request->nomeboard));
         
@@ -150,8 +172,8 @@ class PostController extends Controller {
         
         }
         
-        if(sizeof($arquivos) >  Config::get('constantes.num_max_files') ){
-            Session::flash('erro_upload', 'Número máximo de arquivos permitidos: ' . Config::get('constantes.num_max_files') );
+        if(sizeof($arquivos) >  Config::get('constantes.num_max_files') || ($links && sizeof($links) >  Config::get('constantes.num_max_files') ) ){
+            Session::flash('erro_upload', 'Número máximo de arquivos ou links do youtube permitidos: ' . Config::get('constantes.num_max_files') );
         
             return Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
     
@@ -177,6 +199,18 @@ class PostController extends Controller {
                     
                 }
             }
+        } else if($links){
+            foreach($links as $link){
+                if(preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $link, $match)){
+                    $post->ytanexos()->save(new Ytanexo(['ytcode' => $match[1], 'post_id' => $post->id ]));
+                    
+                } else {
+                    Session::flash('erro_upload', 'Link inválido');
+                    $this->postRollback($post);
+                    return Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
+    
+                }
+            }
         }
 
         if($post->lead_id && $post->sage !== 's'){
@@ -188,6 +222,10 @@ class PostController extends Controller {
         $flashmsg = $post->lead_id ? 'Post número ' . $post->id . ' criado' : 'Post número <a target="_blank" href="/' . $post->board . '/' . $post->id . '">' . $post->id . '</a> criado';
         Session::flash('post_criado', $flashmsg);
         return Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id));
+    }
+    
+    protected function postRollback($post){
+        $this->destroy($post->id);
     }
 
     protected function verificaLimitePosts($nomeBoard){
@@ -279,6 +317,11 @@ class PostController extends Controller {
             $this->destroyArq($arq->filename);
             \DB::table('arquivos')->where('post_id', '=', $post_id)->delete();
         }
+        if($post->ytanexos){
+            \DB::table('ytanexos')->where('post_id', '=', $post_id)->delete();
+            
+        }
+        
         $post_board = $post->board;
         $post->delete();
 

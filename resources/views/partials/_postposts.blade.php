@@ -30,7 +30,13 @@
 @if(Auth::check()) <a href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}"><button class="btn">Deletar Arquivo</button> </a> @endif
 @endforeach
 
-<br><br>
+@foreach ($post->ytanexos as $anx)
+    <iframe width="220" height="220"
+        src="https://www.youtube.com/embed/{{ $anx->ytcode }}">
+    </iframe> 
+@endforeach
+
+<br>
 {!! $post->conteudo !!}
 @if($post->ban) <p class="ban-msg">({{ $post->ban->motivo }})</p>  @endif
 @if($ind !== 0) </div> @endif

@@ -28,6 +28,8 @@
     <ul>
         @foreach ($errors->all() as $error)
             @if(preg_match('/.*arquivos.*/s',$error)) <li>Mime type não permitido.</li> 
+            @elseif(preg_match('/.*linkyoutube.*/s',$error)) <li>Link inválido.</li> 
+            @elseif(preg_match('/.*g-recaptcha-response.*/s',$error)) <li>Captcha não preenchido</li> 
             @else <li>{{ $error }}</li>
             @endif
         @endforeach

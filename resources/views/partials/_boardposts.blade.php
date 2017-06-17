@@ -29,6 +29,12 @@
     @if(Auth::check()) <a href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}"><button class="btn">Deletar Arquivo</button> </a> @endif
     </div>
     @endforeach
+    
+    @foreach ($post->ytanexos as $anx)
+    <iframe width="220" height="220"
+        src="https://www.youtube.com/embed/{{ $anx->ytcode }}">
+    </iframe> 
+    @endforeach
     </div>
 
 {!! substr($post->conteudo, 0, 500) !!}
@@ -42,6 +48,13 @@
                 @foreach ($subpost->arquivos as $sbarq)
                 <a href="/storage/{{ $sbarq->filename }}" target="_blank"><img class="img-responsive img-thumbnail" src="{{ \Storage::url($sbarq->filename) }}" width="150px" height="150px" ></a>
                 @endforeach
+                
+                @foreach ($subpost->ytanexos as $anx)
+                <iframe width="220" height="220"
+                    src="https://www.youtube.com/embed/{{ $anx->ytcode }}">
+                </iframe> 
+                @endforeach
+                
                 {!! substr($subpost->conteudo, 0, 500) !!}
                 @if($subpost->ban) <p class="ban-msg">({{ $subpost->ban->motivo }})</p>  @endif
                 <br>

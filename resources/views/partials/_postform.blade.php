@@ -6,10 +6,11 @@
 {{  Form::hidden('insidepost', $insidePost) }}
 {{  Form::text('assunto', null, array('class' => 'novo-post-form-item form-control', 'maxlength' => '255', 'placeholder' => 'Assunto' )) }}
 @if($insidePost === 'n') 
-    {{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'required'=>'','multiple' => '')) }}
+    {{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'multiple' => '')) }}
 @else
     {{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'multiple' => '')) }}
 @endif
+{{ Form::text('linkyoutube', null, array('class' => 'novo-post-form-item form-control', 'maxlength' => '255', 'placeholder' => 'Link para vídeo do youtube' )) }}
 @if(Auth::check()) 
 <div style="float: left; margin-bottom: 20px; margin-left: 15px;">
 Modpost {{ Form::checkbox('modpost', 'modpost', false,array('class'=>'novo-post-form-item')) }}
