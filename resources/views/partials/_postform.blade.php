@@ -10,7 +10,7 @@
 @else
     {{  Form::file('arquivos[]', array('class' => 'novo-post-form-item', 'multiple' => '')) }}
 @endif
-{{ Form::text('linkyoutube', null, array('class' => 'novo-post-form-item form-control', 'maxlength' => '255', 'placeholder' => 'Link para vídeo do youtube' )) }}
+{{ Form::text('linkyoutube', null, array('class' => 'novo-post-form-item form-control', 'maxlength' => '255', 'placeholder' => 'Link(s) para vídeo(s) do youtube, separados por |' )) }}
 @if(Auth::check()) 
 <div style="float: left; margin-bottom: 20px; margin-left: 15px;">
 Modpost {{ Form::checkbox('modpost', 'modpost', false,array('class'=>'novo-post-form-item')) }}
