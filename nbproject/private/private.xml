@@ -20,7 +20,6 @@
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_nav.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_postposts.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/ResetPasswordController.php</file>
-            <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Kernel.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_06_09_014056_create_bans_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_boardpostheader.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_05_20_223048_create_arquivos_table.php</file>
@@ -45,7 +44,6 @@
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/auth/passwords/email.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_boardposts.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/PagesController.php</file>
-            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_postform.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/indice.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Arquivo.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_modalreport.blade.php</file>

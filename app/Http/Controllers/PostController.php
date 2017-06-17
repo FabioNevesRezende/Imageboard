@@ -8,6 +8,7 @@ use Purifier;
 use Storage;
 use Session;
 use Config;
+use Redirect;
 use Ibbr\Arquivo;
 use Ibbr\Report;
 use Carbon\Carbon;
@@ -82,12 +83,15 @@ class PostController extends Controller {
     public function store(Request $request) {
         
         
-        
+        if(!preg_match(Config::get('funcoes.geraRegexBoards')(), strip_tags(Purifier::clean($request->nomeboard)))){
+            Session::flash('erro_upload', 'Board inválida');
+            return Redirect::to('/');
+        }
         $bantime = $this->estaBanido(\Request::ip(), strip_tags(Purifier::clean($request->nomeboard)));
         if($bantime){
             Session::flash('ban', 'Seu IP ' . \Request::ip() . ' está banido da board ' . strip_tags(Purifier::clean($request->nomeboard)) . ' até: ' . $bantime->toDateTimeString() . ' e não pode postar.');
         
-            return \Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+            return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
      
         }
         
@@ -96,7 +100,7 @@ class PostController extends Controller {
         if($bantime){
             Session::flash('ban', 'Seu IP ' . \Request::ip() . ' está banido de todas as boards até: ' . $bantime->toDateTimeString() . ' e não pode postar.');
         
-            return \Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+            return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
      
         }
         
@@ -107,17 +111,21 @@ class PostController extends Controller {
             $this->validate($request, array(
                 'arquivos.*' => 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
                 'assunto' => 'max:255',
-                'conteudo' => 'required|max:65535',
-                'g-recaptcha-response' => 'required|captcha'
+                'conteudo' => 'required|max:65535'//,
+                //'g-recaptcha-response' => 'required|captcha'
             ));
-        } else {
+        } else if( preg_match('/^[0-9]+$/s',strip_tags(Purifier::clean($request->insidepost))) ) {
             
             $this->validate($request, array(
                 'arquivos.*' => 'mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
                 'assunto' => 'max:255',
-                'conteudo' => 'required|max:65535',
-                'g-recaptcha-response' => 'required|captcha'
+                'conteudo' => 'required|max:65535'//,
+                //'g-recaptcha-response' => 'required|captcha'
             ));
+        } else {
+            Session::flash('erro_upload', 'Input inválido');
+        
+            return Redirect::to('/');
         }
         
         
@@ -126,6 +134,7 @@ class PostController extends Controller {
 
         $post->assunto = strip_tags(Purifier::clean($request->assunto));
         $post->board = strip_tags(Purifier::clean($request->nomeboard));
+        
         $post->conteudo = $this->trataLinks(strip_tags(Purifier::clean($request->conteudo)));
         $post->conteudo = $this->addRefPosts(\URL::to('/') . '/' . $post->board, $post->conteudo);
         $post->conteudo = $this->addGreenText($post->conteudo);
@@ -144,7 +153,7 @@ class PostController extends Controller {
         if(sizeof($arquivos) >  Config::get('constantes.num_max_files') ){
             Session::flash('erro_upload', 'Número máximo de arquivos permitidos: ' . Config::get('constantes.num_max_files') );
         
-            return \Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . strip_tags(Purifier::clean($request->insidepost))));
+            return Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
     
         }
         
@@ -178,7 +187,7 @@ class PostController extends Controller {
         
         $flashmsg = $post->lead_id ? 'Post número ' . $post->id . ' criado' : 'Post número <a target="_blank" href="/' . $post->board . '/' . $post->id . '">' . $post->id . '</a> criado';
         Session::flash('post_criado', $flashmsg);
-        return \Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . strip_tags(Purifier::clean($request->insidepost))));
+        return Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id));
     }
 
     protected function verificaLimitePosts($nomeBoard){
@@ -198,16 +207,21 @@ class PostController extends Controller {
 
     protected function atualizaUpdatedAt($post_id){
         $post = Post::find($post_id);
-        $post->updated_at = Carbon::now();
-        $post->save();
+        if($post){
+            $post->updated_at = Carbon::now();
+            $post->save();
+            
+        }
     }
     
     public function pinarPost($post_id){
         $post = Post::find($post_id);
-        $post->pinado = 's';
-        $post->save();
-        return \Redirect::to('/' . $post->board );
-    
+        if($post){
+            $post->pinado = 's';
+            $post->save();
+            return \Redirect::to('/' . $post->board );
+        }
+        return \Redirect::to('/');
     }
     
     public function report(Request $request){
@@ -222,7 +236,7 @@ class PostController extends Controller {
         
         $report->save();
         
-        return \Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));  
+        return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));  
     }
     
     /**

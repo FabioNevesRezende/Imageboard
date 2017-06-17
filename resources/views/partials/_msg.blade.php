@@ -20,3 +20,17 @@
     </div>
 
 @endif
+
+@if (count($errors) > 0)
+
+<div class="alert alert-danger" role="alert">
+    <p><strong>Erro ao validar postagem:</strong></p>
+    <ul>
+        @foreach ($errors->all() as $error)
+            @if(preg_match('/.*arquivos.*/s',$error)) <li>Mime type não permitido.</li> 
+            @else <li>{{ $error }}</li>
+            @endif
+        @endforeach
+    </ul>
+</div>
+@endif
