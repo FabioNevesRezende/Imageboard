@@ -29,7 +29,8 @@ Route::group(['middleware'=>['auth']], function(){
     Route::get('/deleteimg/{nomeBoard}/{filename}', ['uses' => 'PostController@destroyArqDb'])->where('filename', '[0-9\-]+\.[a-zA-Z]+')->where('nomeBoard', Config::get('funcoes.geraRegexBoards')());
     Route::get('/admin', 'PagesController@getAdmPage');
     Route::post('/userban', ['as' => 'bans.userban', 'uses' => 'Controller@banirUsuario']);
-    
+    Route::get('/migrate', 'HomeController@migrate');
+    Route::get('/migrate/refresh', 'HomeController@migrateRefresh');
 });
 
 

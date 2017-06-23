@@ -2,7 +2,9 @@
 
 namespace Ibbr\Http\Controllers;
 
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -25,4 +27,18 @@ class HomeController extends Controller
     {
         return view('home');
     }
+    
+    public function migrate(){
+        if(Auth::check()){
+            Artisan::call('migrate');
+            
+        }
+    }
+    
+    public function migrateRefresh(){
+        if(Auth::check()){
+            Artisan::call('migrate:refresh');
+        }
+    }
+    
 }
