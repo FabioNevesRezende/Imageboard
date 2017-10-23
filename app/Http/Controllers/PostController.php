@@ -12,6 +12,7 @@ use Redirect;
 use Ibbr\Arquivo;
 use Ibbr\Ytanexo;
 use Ibbr\Report;
+use Ibbr\Configuracao;
 use Carbon\Carbon;
 
 class PostController extends Controller {
@@ -104,7 +105,7 @@ class PostController extends Controller {
             return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
      
         }
-        
+        $configuracaos = Configuracao::orderBy('id', 'desc')->get()[0];
         if($request->linkyoutube){
             if($request->file('arquivos')){
                 Session::flash('erro_upload', 'Sem anexo de arquivos quando há links de youtube');
@@ -115,8 +116,8 @@ class PostController extends Controller {
             $this->validate($request, array(
                     'linkyoutube' => 'max:255',
                     'assunto' => 'max:255',
-                    'conteudo' => 'required|max:65535'//,
-                    //'g-recaptcha-response' => 'required|captcha'
+                    'conteudo' => 'required|max:65535',
+                    'g-recaptcha-response' =>  $configuracaos->captchaativado === 's' ? 'required|captcha' : ''
                 ));
             
         } else {
@@ -130,16 +131,16 @@ class PostController extends Controller {
                 $this->validate($request, array(
                     'arquivos.*' => 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
                     'assunto' => 'max:255',
-                    'conteudo' => 'required|max:65535'//,
-                    //'g-recaptcha-response' => 'required|captcha'
+                    'conteudo' => 'required|max:65535',
+                    'g-recaptcha-response' => $configuracaos->captchaativado === 's' ? 'required|captcha' : ''
                 ));
             } else if( preg_match('/^[0-9]+$/s',strip_tags(Purifier::clean($request->insidepost))) ) {
 
                 $this->validate($request, array(
                     'arquivos.*' => 'mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg',
                     'assunto' => 'max:255',
-                    'conteudo' => 'max:65535'//,
-                    //'g-recaptcha-response' => 'required|captcha'
+                    'conteudo' => 'max:65535',
+                    'g-recaptcha-response' => $configuracaos->captchaativado === 's' ? 'required|captcha' : ''
                 ));
             } else {
                 Session::flash('erro_upload', 'Input inválido');

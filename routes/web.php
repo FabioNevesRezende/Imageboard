@@ -30,7 +30,9 @@ Route::group(['middleware'=>['auth']], function(){
     Route::get('/admin', 'PagesController@getAdmPage');
     Route::post('/userban', ['as' => 'bans.userban', 'uses' => 'Controller@banirUsuario']);
     Route::get('/migrate', 'HomeController@migrate');
+    Route::get('/seedar', 'HomeController@seedar');
     Route::get('/migrate/refresh', 'HomeController@migrateRefresh');
+    Route::get('/togglecaptcha/{status}', 'HomeController@toggleCaptcha')->where('status', '(ativado|desativado)');
 });
 
 

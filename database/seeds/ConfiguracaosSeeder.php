@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class ConfiguracaosSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(ConfiguracaosSeeder::class);
+        Ibbr\Configuracao::create([
+            'id' => '1',
+            'captchaativado' => 'n'
+        ]);
     }
 }

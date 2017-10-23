@@ -92,3 +92,8 @@ body{
     color: #ff6e00;
     
 }
+
+#admin-buttons li{
+    list-style-type: none;
+    padding: 3px;
+}

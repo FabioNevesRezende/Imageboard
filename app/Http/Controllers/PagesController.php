@@ -5,6 +5,7 @@ namespace Ibbr\Http\Controllers;
 //use Illuminate\Http\Request;
 use Ibbr\Post;
 use Ibbr\Report;
+use Ibbr\Configuracao;
 
 class PagesController extends Controller
 {
@@ -35,8 +36,15 @@ class PagesController extends Controller
         if(in_array($nomeBoard, array_keys(\Config::get('constantes.boards')))){
             $posts = Post::orderBy('updated_at', 'desc')->where('board', $nomeBoard)->where('lead_id', null)->paginate(10);
             $subposts = Post::orderBy('created_at', 'asc')->where('board', $nomeBoard)->where('lead_id', '<>', null)->get();
-                
-            return view('pages.board')->with('nomeBoard', $nomeBoard)->with('descrBoard', \Config::get('constantes.boards.' . $nomeBoard))->with('insidePost', 'n')->withPosts($this->reordenaPostsPinados($posts))->with('subPosts', $subposts)->with('paginador', $posts->appends(\Request::except('page'))->links());
+            $configuracaos = Configuracao::orderBy('id', 'desc')->get()[0];
+            return view('pages.board')
+                    ->with('nomeBoard', $nomeBoard)
+                    ->with('descrBoard', \Config::get('constantes.boards.' . $nomeBoard))
+                    ->with('insidePost', 'n')
+                    ->withPosts($this->reordenaPostsPinados($posts))
+                    ->with('subPosts', $subposts)
+                    ->with('paginador', $posts->appends(\Request::except('page'))->links())
+                    ->withConfiguracaos($configuracaos);
             
         } else{
             return view('pages.indice'); 
@@ -54,8 +62,14 @@ class PagesController extends Controller
         } else return view('pages.indice');
         
         $posts = Post::orderBy('created_at', 'asc')->where('id', $thread)->orWhere('lead_id', $thread)->get();
+        $configuracaos = Configuracao::orderBy('id', 'desc')->get()[0];
         
-        return view('pages.postshow')->withPosts($posts)->with('nomeBoard', $nomeBoard)->with('descrBoard', \Config::get('constantes.boards.' . $nomeBoard))->with('insidePost', $thread);
+        return view('pages.postshow')
+                ->withPosts($posts)
+                ->with('nomeBoard', $nomeBoard)
+                ->with('descrBoard', \Config::get('constantes.boards.' . $nomeBoard))
+                ->with('insidePost', $thread)
+                ->withConfiguracaos($configuracaos);
         
     }
     
@@ -64,7 +78,8 @@ class PagesController extends Controller
         if(!(\Auth::check())) return view('pages.indice');
         
         $reports = Report::orderBy('id', 'desc')->get();
-        return view('pages.admin')->withReports($reports);
+        $configuracaos = Configuracao::orderBy('id', 'desc')->get()[0];
+        return view('pages.admin')->withReports($reports)->withConfiguracaos($configuracaos);
     }
     
 }

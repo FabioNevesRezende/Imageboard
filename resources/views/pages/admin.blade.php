@@ -4,18 +4,28 @@
 @section('titulo', 'Admin')
 
 @section('conteudo')
-
-@if(Auth::id() === 1)
+@if(isset($configuracaos))
+<div class="admin-page">
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-10"></div>
         <div class="col-sm-2">
-            <a href="/migrate"><button type="button" class="btn btn-danger">Migrate</button></a>
-            <a href="/migrate/refresh"><button type="button" class="btn btn-danger">Migrate:refresh</button></a>
+            
+        <ul id="admin-buttons">
+@if(Auth::id() === 1)
+            <li><a href="/seedar"><button type="button" class="btn btn-success">Seedar</button></a></li>
+            <li><a href="/migrate"><button type="button" class="btn btn-warning">Migrate</button></a></li>
+            <li><a href="/migrate/refresh"><button type="button" class="btn btn-danger">Migrate:refresh</button></a></li>
+@endif
+@if($configuracaos->captchaativado === 's')
+            <li><a href="/togglecaptcha/ativado"><button type="button" class="btn btn-danger">Desativar captcha</button></a></li>
+@elseif($configuracaos->captchaativado === 'n')
+            <li><a href="/togglecaptcha/desativado"><button type="button" class="btn btn-primary">Ativar captcha</button></a></li>
+@endif
+        </ul>
         </div>
     </div>
 </div>
-@endif
 
 @foreach($reports as $report)
 <div class="alert alert-success" role="alert">
@@ -26,5 +36,6 @@
 <hr>
 @endforeach
 
-
+</div>
+@endif
 @endsection
