@@ -14,3 +14,4 @@ inserts.sql
 infos\ host
 public/*.jpg
 public/*.png
+.directory

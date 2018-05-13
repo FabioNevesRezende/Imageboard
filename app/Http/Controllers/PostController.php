@@ -114,18 +114,20 @@ class PostController extends Controller {
             $regras['sage'] = 'max:4';
         }
         
-        if($request->lead_id){
-            $regras['lead_id'] = 'max:25';
+        if($request->insidepost){
+            $regras['insidepost'] = 'max:25';
         }
         
-        if($request->ipposter){
-            $regras['ipposter'] = 'max:15';
+        if($request->lead_id){
+            $regras['lead_id'] = 'max:25';
         }
         
         if($request->modpost){
             $regras['modpost'] = 'max:7';
         }
         
+            //$_SESSION['regras'] = $regras;
+            //sdfsdfsdfsdf;
         return $regras;
     }
     
@@ -136,7 +138,7 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        $this->defineArrayValidacao($request);
+        
         // Verifica se a board requisitada para o post realmente existe
         if(!$this->verificaBoardLegitima(strip_tags(Purifier::clean($request->nomeboard)))){
             return Redirect::to('/');
@@ -171,16 +173,11 @@ class PostController extends Controller {
             $this->validate($request, $regras);
             
         } else { // se não houver nenhum link do youtube
-            if(!$request->file('arquivos') && strip_tags(Purifier::clean($request->insidepost)) === 'n'){
+            if( (!$request->file('arquivos') && strip_tags(Purifier::clean($request->insidepost)) === 'n') || sizeof($arquivos) < 1 ){
                 Session::flash('erro_upload', 'É necessário postar pelo menos com um arquivo ou um link do youtube');
                 return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
             }
             $this->validate($request, $regras);
-            if(sizeof($arquivos) < 1){
-                Session::flash('erro_upload', 'É necessário postar pelo menos com um arquivo ou um link do youtube');
-                return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
-                
-            }
         }
         // termina validação dos inputs
         
