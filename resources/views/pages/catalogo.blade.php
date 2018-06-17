@@ -13,10 +13,7 @@
     <div class="col-sm-4"></div>
     
     <div class="col-sm-4 text-center div-regras">
-        Imageboard ainda em fase de testes.<br>
-        Regras:<br><br>
-        1 - Não poste conteúdo ilegal.<br>
-        <br><br>
+        <h1>CATALOGO</h1>
         
     </div>
     

@@ -17,14 +17,15 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->string('assunto', 256); 
             $table->string('board', 10); 
-            $table->char('modpost', 1)->nullable(); 
+            $table->boolean('modpost')->nullable(); 
             $table->text('conteudo');
-            $table->char('sage', 1);
-            $table->char('pinado', 1);
+            $table->boolean('sage');
+            $table->boolean('pinado');
             $table->char('countrycode', 2)->nullable();
             $table->integer('lead_id')->unsigned()->nullable();
             $table->string('ipposter', 15);
             $table->timestamps();
+            $table->foreign('board')->references('sigla')->on('boards');
         });        
     }
 

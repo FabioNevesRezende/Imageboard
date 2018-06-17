@@ -18,6 +18,7 @@ Route::group(['middleware'=>['web']], function(){
     
     Route::resource('posts', 'PostController');
     Route::post('/report', ['as' => 'posts.report', 'uses' => 'PostController@report']);
+    Route::get('/catalogo', 'PagesController@getCatalogo');
     
 });
 Auth::routes();

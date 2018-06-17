@@ -15,7 +15,10 @@ class CreateConfiguracaosTable extends Migration
     {
         Schema::create('configuracaos', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('captchaativado', 1);
+            $table->boolean('captcha_ativado');
+            $table->string('carteira_doacao', 300)->nullable();
+            $table->tinyInteger('num_max_arq_post')->nullable();
+            $table->tinyInteger('num_max_fios')->nullable();
         });
     }
 

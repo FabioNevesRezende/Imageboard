@@ -1,7 +1,7 @@
 @foreach($posts as $post)
 @if($post->lead_id === NULL)
 <div id="{{ $post->id }}" class="fio">
-    @if($post->pinado === 's') <span class="glyphicon glyphicon-pushpin"></span> @endif @if($post->modpost === 's') <p class="modpost">### Administrador ###</p>  @else Anônimo @endif @if($post->countrycode) |  <img src="/storage/flags/{{ $post->countrycode }}.png" alt="{{ $post->countrycode }}"> @endif | <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }} | Nro <a class="a-nro-post">{{ $post->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <a href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> 
+    @if($post->pinado) <span class="glyphicon glyphicon-pushpin"></span> @endif @if($post->modpost) <p class="modpost">### Administrador ###</p>  @else Anônimo @endif @if($post->countrycode) |  <img src="/storage/flags/{{ $post->countrycode }}.png" alt="{{ $post->countrycode }}"> @endif | <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }} | Nro <a class="a-nro-post">{{ $post->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <a href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> 
     @if(Auth::check()) 
     | <a href="/deletepost/{{ $post->id }}"><button class="btn">Deletar post</button> </a> 
     | <a href="/pinarpost/{{ $post->id }}"><button class="btn">Pinar post</button> </a> 
@@ -44,7 +44,7 @@
     @foreach($subPosts as $subpost)
         @if($subpost->lead_id === $post->id)
             <div class="fio-subpost">
-                @if($subpost->modpost === 's') <p class="modpost">### Administrador ###</p>  @else Anônimo @endif  @if($post->countrycode) |  <img src="/storage/flags/{{ $subpost->countrycode }}.png" alt="{{ $subpost->countrycode }}"> @endif | <strong class="assunto">{{ $subpost->assunto }}</strong> | | {{ $subpost->created_at->toDayDateTimeString() }}  | Nro <a class="a-nro-post">{{ $subpost->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $subpost->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <br>
+                @if($subpost->modpost) <p class="modpost">### Administrador ###</p>  @else Anônimo @endif  @if($post->countrycode) |  <img src="/storage/flags/{{ $subpost->countrycode }}.png" alt="{{ $subpost->countrycode }}"> @endif | <strong class="assunto">{{ $subpost->assunto }}</strong> | | {{ $subpost->created_at->toDayDateTimeString() }}  | Nro <a class="a-nro-post">{{ $subpost->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $subpost->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <br>
                 @foreach ($subpost->arquivos as $sbarq)
                 <a href="/storage/{{ $sbarq->filename }}" target="_blank"><img class="img-responsive img-thumbnail" src="{{ \Storage::url($sbarq->filename) }}" width="150px" height="150px" ></a>
                 @endforeach

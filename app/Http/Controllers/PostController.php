@@ -86,7 +86,7 @@ class PostController extends Controller {
     
     // retorna array com regras de validação
     public function defineArrayValidacao($request){
-        $configuracaos = Configuracao::orderBy('id', 'desc')->get()[0];
+        $configuracaos = ConfiguracaoController::getAll();
         $regras = array();
         
         if($request->linkyoutube){
@@ -108,7 +108,7 @@ class PostController extends Controller {
             }
             
         }
-        $regras['g-recaptcha-response'] = $configuracaos->captchaativado === 's' ? 'required|captcha' : '';
+        $regras['g-recaptcha-response'] = $configuracaos->captcha_ativado ? 'required|captcha' : '';
         
         if($request->sage){
             $regras['sage'] = 'max:4';
@@ -192,8 +192,8 @@ class PostController extends Controller {
         $post->conteudo = $this->trataLinks(strip_tags(Purifier::clean($request->conteudo))); // adiciona tags <a> ao conteudo das mensagens
         $post->conteudo = $this->addRefPosts(\URL::to('/') . '/' . $post->board, $post->conteudo); // adiciona referência a outros posts iniciados com '>'
         $post->conteudo = $this->addGreenText($post->conteudo); // add verdetexto após os símbolos '>>'
-        $post->sage = (strip_tags(Purifier::clean($request->sage)) === 'sage' ? 's' : 'n'); // define se o post foi sageado ou não
-        $post->pinado = 'n'; // define se a thread está pinada, por padrão, não
+        $post->sage = strip_tags(Purifier::clean($request->sage)) === 'sage'; // define se o post foi sageado ou não
+        $post->pinado = false; // define se a thread está pinada, por padrão, não
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost))); // caso o post seja dentro de um fio, define qual fio "pai" da postagem
         
         $post->ipposter = \Request::ip(); // ip do postador
@@ -201,12 +201,12 @@ class PostController extends Controller {
                 
         // flag "modpost" definido pelo mod
         if($request->modpost){
-            $post->modpost = (strip_tags(Purifier::clean($request->modpost)) === 'modpost' ? 's' : 'n');
+            $post->modpost = strip_tags(Purifier::clean($request->modpost)) === 'modpost';
         }
-        
+        $num_max_arq_post = ConfiguracaoController::getAll()->num_max_arq_post;
         // verifica se há mais arquivos/links que o máximo permitido
-        if(sizeof($arquivos) >  Config::get('constantes.num_max_files') || ($links && sizeof($links) >  Config::get('constantes.num_max_files') ) ){
-            Session::flash('erro_upload', 'Número máximo de arquivos ou links do youtube permitidos: ' . Config::get('constantes.num_max_files') );
+        if(sizeof($arquivos) >  $num_max_arq_post || ($links && sizeof($links) >  $num_max_arq_post ) ){
+            Session::flash('erro_upload', 'Número máximo de arquivos ou links do youtube permitidos: ' . $num_max_arq_post );
             return Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
         }
         
@@ -250,7 +250,7 @@ class PostController extends Controller {
         }
 
         // se for post dentro de fio e não for sage, atualiza sua ultima atualização para que "bumpe"
-        if($post->lead_id && $post->sage !== 's'){
+        if($post->lead_id && !($post->sage)){
             $this->atualizaUpdatedAt($post->lead_id);
         }
         
@@ -267,9 +267,9 @@ class PostController extends Controller {
         $this->destroy($post->id);
     }
 
-    // verifica se ultrapassou o nro máximo de posts para a board [constantes.num_max_posts]
+    // verifica se ultrapassou o nro máximo de posts para a board [configuracaos.num_max_fios]
     protected function verificaLimitePosts($nomeBoard){
-        $posts = \DB::select('select * from posts where pinado <> \'s\' and board = ? order by updated_at desc limit 1 offset ?;', [$nomeBoard, Config::get('constantes.num_max_posts')]);
+        $posts = \DB::select('select * from posts where pinado = false and board = ? order by updated_at desc limit 1 offset ?;', [$nomeBoard, ConfiguracaoController::getAll()->num_max_fios ]);
         if(count($posts)>0){
             // destroyArq, destroyArqDb
             $post_a_deletar = $posts[0]->id;
@@ -295,7 +295,7 @@ class PostController extends Controller {
     public function pinarPost($post_id){
         $post = Post::find($post_id);
         if($post){
-            $post->pinado = 's';
+            $post->pinado = true;
             $post->save();
             return \Redirect::to('/' . $post->board );
         }

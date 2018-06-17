@@ -27,7 +27,7 @@ Modpost {{ Form::checkbox('modpost', 'modpost', false,array('class'=>'novo-post-
     </div>
 </div>
 
-@if($configuracaos->captchaativado === 's')
+@if($configuracaos->captcha_ativado)
 <div class="row">
     <div class="col-sm-12 text-center">
         {!! app('captcha')->display($attributes = ['style'=>'margin-top: 20px;'], $lang = 'pt'); !!}

@@ -6,6 +6,7 @@ namespace Ibbr\Http\Controllers;
 use Ibbr\Post;
 use Ibbr\Report;
 use Ibbr\Configuracao;
+use Ibbr\Http\Controllers\BoardController;
 
 class PagesController extends Controller
 {
@@ -15,13 +16,13 @@ class PagesController extends Controller
         $postsFinal = array();
         
         foreach($posts->getCollection()->all() as $post){
-            if($post->pinado === 's'){
+            if($post->pinado){
                 array_push($postsFinal, $post);
             }
         }
         
         foreach($posts->getCollection()->all() as $post){
-            if($post->pinado === 'n'){
+            if(!($post->pinado)){
                 array_push($postsFinal, $post);
             }
         }
@@ -29,22 +30,24 @@ class PagesController extends Controller
     }
     
     public function getIndex(){
-        return view('pages.indice');
+        $configuracaos = ConfiguracaoController::getAll();
+        return view('pages.indice')->withBoards(BoardController::getAll())->withConfiguracaos($configuracaos);
     }    
     
     public function getBoard($nomeBoard){
-        if(in_array($nomeBoard, array_keys(\Config::get('constantes.boards')))){
+        if(in_array($nomeBoard, array_keys(BoardController::getAll()) )){
             $posts = Post::orderBy('updated_at', 'desc')->where('board', $nomeBoard)->where('lead_id', null)->paginate(10);
             $subposts = Post::orderBy('created_at', 'asc')->where('board', $nomeBoard)->where('lead_id', '<>', null)->get();
-            $configuracaos = Configuracao::orderBy('id', 'desc')->get()[0];
+            $configuracaos = ConfiguracaoController::getAll();
             return view('pages.board')
                     ->with('nomeBoard', $nomeBoard)
-                    ->with('descrBoard', \Config::get('constantes.boards.' . $nomeBoard))
+                    ->with('descrBoard', BoardController::getAll()[$nomeBoard])
                     ->with('insidePost', 'n')
                     ->withPosts($this->reordenaPostsPinados($posts))
                     ->with('subPosts', $subposts)
                     ->with('paginador', $posts->appends(\Request::except('page'))->links())
-                    ->withConfiguracaos($configuracaos);
+                    ->withConfiguracaos($configuracaos)
+                    ->withBoards(BoardController::getAll());
             
         } else{
             return view('pages.indice'); 
@@ -62,14 +65,15 @@ class PagesController extends Controller
         } else return view('pages.indice');
         
         $posts = Post::orderBy('created_at', 'asc')->where('id', $thread)->orWhere('lead_id', $thread)->get();
-        $configuracaos = Configuracao::orderBy('id', 'desc')->get()[0];
+        $configuracaos = ConfiguracaoController::getAll();
         
         return view('pages.postshow')
                 ->withPosts($posts)
                 ->with('nomeBoard', $nomeBoard)
-                ->with('descrBoard', \Config::get('constantes.boards.' . $nomeBoard))
+                ->with('descrBoard', BoardController::getAll()[$nomeBoard])
                 ->with('insidePost', $thread)
-                ->withConfiguracaos($configuracaos);
+                ->withConfiguracaos($configuracaos)
+                ->withBoards(BoardController::getAll());
         
     }
     
@@ -78,8 +82,17 @@ class PagesController extends Controller
         if(!(\Auth::check())) return view('pages.indice');
         
         $reports = Report::orderBy('id', 'desc')->get();
-        $configuracaos = Configuracao::orderBy('id', 'desc')->get()[0];
-        return view('pages.admin')->withReports($reports)->withConfiguracaos($configuracaos);
+        $configuracaos = ConfiguracaoController::getAll();
+        return view('pages.admin')
+        ->withReports($reports)
+        ->withConfiguracaos($configuracaos)
+        ->withBoards(BoardController::getAll());
+    }
+    
+    public function getCatalogo()
+    {
+        $configuracaos = ConfiguracaoController::getAll();
+        return view('pages.catalogo')->withBoards(BoardController::getAll())->withConfiguracaos($configuracaos);
     }
     
 }

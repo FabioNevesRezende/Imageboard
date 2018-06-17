@@ -97,3 +97,7 @@ body{
     list-style-type: none;
     padding: 3px;
 }
+
+.footer-text{
+    font-size: 10px;
+}

@@ -21,4 +21,9 @@ class Post extends Model
         return $this->hasOne('Ibbr\Ban');
     }
     
+    public function board()
+    {
+        return $this->hasOne('Ibbr\Board');
+    }
+    
 }

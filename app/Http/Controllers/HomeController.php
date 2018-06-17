@@ -56,11 +56,11 @@ class HomeController extends Controller
         if(Auth::check()){
             $config = Configuracao::find(1);
             if($status === 'ativado'){
-                $config->captchaativado = 'n';
+                $config->captcha_ativado = false;
                 $config->save();
                 return Redirect::to('/admin');
             } elseif ($status === 'desativado'){
-                $config->captchaativado = 's';
+                $config->captcha_ativado = true;
                 $config->save();
                 return Redirect::to('/admin');
             } else {
