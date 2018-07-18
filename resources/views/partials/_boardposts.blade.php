@@ -1,11 +1,32 @@
 @foreach($posts as $post)
 @if($post->lead_id === NULL)
 <div id="{{ $post->id }}" class="fio">
-    @if($post->pinado) <span class="glyphicon glyphicon-pushpin"></span> @endif @if($post->modpost) <p class="modpost">### Administrador ###</p>  @else Anônimo @endif @if($post->countrycode) |  <img src="/storage/flags/{{ $post->countrycode }}.png" alt="{{ $post->countrycode }}"> @endif | <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }} | Nro <a class="a-nro-post">{{ $post->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <a href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> 
-    @if(Auth::check()) 
-    | <a href="/deletepost/{{ $post->id }}"><button class="btn">Deletar post</button> </a> 
-    | <a href="/pinarpost/{{ $post->id }}"><button class="btn">Pinar post</button> </a> 
-    | <button type="button" class="btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan">Banir usuário</button> 
+    @if($post->pinado) <span class="glyphicon glyphicon-pushpin"></span> @endif 
+    @if($post->trancado) <span class="glyphicon glyphicon-lock"></span> @endif 
+    @if($post->modpost) <p class="modpost">### Administrador ###</p>  
+    @else <span class="anonpost-title">Anônimo</span> @endif 
+    @if($post->anao->countrycode)   <img src="/storage/flags/{{ $post->anao->countrycode }}.png" alt="{{ $post->anao->countrycode }}"> @endif 
+     <strong class="assunto">{{ $post->assunto }}</strong>  <i>{{ $post->created_at->toDayDateTimeString() }} </i>
+     <u>Nro <a class="a-nro-post" href="/{{ $post->board }}/{{ $post->id }}">{{ $post->id }}</a></u>
+     <a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</a> 
+     <a class="mini-btn" href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank">Responder</a> 
+     
+     <a href="/deletepost/{{ $nomeBoard }}/{{ $post->id }}" class="mini-btn">Deletar post</a> 
+     
+    @if(Auth::check())
+    @if($post->pinado)
+        <a href="/pinarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn">Despinar post</a>
+    @elseif(!$post->pinado)
+    <a href="/pinarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn">Pinar post</a> 
+    @endif
+     
+    @if($post->trancado)
+        <a href="/trancarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn">Destrancar post</a>
+    @elseif(!$post->trancado)
+    <a href="/trancarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn">Trancar post</a> 
+    @endif
+    
+    <a class="mini-btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan">Banir usuário</a> 
     @endif <br>
     
     <div class="fio-imgs-div">
@@ -26,7 +47,8 @@
         <source src="/storage/{{ $arq->filename }}" type="audio/mpeg">
      </audio>
     @endif
-    @if(Auth::check()) <a href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}"><button class="btn">Deletar Arquivo</button> </a> @endif
+    @if(Auth::check()) 
+    <a href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}" class="mini-btn">Deletar Arquivo</a><br><br>@endif
     </div>
     @endforeach
     
@@ -44,7 +66,17 @@
     @foreach($subPosts as $subpost)
         @if($subpost->lead_id === $post->id)
             <div class="fio-subpost">
-                @if($subpost->modpost) <p class="modpost">### Administrador ###</p>  @else Anônimo @endif  @if($post->countrycode) |  <img src="/storage/flags/{{ $subpost->countrycode }}.png" alt="{{ $subpost->countrycode }}"> @endif | <strong class="assunto">{{ $subpost->assunto }}</strong> | | {{ $subpost->created_at->toDayDateTimeString() }}  | Nro <a class="a-nro-post">{{ $subpost->id }}</a> |  <button type="button" class="btn btn-report" data-id-post="{{ $subpost->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <br>
+                @if($subpost->modpost) <p class="modpost">### Administrador ###</p>  
+                @else <span class="anonpost-title">Anônimo</span> 
+                @endif  
+                @if($post->anao->countrycode)  
+                    <img src="/storage/flags/{{ $subpost->anao->countrycode }}.png" alt="{{ $subpost->anao->countrycode }}"> 
+                @endif
+                <strong class="assunto">{{ $subpost->assunto }}</strong> 
+                <i>{{ $subpost->created_at->toDayDateTimeString() }}</i>
+                <u>Nro <a class="a-nro-post">{{ $subpost->id }}</a></u> 
+                  <a class="mini-btn btn-report" data-id-post="{{ $subpost->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</a>
+                <br>
                 @foreach ($subpost->arquivos as $sbarq)
                 <a href="/storage/{{ $sbarq->filename }}" target="_blank"><img class="img-responsive img-thumbnail" src="{{ \Storage::url($sbarq->filename) }}" width="150px" height="150px" ></a>
                 @endforeach

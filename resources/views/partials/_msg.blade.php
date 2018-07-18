@@ -16,7 +16,7 @@
 @if (Session::has('ban'))
 
     <div class="alert alert-danger" role="alert">
-        <p><strong>Erro ao criar post:</strong> {{ Session::get('ban') }}</p>
+        <p><strong>Erro:</strong> {{ Session::get('ban') }}</p>
     </div>
 
 @endif

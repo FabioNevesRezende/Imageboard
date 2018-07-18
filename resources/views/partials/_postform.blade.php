@@ -23,7 +23,7 @@ Modpost {{ Form::checkbox('modpost', 'modpost', false,array('class'=>'novo-post-
         Sage {{ Form::checkbox('sage', 'sage', false,array('class'=>'novo-post-form-item')) }}
     </div>
     <div class="col-sm-6">
-        {{ Form::submit('Postar', array('class' => 'btn btn-primary btn-block form-control') ) }}
+        {{ Form::submit('Postar', array('class' => 'mini-btn form-control') ) }}
     </div>
 </div>
 

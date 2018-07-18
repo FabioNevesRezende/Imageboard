@@ -10,8 +10,11 @@
 
     <div class="ibnavr">
         [
-        <a href="/">Home</a> /
-        <a href="/catalogo">Catalogo</a>
+        <a href="/">Home</a>
+        / <a href="/catalogo">Catalogo</a>
+        @if(Auth::check()) 
+        / <a href="/admin">Admin</a>
+        @endif
         ]
     </div>
     <hr>

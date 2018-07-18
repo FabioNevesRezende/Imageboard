@@ -6,6 +6,7 @@ namespace Ibbr\Http\Controllers;
 use Illuminate\Support\Facades\Artisan;
 use Auth;
 use Illuminate\Support\Facades\Redirect;
+use Cache;
 
 use Ibbr\Configuracao;
 
@@ -33,7 +34,12 @@ class HomeController extends Controller
     
     public function seedar(){
         if(Auth::check() && Auth::id() === 1){
-            Artisan::call('db:seed');
+            try{
+                Artisan::call('db:seed');
+            }catch(\Illuminate\Database\QueryException $e)
+            {
+                    
+            }
         }
         return Redirect::to('/admin');
     }
@@ -52,23 +58,18 @@ class HomeController extends Controller
         return Redirect::to('/');
     }
     
-    public function toggleCaptcha($status){
-        if(Auth::check()){
-            $config = Configuracao::find(1);
-            if($status === 'ativado'){
-                $config->captcha_ativado = false;
-                $config->save();
-                return Redirect::to('/admin');
-            } elseif ($status === 'desativado'){
-                $config->captcha_ativado = true;
-                $config->save();
-                return Redirect::to('/admin');
-            } else {
-                return 'input invalido';
-            }
-        } else {
-            return Redirect::to('/');
+    public function limparCache()
+    {
+        if(Auth::check() && Auth::id() === 1){
+            Cache::flush();
+            return Redirect::to('/admin');
         }
     }
+    
+    /*public function getArquivo($filename)
+    {
+        $fullpath = "/storage/" . $filename;
+        return response()->download(storage_path($fullpath), null, [], null);
+    }*/
     
 }

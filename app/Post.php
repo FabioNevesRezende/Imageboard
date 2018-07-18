@@ -16,6 +16,11 @@ class Post extends Model
         return $this->hasMany('Ibbr\Ytanexo');
     }
     
+    public function anao()
+    {
+        return $this->hasOne('Ibbr\Anao', 'biscoito', 'biscoito');
+    }
+    
     public function ban()
     {
         return $this->hasOne('Ibbr\Ban');
@@ -23,7 +28,7 @@ class Post extends Model
     
     public function board()
     {
-        return $this->hasOne('Ibbr\Board');
+        return $this->hasOne('Ibbr\Board', 'sigla','board');
     }
     
 }

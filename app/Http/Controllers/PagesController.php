@@ -7,6 +7,7 @@ use Ibbr\Post;
 use Ibbr\Report;
 use Ibbr\Configuracao;
 use Ibbr\Http\Controllers\BoardController;
+use Cache;
 
 class PagesController extends Controller
 {
@@ -30,20 +31,26 @@ class PagesController extends Controller
     }
     
     public function getIndex(){
+        $this->setaBiscoito();
+        
         $configuracaos = ConfiguracaoController::getAll();
         return view('pages.indice')->withBoards(BoardController::getAll())->withConfiguracaos($configuracaos);
     }    
     
     public function getBoard($nomeBoard){
+        
+        $this->setaBiscoito();
         if(in_array($nomeBoard, array_keys(BoardController::getAll()) )){
-            $posts = Post::orderBy('updated_at', 'desc')->where('board', $nomeBoard)->where('lead_id', null)->paginate(10);
-            $subposts = Post::orderBy('created_at', 'asc')->where('board', $nomeBoard)->where('lead_id', '<>', null)->get();
+            
+            $posts = PostController::pegaPostsBoard($nomeBoard);
+            $subposts = PostController::pegaSubPostsBoard($nomeBoard);
+            
             $configuracaos = ConfiguracaoController::getAll();
-            return view('pages.board')
+            return view('pages.board', ['posts' => $this->reordenaPostsPinados($posts)])
                     ->with('nomeBoard', $nomeBoard)
                     ->with('descrBoard', BoardController::getAll()[$nomeBoard])
                     ->with('insidePost', 'n')
-                    ->withPosts($this->reordenaPostsPinados($posts))
+                    //->withPosts($this->reordenaPostsPinados($posts))
                     ->with('subPosts', $subposts)
                     ->with('paginador', $posts->appends(\Request::except('page'))->links())
                     ->withConfiguracaos($configuracaos)
@@ -56,6 +63,7 @@ class PagesController extends Controller
     }
     
     public function getThread($nomeBoard, $thread){
+        $this->setaBiscoito();
         
         $ver = Post::find($thread);
         if($ver){
@@ -64,7 +72,7 @@ class PagesController extends Controller
             }
         } else return view('pages.indice');
         
-        $posts = Post::orderBy('created_at', 'asc')->where('id', $thread)->orWhere('lead_id', $thread)->get();
+        $posts = PostController::pegaPostsThread($thread);
         $configuracaos = ConfiguracaoController::getAll();
         
         return view('pages.postshow')
@@ -76,12 +84,13 @@ class PagesController extends Controller
                 ->withBoards(BoardController::getAll());
         
     }
-    
-    
+        
     public function getAdmPage(){
+        
         if(!(\Auth::check())) return view('pages.indice');
         
-        $reports = Report::orderBy('id', 'desc')->get();
+        $reports = PostController::pegaReports();
+        
         $configuracaos = ConfiguracaoController::getAll();
         return view('pages.admin')
         ->withReports($reports)
@@ -91,8 +100,14 @@ class PagesController extends Controller
     
     public function getCatalogo()
     {
+        
+        $this->setaBiscoito();
+        $posts = PostController::pegaPostsCatalogo();
         $configuracaos = ConfiguracaoController::getAll();
-        return view('pages.catalogo')->withBoards(BoardController::getAll())->withConfiguracaos($configuracaos);
+        return view('pages.catalogo')
+        ->withBoards(BoardController::getAll())
+        ->withPosts($posts)
+        ->withConfiguracaos($configuracaos);
     }
     
 }

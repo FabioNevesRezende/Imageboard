@@ -21,12 +21,13 @@ class CreatePostsTable extends Migration
             $table->text('conteudo');
             $table->boolean('sage');
             $table->boolean('pinado');
-            $table->char('countrycode', 2)->nullable();
+            $table->boolean('trancado');
+            $table->string('biscoito', 128);
             $table->integer('lead_id')->unsigned()->nullable();
-            $table->string('ipposter', 15);
             $table->timestamps();
             $table->foreign('board')->references('sigla')->on('boards');
-        });        
+            $table->foreign('biscoito')->references('biscoito')->on('anaos');
+        });
     }
 
     /**

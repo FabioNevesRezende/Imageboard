@@ -14,12 +14,13 @@
         <ul id="admin-buttons">
 @if(Auth::id() === 1)
             <li><a href="/seedar"><button type="button" class="btn btn-success">Seedar</button></a></li>
+            <li><a href="/limparcache"><button type="button" class="btn btn-default">Limpar Cache</button></a></li>
             <li><a href="/migrate"><button type="button" class="btn btn-warning">Migrate</button></a></li>
             <li><a href="/migrate/refresh"><button type="button" class="btn btn-danger">Migrate:refresh</button></a></li>
 @endif
 @if($configuracaos->captcha_ativado)
             <li><a href="/togglecaptcha/ativado"><button type="button" class="btn btn-danger">Desativar captcha</button></a></li>
-@elseif($configuracaos->captcha_ativado)
+@elseif(!$configuracaos->captcha_ativado)
             <li><a href="/togglecaptcha/desativado"><button type="button" class="btn btn-primary">Ativar captcha</button></a></li>
 @endif
         </ul>

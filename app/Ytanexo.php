@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ytanexo extends Model
 {
+    protected $table = 'ytanexos';
     public $timestamps = false;
     
     protected $fillable = [

@@ -2,11 +2,45 @@
 @foreach($posts as $ind=>$post)
 @if($ind !== 0) <div class="fio-subpost"> @endif
 
-@if($post->pinado) <span class="glyphicon glyphicon-pushpin"></span> @endif @if($post->modpost) <p class="modpost">### Administrador ###</p>  @else Anônimo @endif @if($post->countrycode) |  <img src="/storage/flags/{{ $post->countrycode }}.png" alt="{{ $post->countrycode }}"> @endif  | <strong class="assunto">{{ $post->assunto }}</strong> | {{ $post->created_at->toDayDateTimeString() }}  | Nro <a class="a-nro-post">{{ $post->id }}</a> @if($ind === 0) |  <button type="button" class="btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</button> | <a href="/{{ $nomeBoard }}">Voltar</a>  @endif 
+@if($post->pinado) 
+<span class="glyphicon glyphicon-pushpin"></span> 
+@endif 
+@if($post->trancado) 
+<span class="glyphicon glyphicon-lock"></span> 
+@endif 
+@if($post->modpost) 
+    <p class="modpost">### Administrador ###</p>  
+@else <span class="anonpost-title">Anônimo</span> 
+@endif 
+@if($post->anao->countrycode)
+  <img src="/storage/flags/{{ $post->anao->countrycode }}.png" alt="{{ $post->anao->countrycode }}"> 
+@endif 
+<strong class="assunto">{{ $post->assunto }} </strong> 
+ <i>{{ $post->created_at->toDayDateTimeString() }}</i>
+ <u>Nro <a class="a-nro-post">{{ $post->id }}</a></u>
+ 
+<a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</a> 
+@if($ind === 0) 
+<a class="mini-btn" href="/{{ $nomeBoard }}">Voltar</a>  
+@endif 
+     <a href="/deletepost/{{ $nomeBoard }}/{{ $post->id }}" class="mini-btn">Deletar post</a> 
+     
 @if(Auth::check()) 
-    | <a href="/deletepost/{{ $post->id }}"><button class="btn">Deletar post</button> </a> 
-    @if($ind === 0) | <a href="/pinarpost/{{ $post->id }}"><button class="btn">Pinar post</button> </a> @endif
-    | <button type="button" class="btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan">Banir usuário</button> 
+    @if($ind === 0) 
+        
+        @if($post->pinado)
+            <a href="/pinarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn">Despinar post</a>
+        @elseif(!$post->pinado)
+        <a href="/pinarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn">Pinar post</a> 
+        @endif
+         
+        @if($post->trancado)
+            <a href="/trancarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn">Destrancar post</a>
+        @elseif(!$post->trancado)
+        <a href="/trancarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn">Trancar post</a> 
+        @endif
+    @endif
+     <a class="mini-btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan">Banir usuário</a> 
 @endif <br>
 <br>
 @foreach ($post->arquivos as $arq)
@@ -27,7 +61,7 @@
      </audio>
     @endif
 
-@if(Auth::check()) <a href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}"><button class="btn">Deletar Arquivo</button> </a> @endif
+@if(Auth::check()) <a href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}" class="mini-btn">Deletar Arquivo</a> @endif
 @endforeach
 
 @foreach ($post->ytanexos as $anx)

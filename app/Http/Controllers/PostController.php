@@ -11,9 +11,12 @@ use Config;
 use Redirect;
 use Ibbr\Arquivo;
 use Ibbr\Ytanexo;
+use Ibbr\Anao;
 use Ibbr\Report;
 use Ibbr\Configuracao;
 use Carbon\Carbon;
+use Cache;
+use Auth;
 
 class PostController extends Controller {
 
@@ -35,15 +38,64 @@ class PostController extends Controller {
       {
       //
       } */
+      
+      
 
-    // obtem código do país baseado no IP
-    protected function obtemCountryCode($ip){
-        if($ip === '127.0.0.1') $ip = '139.82.255.255'; // se teste em localhost, retorna um ip do brasil
-        $iptolocation = 'http://www.geoplugin.net/xml.gp?ip=' . $ip;
-        $creatorlocation = simplexml_load_string(file_get_contents($iptolocation));
-        return strtolower(preg_replace('/<geoplugin_countryCode>([a-zA-Z]+)<\/geoplugin_countryCode>/s', '$1', $creatorlocation->geoplugin_countryCode->asXML()));
-        
-        
+    public static function pegaPostsCatalogo()
+    {
+        $chave = 'posts_catalogo';
+        if(Cache::has($chave))
+            return Cache::get($chave);
+            
+        $posts = Post::with(['arquivos', 'ytanexos'])->orderBy('updated_at', 'desc')->where('lead_id', null)->get();
+        Cache::forever($chave, $posts);
+        return $posts;
+    }
+
+    public static function pegaPostsBoard($nomeBoard)
+    {
+        $pagina = Controller::getPagina();
+        $chave = 'posts_board_' . $nomeBoard . '_pag_' . $pagina;
+        if(Cache::has($chave))
+            return Cache::get($chave);
+            
+        $posts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])->orderBy('updated_at', 'desc')->join('arquivos', 'posts.id', '=', 'arquivos.post_id')->where('board', $nomeBoard)->where('lead_id', null)->paginate(ConfiguracaoController::getAll()->num_posts_paginacao);
+        Cache::forever($chave, $posts);
+        return $posts;
+    }
+    
+    public static function pegaSubPostsBoard($nomeBoard)
+    {
+        $pagina = Controller::getPagina();
+        $chave = 'subposts_board_' . $nomeBoard . '_pag_' . $pagina;
+        if(Cache::has($chave))
+            return Cache::get($chave);
+            
+        $subposts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])->orderBy('created_at', 'asc')->where('board', $nomeBoard)->where('lead_id', '<>', null)->get();
+        Cache::forever($chave, $subposts);
+        return $subposts;
+    }
+    
+    public static function pegaPostsThread($thread)
+    {
+        $chave = 'posts_thread_' . $thread;
+        if(Cache::has($chave))
+            return Cache::get($chave);
+            
+        $posts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])->orderBy('created_at', 'asc')->where('id', $thread)->orWhere('lead_id', $thread)->get();
+        Cache::forever($chave, $posts);
+        return $posts;
+    }
+    
+    public static function pegaReports()
+    {
+        $chave = 'reports';
+        if(Cache::has($chave))
+            return Cache::get($chave);
+            
+        $reports = Report::orderBy('id', 'desc')->get();
+        Cache::forever($chave, $reports);
+        return $reports;
     }
     
     // adiciona tags <a> em links
@@ -131,6 +183,17 @@ class PostController extends Controller {
         return $regras;
     }
     
+    private function limpaCachePosts($board, $thread)
+    {
+        $num_paginas = 10;
+        for($i = 0 ; $i < $num_paginas ; $i++ ){
+            Cache::forget('posts_board_' . $board . '_pag_' . $i);
+            Cache::forget('subposts_board_' . $board  . '_pag_' . $i);
+        }
+        Cache::forget('posts_thread_' . $thread);
+        Cache::forget('posts_catalogo');
+    }
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -147,9 +210,9 @@ class PostController extends Controller {
         // Verifica se o postador está banido da board em questão
         $bantime = $this->estaBanido(\Request::ip(), strip_tags(Purifier::clean($request->nomeboard)));
         if($bantime){
-            Session::flash('ban', 'Seu IP ' . \Request::ip() . ' está banido da board ' . strip_tags(Purifier::clean($request->nomeboard)) . ' até: ' . $bantime->toDateTimeString() . ' e não pode postar.');
-        
-            return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+            return $this->redirecionaComMsg('ban', 
+            'Seu IP ' . \Request::ip() . ' está banido da board ' . strip_tags(Purifier::clean($request->nomeboard)) . ' até: ' . $bantime->toDateTimeString() . ' e não pode postar.',
+            '/' . strip_tags(Purifier::clean($request->nomeboard)));
      
         }
         
@@ -157,8 +220,9 @@ class PostController extends Controller {
         $bantime = null;
         $bantime = $this->estaBanido(\Request::ip());
         if($bantime){
-            Session::flash('ban', 'Seu IP ' . \Request::ip() . ' está banido de todas as boards até: ' . $bantime->toDateTimeString() . ' e não pode postar.');
-            return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+            return $this->redirecionaComMsg('ban',
+            'Seu IP ' . \Request::ip() . ' está banido de todas as boards até: ' . $bantime->toDateTimeString() . ' e não pode postar.',
+            '/' . strip_tags(Purifier::clean($request->nomeboard)));
         }
         
         $arquivos = $request->file('arquivos'); // salva os dados dos arquivos na variável $arquivos
@@ -167,15 +231,17 @@ class PostController extends Controller {
         // validação caso haja link do youtube provido na postagem
         if($request->linkyoutube){
             if($request->file('arquivos')){
-                Session::flash('erro_upload', 'Sem anexo de arquivos quando há links de youtube');
-                return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+                return $this->redirecionaComMsg('erro_upload',
+                'Sem anexo de arquivos quando há links de youtube',
+                '/' . strip_tags(Purifier::clean($request->nomeboard)));
             }
             $this->validate($request, $regras);
             
         } else { // se não houver nenhum link do youtube
-            if( (!$request->file('arquivos') && strip_tags(Purifier::clean($request->insidepost)) === 'n') || sizeof($arquivos) < 1 ){
-                Session::flash('erro_upload', 'É necessário postar pelo menos com um arquivo ou um link do youtube');
-                return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));
+            if( (!$request->file('arquivos') && strip_tags(Purifier::clean($request->insidepost)) === 'n') || (is_array($arquivos) && sizeof($arquivos) < 1) ){
+                return $this->redirecionaComMsg('erro_upload',
+                'É necessário postar pelo menos com um arquivo ou um link do youtube',
+                '/' . strip_tags(Purifier::clean($request->nomeboard)));
             }
             $this->validate($request, $regras);
         }
@@ -195,23 +261,55 @@ class PostController extends Controller {
         $post->sage = strip_tags(Purifier::clean($request->sage)) === 'sage'; // define se o post foi sageado ou não
         $post->pinado = false; // define se a thread está pinada, por padrão, não
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost))); // caso o post seja dentro de um fio, define qual fio "pai" da postagem
+        $post->trancado = false; // define se o fio pode receber novos posts ou não
         
-        $post->ipposter = \Request::ip(); // ip do postador
-        $post->countrycode = $this->obtemCountryCode($post->ipposter); // country code do IP é armazenado para não ter que ficar recalculando em tempo de execução
-                
+        
+        
+        if(!isset($_COOKIE[$this->nomeBiscoitoSessao]))
+        {
+            return $this->redirecionaComMsg('erro_upload', 
+            'Erro ao postar. Você quer biscoito, amigo?',
+            '/' . $post->board . '/' . ($post->lead_id ? $post->lead_id : ''));
+        }
+        
+        $biscoito = strip_tags(Purifier::clean($_COOKIE[$this->nomeBiscoitoSessao]));
+        $anao = Anao::where('biscoito', $biscoito)->first();
+        
+        if(!$anao)
+        {
+            return $this->redirecionaComMsg('erro_upload', 
+            'Erro ao postar. Você quer biscoito, amigo?',
+            '/' . $post->board . '/' . ($post->lead_id ? $post->lead_id : ''));    
+        }
+        
+        $post->biscoito = $anao->biscoito;
+        
+        if($post->lead_id)
+        {
+            $lead_fio = Post::find($post->lead_id);
+            if($lead_fio && $lead_fio->trancado)
+            {
+                return $this->redirecionaComMsg('erro_upload', 
+                'Este fio já está trancado',
+                '/' . $post->board . '/' . $post->lead_id);
+            }
+        }
+        
         // flag "modpost" definido pelo mod
         if($request->modpost){
             $post->modpost = strip_tags(Purifier::clean($request->modpost)) === 'modpost';
         }
         $num_max_arq_post = ConfiguracaoController::getAll()->num_max_arq_post;
         // verifica se há mais arquivos/links que o máximo permitido
-        if(sizeof($arquivos) >  $num_max_arq_post || ($links && sizeof($links) >  $num_max_arq_post ) ){
-            Session::flash('erro_upload', 'Número máximo de arquivos ou links do youtube permitidos: ' . $num_max_arq_post );
-            return Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
+        if((is_array($arquivos) && sizeof($arquivos) >  $num_max_arq_post) || ($links && sizeof($links) >  $num_max_arq_post ) ){
+            return $this->redirecionaComMsg('erro_upload',
+            'Número máximo de arquivos ou links do youtube permitidos: ' . $num_max_arq_post,
+            '/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
         }
         
         // salva o post em banco de dados
         $post->save();
+        $this->limpaCachePosts($post->board, $post->lead_id);
 
         // caso haja arquivos, salva-os em disco e seus paths em banco
         if (!empty($arquivos)) {
@@ -241,10 +339,11 @@ class PostController extends Controller {
                     $post->ytanexos()->save(new Ytanexo(['ytcode' => $match[1], 'post_id' => $post->id ]));
                     
                 } else {
-                    Session::flash('erro_upload', 'Link inválido');
                     $this->postRollback($post);
-                    return Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
-    
+                    return $this->redirecionaComMsg('erro_upload',
+                    'Link inválido',
+                    '/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
+                    
                 }
             }
         }
@@ -259,8 +358,9 @@ class PostController extends Controller {
         
         // prepara mensagem de aviso de post criado com sucesso
         $flashmsg = $post->lead_id ? 'Post número ' . $post->id . ' criado' : 'Post número <a target="_blank" href="/' . $post->board . '/' . $post->id . '">' . $post->id . '</a> criado';
-        Session::flash('post_criado', $flashmsg);
-        return Redirect::to('/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id));
+        return $this->redirecionaComMsg('post_criado', $flashmsg,
+        '/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id));
+        
     }
     
     protected function postRollback($post){
@@ -292,14 +392,27 @@ class PostController extends Controller {
     }
     
     // atualiza variável pinado fazendo que o post fique sempre no topo da primeira página entre outros pinados
-    public function pinarPost($post_id){
+    public function pinarPost($nomeBoard, $post_id, $val){
         $post = Post::find($post_id);
         if($post){
-            $post->pinado = true;
+            $post->pinado = $val;
             $post->save();
-            return \Redirect::to('/' . $post->board );
+            $this->limpaCachePosts($nomeBoard, $post_id);
+            return Redirect::to('/' . $post->board );
         }
-        return \Redirect::to('/');
+        return Redirect::to('/');
+    }
+    
+    // atualiza variável trancado fazendo que o post não possa mais ser respondido
+    public function trancarPost($nomeBoard, $post_id, $val){
+        $post = Post::find($post_id);
+        if($post){
+            $post->trancado = $val;
+            $post->save();
+            $this->limpaCachePosts($nomeBoard, $post_id);
+            return Redirect::to('/' . $post->board );
+        }
+        return Redirect::to('/');
     }
     
     // gera um report (denuncia)
@@ -314,6 +427,7 @@ class PostController extends Controller {
         $report->board = strip_tags(Purifier::clean($request->nomeboard));
         
         $report->save();
+        Cache::forget('reports');
         
         return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));  
     }
@@ -349,27 +463,63 @@ class PostController extends Controller {
         //
     }
 
+    protected function podeDeletarFio($postId){
+        $post = Post::find($postId);
+        $bisc = $this->temBiscoito();
+        if(!$post || !$bisc)
+        {
+            return false;
+        }
+        if($post->biscoito === $bisc)
+            return $post;
+        else return false;
+    }
+
     // deleta uma postagem e dados relacionados a ele (links, arquivos)
-    public function destroy($post_id) {
-        
-        $post = Post::find($post_id);
+    public function destroy($nomeBoard, $postId) {
+        $post = $this->podeDeletarFio($postId);
+        if(Auth::check() || $post)
+        {
+            $arquivos = $post->arquivos;
+
+            foreach($arquivos as $arq){
+                $this->destroyArq($arq->filename);
+                \DB::table('arquivos')->where('post_id', '=', $postId)->delete();
+            }
+            if($post->ytanexos){
+                \DB::table('ytanexos')->where('post_id', '=', $postId)->delete();
+            }
+            
+            if(!$post->lead_id)
+            {
+                $posts = Post::where('lead_id', $post->id)->get();
+                foreach($posts as $p)
+                {
+                    $this->deletaUmPost($p);
+                }
+            }
+            
+            $post->delete();
+            $this->limpaCachePosts($nomeBoard, $postId);
+            return Redirect::to('/' . $nomeBoard );
+            
+        } else {
+            return $this->redirecionaComMsg('ban', 'Não foi possível deletar este post', '/' . $nomeBoard);
+        }
+    }
+    
+    private function deletaUmPost($post)
+    {
         $arquivos = $post->arquivos;
 
         foreach($arquivos as $arq){
             $this->destroyArq($arq->filename);
-            \DB::table('arquivos')->where('post_id', '=', $post_id)->delete();
+            \DB::table('arquivos')->where('post_id', '=', $post->id)->delete();
         }
         if($post->ytanexos){
-            \DB::table('ytanexos')->where('post_id', '=', $post_id)->delete();
-            
+            \DB::table('ytanexos')->where('post_id', '=', $post->id)->delete();
         }
-        
-        $post_board = $post->board;
         $post->delete();
-
-        
-        return \Redirect::to('/' . $post_board );
-    
     }
     
     // deleta arquivo da pasta pública
@@ -381,8 +531,9 @@ class PostController extends Controller {
     public function destroyArqDb($nomeBoard, $filename, $redirect=true){
         \File::delete(public_path() . '/storage/' . $filename);
         \DB::table('arquivos')->where('filename', '=', $filename)->delete();
+        Cache::forget('posts');
     
-        if($redirect) return \Redirect::to('/' . $nomeBoard );
+        if($redirect) return Redirect::to('/' . $nomeBoard );
     }
 
 }

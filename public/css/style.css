@@ -40,6 +40,7 @@ body{
     padding: 10px;
     background-color: #e8fdfc;
     margin: 5px;
+    border-radius: 20px;
     
 }
 
@@ -61,7 +62,7 @@ body{
 }
 
 .green-text{
-    color: #3ffe57;
+    color: #0f9e27;
     
 }
 
@@ -82,8 +83,11 @@ body{
     font-size: 19px;
 }
 
-.div-regras{
+.div-indice{
     font-size: 17px;
+    background-color: #e8fdfc;
+    border-radius: 25px;
+    border: 1px dashed #c8dddc;
     
 }
 
@@ -100,4 +104,32 @@ body{
 
 .footer-text{
     font-size: 10px;
+}
+
+.catalogo-post-div{
+    display: inline-table; 
+    margin: 5px; 
+    border: 2px solid black; 
+    width: 170px;
+    height: 200px;
+}
+
+.anonpost-title{
+    font-weight: bold; 
+    color: #006600; 
+    font-size: 18px;
+}
+
+.mini-btn{
+    border-radius: 6px;
+    background-color: #b8cdcc;
+    color: #006600;
+    border-bottom-style: solid;
+    padding: 2px;
+    font-weight:bold;
+    
+}
+.mini-btn:hover{
+    cursor: pointer;
+    text-decoration:none;
 }
