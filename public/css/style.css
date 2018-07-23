@@ -144,3 +144,7 @@ body{
     border: 1px dashed #c8dddc;
     margin-bottom: 10px;
 }
+
+.paginador{
+    font-size: 16px;
+}

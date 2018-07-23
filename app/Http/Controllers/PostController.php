@@ -40,6 +40,57 @@ class PostController extends Controller {
       } */
       
       
+    private static function pegaMesPortugues($numMes)
+    {
+        switch($numMes)
+        {
+            case 1:
+                return 'Janeiro';
+            case 2:
+                return 'Fevereiro';
+            case 3:
+                return 'Março';
+            case 4:
+                return 'Abril';
+            case 5:
+                return 'Maio';
+            case 6:
+                return 'Junho';
+            case 7:
+                return 'Julho';
+            case 8:
+                return 'Agosto';
+            case 9:
+                return 'Setembro';
+            case 10:
+                return 'Outubro';
+            case 11:
+                return 'Novembro';
+            case 12:
+                return 'Dezembro';
+            default:
+                return '';
+        }
+    }
+    
+    private static function transformaDatasPortugues($posts)
+    {
+        foreach($posts as $post)
+        {
+            $temp = strlen($post->created_at->day) === 1 ? '0' . $post->created_at->day : $post->created_at->day ;
+            $temp .= ' de ';
+            $temp .= PostController::pegaMesPortugues($post->created_at->month);
+            $temp .= ' de ';
+            $temp .= $post->created_at->year;
+            $temp .= ' às ';
+            $temp .= $post->created_at->hour;
+            $temp .= ':';
+            $temp .= strlen($post->created_at->minute) === 1 ? '0' . $post->created_at->minute : $post->created_at->minute ;
+            
+            $post->data_post = $temp;
+        }
+        return $posts;
+    }
 
     public static function pegaPostsCatalogo()
     {
@@ -62,6 +113,7 @@ class PostController extends Controller {
         $posts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])
         ->orderBy('updated_at', 'desc')
         ->where('board', $nomeBoard)->where('lead_id', null)->paginate(ConfiguracaoController::getAll()->num_posts_paginacao);
+        $posts = PostController::transformaDatasPortugues($posts);
         Cache::forever($chave, $posts);
         return $posts;
     }
@@ -74,6 +126,7 @@ class PostController extends Controller {
             return Cache::get($chave);
             
         $subposts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])->orderBy('created_at', 'asc')->where('board', $nomeBoard)->where('lead_id', '<>', null)->get();
+        $subposts = PostController::transformaDatasPortugues($subposts);
         Cache::forever($chave, $subposts);
         return $subposts;
     }
@@ -85,6 +138,7 @@ class PostController extends Controller {
             return Cache::get($chave);
             
         $posts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])->orderBy('created_at', 'asc')->where('id', $thread)->orWhere('lead_id', $thread)->get();
+        $posts = PostController::transformaDatasPortugues($posts);
         Cache::forever($chave, $posts);
         return $posts;
     }

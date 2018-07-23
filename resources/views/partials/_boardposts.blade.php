@@ -1,4 +1,3 @@
-
 @foreach($posts as $post)
 @if($post->lead_id === NULL)
 <div id="{{ $post->id }}" class="fio">
@@ -8,7 +7,7 @@
     @else <span class="anonpost-title">Anônimo</span> @endif 
     @if($post->anao->countrycode)   <img src="/storage/res/flags/{{ $post->anao->countrycode }}.png" alt="{{ $post->anao->countrycode }}"> @endif 
      <strong class="assunto">{{ $post->assunto }}</strong>  
-     <i>{{ $post->created_at->toDayDateTimeString() }} </i>
+     <i>{{ $post->data_post }} </i>
 
      <u>Nro <a class="a-nro-post" href="/{{ $post->board }}/{{ $post->id }}">{{ $post->id }}</a></u>
      <a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a> 
@@ -83,7 +82,7 @@
                     <img src="/storage/res/flags/{{ $subpost->anao->countrycode }}.png" alt="{{ $subpost->anao->countrycode }}"> 
                 @endif
                 <strong class="assunto">{{ $subpost->assunto }}</strong> 
-                <i>{{ $subpost->created_at->toDayDateTimeString() }}</i>
+                <i>{{ $subpost->data_post }}</i>
                 <u>Nro <a class="a-nro-post">{{ $subpost->id }}</a></u> 
                   <a class="mini-btn btn-report" data-id-post="{{ $subpost->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a>
                 <br>
@@ -127,8 +126,17 @@
     @endforeach
 
 </div>
-<hr class="fio-divisor">
+<hr>
 @endif
 @endforeach
 
-{{ $paginador }}
+@if(isset($paginador))
+    <br>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4 text-center">
+            {{ $paginador }}    
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+@endif

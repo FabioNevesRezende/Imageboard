@@ -16,7 +16,7 @@
   <img src="/storage/res/flags/{{ $post->anao->countrycode }}.png" alt="{{ $post->anao->countrycode }}"> 
 @endif 
 <strong class="assunto">{{ $post->assunto }} </strong> 
- <i>{{ $post->created_at->toDayDateTimeString() }}</i>
+ <i>{{ $post->data_post }}</i>
  <u>Nro <a class="a-nro-post">{{ $post->id }}</a></u>
  
 <a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a> 
