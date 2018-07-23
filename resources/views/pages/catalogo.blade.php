@@ -53,7 +53,13 @@
                     <br>
                     <a href="/{{ $post->board }}/{{ $post->id }}" target="_blank">
                     @if(!$vid)
-                    <img class="img-responsive img-thumbnail" src="{{ \Storage::url($arq->filename) }}" width="150px" height="150px" >
+                    <img class="img-responsive img-thumbnail" 
+                    @if($arq->spoiler) src="{{ \Storage::url('res/spoiler.png') }}"
+                    @elseif($arq->mime === "audio/mpeg") src="{{ \Storage::url('res/music.png') }}"
+                    @elseif($arq->mime === "video/mp4" || $arq->mime === "video/webm") src="{{ \Storage::url('res/video.png') }}"
+                    @else src="{{ \Storage::url($arq->filename) }}"
+                    @endif
+                    width="150px" height="150px" >
                     @else
                     <img class="img-responsive img-thumbnail" src="//img.youtube.com/vi/{{$arq->ytcode}}/0.jpg" width="150px" height="150px" >
                     @endif

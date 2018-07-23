@@ -5,6 +5,7 @@ namespace Ibbr\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Ibbr\Http\Controllers\PagesController;
 
 class Handler extends ExceptionHandler {
 
@@ -42,6 +43,14 @@ class Handler extends ExceptionHandler {
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception) {
+        if ($exception instanceof \Illuminate\Http\Exceptions\PostTooLargeException) {
+
+            return response(View('pages.erro')->with('msgErro', 'Tamanho do arquivo excedeu o máximo permitido'), 413);
+        }
+        
+        if($this->isHttpException($exception) && $exception->getStatusCode() == 404){
+            return response(View('pages.erro')->with('msgErro', 'Página inexistente'), 404);
+        }
         return parent::render($request, $exception);
     }
 

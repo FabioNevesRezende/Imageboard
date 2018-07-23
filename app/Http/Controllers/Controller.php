@@ -109,13 +109,13 @@ class Controller extends BaseController {
     
     protected function setaBiscoito(){
         $request = \Request();
-        if(!$this->temBiscoito()){
+        if(!($this->temBiscoito())){
             $stringGerarBiscoito = $request->server('HTTP_USER_AGENT')
             . $request->server('REMOTE_ADDR')
             . ConfiguracaoController::getAll()->tempero_biscoito;
             $valorBiscoito = hash("sha512", $stringGerarBiscoito);
-            setcookie($this->nomeBiscoitoSessao, $valorBiscoito);
             (new AnaoController)->salvaAnao($valorBiscoito, $request->server('HTTP_USER_AGENT'), $request->server('REMOTE_ADDR'));
+            setcookie($this->nomeBiscoitoSessao, $valorBiscoito);
         }
     }
     

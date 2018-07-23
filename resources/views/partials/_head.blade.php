@@ -17,14 +17,11 @@
     rel="stylesheet"> -->
 
     <link rel="icon" type="image/png" 
-    href="/storage/icon-ibbr.png"/>
+    href="/storage/res/icon-ibbr.png"/>
     <!--<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>-->
         <!--<link rel="icon" 
         type="image/png" 
         href="res/favico.ico" />-->
     @yield('stylesheets')
 
-@if($configuracaos->captcha_ativado)
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-@endif
 </head>

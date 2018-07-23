@@ -9,7 +9,10 @@ class AnaoController extends Controller
 {
     // obtem código do país baseado no IP
     protected function obtemCountryCode($ip){
-        if($ip === '127.0.0.1') $ip = '139.82.255.255'; // se teste em localhost, retorna um ip do brasil
+        if(preg_match('/^127\..+$/', $ip) 
+        || preg_match('/^192\.168\..+$/', $ip)
+        || preg_match('/^10\..+$/', $ip)
+        ) return 'br'; // se teste em rede local/loopback, retorna brasil
         $iptolocation = 'http://www.geoplugin.net/xml.gp?ip=' . $ip;
         $creatorlocation = simplexml_load_string(file_get_contents($iptolocation));
         return strtolower(preg_replace('/<geoplugin_countryCode>([a-zA-Z]+)<\/geoplugin_countryCode>/s', '$1', $creatorlocation->geoplugin_countryCode->asXML()));

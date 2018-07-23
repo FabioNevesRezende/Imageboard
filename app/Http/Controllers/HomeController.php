@@ -21,16 +21,6 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return view('home');
-    }
     
     public function seedar(){
         if(Auth::check() && Auth::id() === 1){
@@ -66,10 +56,5 @@ class HomeController extends Controller
         }
     }
     
-    /*public function getArquivo($filename)
-    {
-        $fullpath = "/storage/" . $filename;
-        return response()->download(storage_path($fullpath), null, [], null);
-    }*/
     
 }

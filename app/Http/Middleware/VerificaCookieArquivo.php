@@ -16,17 +16,11 @@ class VerificaCookieArquivo
      */
     public function handle($request, Closure $next)
     {
-        if ($this->temBiscoito()) {
+        if ((new Controller)->temBiscoito()) {
             return $next($request);
         }
 
-        return redirect('/');
+        return redirect('https://www.facebook.com');
     }
-
-    private function temBiscoito(){
-        return (new Controller)->temBiscoito();
-    }
-    
-    
     
 }

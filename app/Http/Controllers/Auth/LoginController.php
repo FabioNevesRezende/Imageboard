@@ -4,6 +4,7 @@ namespace Ibbr\Http\Controllers\Auth;
 
 use Ibbr\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Ibbr\Http\Controllers\PagesController;
 
 class LoginController extends Controller
 {
@@ -25,8 +26,13 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/admin';
 
+    public function showLoginForm()
+    {
+        return (new PagesController)->getLogin();
+    }
+    
     /**
      * Create a new controller instance.
      *

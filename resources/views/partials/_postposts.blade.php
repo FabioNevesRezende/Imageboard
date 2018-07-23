@@ -13,40 +13,47 @@
 @else <span class="anonpost-title">Anônimo</span> 
 @endif 
 @if($post->anao->countrycode)
-  <img src="/storage/flags/{{ $post->anao->countrycode }}.png" alt="{{ $post->anao->countrycode }}"> 
+  <img src="/storage/res/flags/{{ $post->anao->countrycode }}.png" alt="{{ $post->anao->countrycode }}"> 
 @endif 
 <strong class="assunto">{{ $post->assunto }} </strong> 
  <i>{{ $post->created_at->toDayDateTimeString() }}</i>
  <u>Nro <a class="a-nro-post">{{ $post->id }}</a></u>
  
-<a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport">Denunciar</a> 
+<a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a> 
 @if($ind === 0) 
-<a class="mini-btn" href="/{{ $nomeBoard }}">Voltar</a>  
+<a data-toggle="tooltip" data-placement="top" title="Voltar" class="mini-btn" href="/{{ $nomeBoard }}"><span class="glyphicon glyphicon-circle-arrow-left"></span></a>  
 @endif 
-     <a href="/deletepost/{{ $nomeBoard }}/{{ $post->id }}" class="mini-btn">Deletar post</a> 
+     <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/deletepost/{{ $nomeBoard }}/{{ $post->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> 
      
 @if(Auth::check()) 
     @if($ind === 0) 
         
         @if($post->pinado)
-            <a href="/pinarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn">Despinar post</a>
+            <a data-toggle="tooltip" data-placement="top" title="Despinar fio" href="/pinarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn"><span class="glyphicon glyphicon-pushpin"></span></a>
         @elseif(!$post->pinado)
-        <a href="/pinarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn">Pinar post</a> 
+        <a data-toggle="tooltip" data-placement="top" title="Pinar fio" href="/pinarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn"><span class="glyphicon glyphicon-pushpin"></span></a> 
         @endif
          
         @if($post->trancado)
-            <a href="/trancarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn">Destrancar post</a>
+            <a data-toggle="tooltip" data-placement="top" title="Destrancar fio" href="/trancarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn"><span class="glyphicon glyphicon-lock"></span></a>
         @elseif(!$post->trancado)
-        <a href="/trancarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn">Trancar post</a> 
+        <a data-toggle="tooltip" data-placement="top" title="Trancar fio" href="/trancarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn"><span class="glyphicon glyphicon-lock"></span></a> 
         @endif
     @endif
-     <a class="mini-btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan">Banir usuário</a> 
+     <a data-toggle="tooltip" data-placement="top" title="Banir usuário" class="mini-btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan"><span class="glyphicon glyphicon-ban-circle"></span></a> 
 @endif <br>
 <br>
 @foreach ($post->arquivos as $arq)
 
+<div class="fio-img-div">
+{{ $arq->original_filename }}<br>
 @if($arq->mime === 'image/jpeg' || $arq->mime === 'image/png' || $arq->mime === 'image/gif' )
-        <a href="/storage/{{ $arq->filename }}" target="_blank"><img class="img-responsive img-thumbnail" src="{{ \Storage::url($arq->filename) }}" width="200px" height="200px" ></a>
+        <a href="/storage/{{ $arq->filename }}" target="_blank">
+        <img class="img-responsive img-thumbnail" 
+        @if($arq->spoiler) src="{{ \Storage::url('res/spoiler.png') }}"
+        @else src="{{ \Storage::url($arq->filename) }}" 
+        @endif
+        width="200px" height="200px" ></a>
     @elseif($arq->mime === 'video/mp4')
      <video width="320" controls>
         <source src="/storage/{{ $arq->filename }}" type="video/mp4">
@@ -60,8 +67,8 @@
         <source src="/storage/{{ $arq->filename }}" type="audio/mpeg">
      </audio>
     @endif
-
-@if(Auth::check()) <a href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}" class="mini-btn">Deletar Arquivo</a> @endif
+@if(Auth::check()) <a data-toggle="tooltip" data-placement="top" title="Deletar arquivo" href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> @endif
+</div>
 @endforeach
 
 @foreach ($post->ytanexos as $anx)

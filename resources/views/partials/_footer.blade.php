@@ -2,7 +2,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 text-center footer-text">
-            <img src="/storage/logo-ibbr.png">
+            <img src="/storage/res/logo-ibbr.png">
             <p>Este é um projeto de Código Aberto.</p>
             <p>Confira <a href="" target="_blank">aqui</a> e contribua!</p>
             <p>Tecnologias usadas: <a href="https://getbootstrap.com" target="_blank">Bootstrap</a> 

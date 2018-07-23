@@ -55,6 +55,9 @@ body{
 
 .fio-img-div{
     display: inline-block;
+    background-color: #c8dddc;
+    border-radius: 10px;
+    border: 1px dashed #c8dddc;
 }
 
 .a-nro-post:hover{
@@ -132,4 +135,12 @@ body{
 .mini-btn:hover{
     cursor: pointer;
     text-decoration:none;
+}
+
+.form-post-file-input-box{
+    font-size: 15px;
+    background-color: #e8fdfc;
+    border-radius: 10px;
+    border: 1px dashed #c8dddc;
+    margin-bottom: 10px;
 }

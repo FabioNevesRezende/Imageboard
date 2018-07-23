@@ -77,7 +77,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'pt',
 
     /*
     |--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'pt',
 
     /*
     |--------------------------------------------------------------------------
@@ -164,6 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
+        Mews\Captcha\CaptchaServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
 
         /*
@@ -179,6 +180,7 @@ return [
         // Ibbr\Providers\BroadcastServiceProvider::class,
         Ibbr\Providers\EventServiceProvider::class,
         Ibbr\Providers\RouteServiceProvider::class,
+        Ibbr\Providers\ViewComposerProvider::class,
 
     ],
 
@@ -231,6 +233,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'Purifier' => Mews\Purifier\Facades\Purifier::class,
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
 
     ],
 

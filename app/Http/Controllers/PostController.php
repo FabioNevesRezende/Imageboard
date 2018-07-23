@@ -59,7 +59,9 @@ class PostController extends Controller {
         if(Cache::has($chave))
             return Cache::get($chave);
             
-        $posts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])->orderBy('updated_at', 'desc')->join('arquivos', 'posts.id', '=', 'arquivos.post_id')->where('board', $nomeBoard)->where('lead_id', null)->paginate(ConfiguracaoController::getAll()->num_posts_paginacao);
+        $posts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])
+        ->orderBy('updated_at', 'desc')
+        ->where('board', $nomeBoard)->where('lead_id', null)->paginate(ConfiguracaoController::getAll()->num_posts_paginacao);
         Cache::forever($chave, $posts);
         return $posts;
     }
@@ -160,7 +162,7 @@ class PostController extends Controller {
             }
             
         }
-        $regras['g-recaptcha-response'] = $configuracaos->captcha_ativado ? 'required|captcha' : '';
+        $regras['captcha'] = $configuracaos->captcha_ativado ? 'required|captcha' : '';
         
         if($request->sage){
             $regras['sage'] = 'max:4';
@@ -178,8 +180,6 @@ class PostController extends Controller {
             $regras['modpost'] = 'max:7';
         }
         
-            //$_SESSION['regras'] = $regras;
-            //sdfsdfsdfsdf;
         return $regras;
     }
     
@@ -296,7 +296,7 @@ class PostController extends Controller {
         }
         
         // flag "modpost" definido pelo mod
-        if($request->modpost){
+        if($request->modpost && Auth::check()){
             $post->modpost = strip_tags(Purifier::clean($request->modpost)) === 'modpost';
         }
         $num_max_arq_post = ConfiguracaoController::getAll()->num_max_arq_post;
@@ -312,8 +312,8 @@ class PostController extends Controller {
         $this->limpaCachePosts($post->board, $post->lead_id);
 
         // caso haja arquivos, salva-os em disco e seus paths em banco
-        if (!empty($arquivos)) {
-            foreach ($arquivos as $arq) {
+        if (!empty($arquivos)) {            
+            foreach ($arquivos as $index => $arq) {
                 if ($arq->isValid()) {
                                  
                     // define o filename baseado no nro da postagem concatenado com a qtdade de arquivos updados
@@ -323,13 +323,20 @@ class PostController extends Controller {
                         $nomeArquivo = $post->id . "-{$contador}"  . "." . $arq->extension();
                         
                         $contador++;
-                    }while(\File::exists(public_path() . '/storage/' . $nomeArquivo));
+                    //}while(\File::exists(public_path() . '/storage/' . $nomeArquivo));
+                    }while(Storage::disk('public')->exists($nomeArquivo));
                     
                     // salva em disco na pasta public/storage
-                    Storage::disk('disk2')->putFileAs('/storage', $arq, $nomeArquivo);
+                    //Storage::disk('disk2')->putFileAs('/storage', $arq, $nomeArquivo);
+                    Storage::disk('public')->putFileAs('', $arq, $nomeArquivo);
                     
-                    // salva em banco
-                    $post->arquivos()->save(new Arquivo(['filename' => $nomeArquivo, 'mime' => $arq->getMimeType() ]));
+                    $spoilerVal =  $request->input('arquivos-spoiler-' . ($index+1)) !== null ? $request->input('arquivos-spoiler-' . ($index+1)) === 'spoiler' : false;
+                    $post->arquivos()->save(new Arquivo(
+                    ['filename' => $nomeArquivo, 
+                     'mime' => $arq->getMimeType(), 
+                     'spoiler' => $spoilerVal ,
+                     'original_filename' => $arq->getClientOriginalName()
+                     ]));
                     
                 }
             }
@@ -364,7 +371,7 @@ class PostController extends Controller {
     }
     
     protected function postRollback($post){
-        $this->destroy($post->id);
+        $this->destroy($post->board, $post->id);
     }
 
     // verifica se ultrapassou o nro máximo de posts para a board [configuracaos.num_max_fios]
@@ -377,7 +384,7 @@ class PostController extends Controller {
             foreach($arqs as $arq){
                 $this->destroyArqDb($nomeBoard, $arq->filename, false);
             }
-            $this->destroy($post_a_deletar);
+            $this->destroy($posts[0]->board, $post_a_deletar);
         }
     }
 

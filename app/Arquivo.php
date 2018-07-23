@@ -10,7 +10,7 @@ class Arquivo extends Model
     protected $table = 'arquivos';
     
     protected $fillable = [
-        'filename', 'mime',
+        'filename', 'mime', 'spoiler', 'original_filename'
     ];
     
     public function post(){

@@ -8,7 +8,6 @@
 <div class="admin-page">
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-10"></div>
         <div class="col-sm-2">
             
         <ul id="admin-buttons">
@@ -19,12 +18,16 @@
             <li><a href="/migrate/refresh"><button type="button" class="btn btn-danger">Migrate:refresh</button></a></li>
 @endif
 @if($configuracaos->captcha_ativado)
-            <li><a href="/togglecaptcha/ativado"><button type="button" class="btn btn-danger">Desativar captcha</button></a></li>
+            <li><a href="/togglecaptcha/0"><button type="button" class="btn btn-danger">Desativar captcha</button></a></li>
 @elseif(!$configuracaos->captcha_ativado)
-            <li><a href="/togglecaptcha/desativado"><button type="button" class="btn btn-primary">Ativar captcha</button></a></li>
+            <li><a href="/togglecaptcha/1"><button type="button" class="btn btn-primary">Ativar captcha</button></a></li>
 @endif
+            <li>
+            <li><a href="/logout"><button type="button" class="btn btn-danger">Logout</button></a></li>
+            </li>
         </ul>
         </div>
+        <div class="col-sm-10"></div>
     </div>
 </div>
 

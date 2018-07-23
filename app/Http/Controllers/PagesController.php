@@ -8,6 +8,9 @@ use Ibbr\Report;
 use Ibbr\Configuracao;
 use Ibbr\Http\Controllers\BoardController;
 use Cache;
+use Config;
+use Auth;
+use Carbon\Carbon;
 
 class PagesController extends Controller
 {
@@ -34,8 +37,8 @@ class PagesController extends Controller
         $this->setaBiscoito();
         
         $configuracaos = ConfiguracaoController::getAll();
-        return view('pages.indice')->withBoards(BoardController::getAll())->withConfiguracaos($configuracaos);
-    }    
+        return view('pages.indice');
+    }
     
     public function getBoard($nomeBoard){
         
@@ -50,11 +53,10 @@ class PagesController extends Controller
                     ->with('nomeBoard', $nomeBoard)
                     ->with('descrBoard', BoardController::getAll()[$nomeBoard])
                     ->with('insidePost', 'n')
-                    //->withPosts($this->reordenaPostsPinados($posts))
                     ->with('subPosts', $subposts)
                     ->with('paginador', $posts->appends(\Request::except('page'))->links())
-                    ->withConfiguracaos($configuracaos)
-                    ->withBoards(BoardController::getAll());
+                    ->with('captchaImage', captcha_img())
+                    ->with('captchaSize', Config::get('captcha.default.length'));
             
         } else{
             return view('pages.indice'); 
@@ -65,23 +67,23 @@ class PagesController extends Controller
     public function getThread($nomeBoard, $thread){
         $this->setaBiscoito();
         
+        $configuracaos = ConfiguracaoController::getAll();
         $ver = Post::find($thread);
         if($ver){
             if($ver->lead_id){
-                return view('pages.indice'); 
+                abort(404);
             }
-        } else return view('pages.indice');
+        } else abort(404);
         
         $posts = PostController::pegaPostsThread($thread);
-        $configuracaos = ConfiguracaoController::getAll();
         
         return view('pages.postshow')
                 ->withPosts($posts)
                 ->with('nomeBoard', $nomeBoard)
                 ->with('descrBoard', BoardController::getAll()[$nomeBoard])
                 ->with('insidePost', $thread)
-                ->withConfiguracaos($configuracaos)
-                ->withBoards(BoardController::getAll());
+                ->with('captchaImage', captcha_img())
+                ->with('captchaSize', Config::get('captcha.default.length'));
         
     }
         
@@ -93,9 +95,7 @@ class PagesController extends Controller
         
         $configuracaos = ConfiguracaoController::getAll();
         return view('pages.admin')
-        ->withReports($reports)
-        ->withConfiguracaos($configuracaos)
-        ->withBoards(BoardController::getAll());
+        ->withReports($reports);
     }
     
     public function getCatalogo()
@@ -103,11 +103,31 @@ class PagesController extends Controller
         
         $this->setaBiscoito();
         $posts = PostController::pegaPostsCatalogo();
-        $configuracaos = ConfiguracaoController::getAll();
         return view('pages.catalogo')
-        ->withBoards(BoardController::getAll())
-        ->withPosts($posts)
-        ->withConfiguracaos($configuracaos);
+        ->withPosts($posts);
     }
     
+    public function getLogin()
+    {
+        $this->setaBiscoito();
+        return view('auth.login');
+    }
+    
+    public function logout()
+    {
+        if(Auth::check())
+            Auth::logout();
+        return $this->getIndex();
+    }
+    
+    public function getArquivo($filename)
+    {
+        $fullpath = "app/public/" . $filename;
+        return response()->download(storage_path($fullpath), null, [], null);
+    }
+    
+    public static function return404()
+    {
+        return view('pages.notfound');
+    }
 }

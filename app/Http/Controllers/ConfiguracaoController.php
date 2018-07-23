@@ -6,6 +6,7 @@ use Ibbr\Configuracao;
 use Illuminate\Http\Request;
 use Cache;
 use Auth;
+use Redirect;
 
 class ConfiguracaoController extends Controller
 {
@@ -20,16 +21,11 @@ class ConfiguracaoController extends Controller
         return $configs;
     }
     
-    public function toggleCaptcha($status){
+    public function toggleCaptcha($val){
         if(Auth::check()){
             $config = Configuracao::find(1);
-            if($status === 'ativado'){
-                $config->captcha_ativado = false;
-                $config->save();
-                Cache::forget('configs');
-                return Redirect::to('/admin');
-            } elseif ($status === 'desativado'){
-                $config->captcha_ativado = true;
+            if($val === "1" || $val === "0"){
+                $config->captcha_ativado = $val;
                 $config->save();
                 Cache::forget('configs');
                 return Redirect::to('/admin');

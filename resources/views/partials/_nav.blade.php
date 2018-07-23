@@ -1,4 +1,5 @@
 <div class="container-fluid ibnav">
+@if(isset($boards))
     <div class="ibnavl">
         [
         @foreach($boards as $board => $boardnome)
@@ -18,4 +19,6 @@
         ]
     </div>
     <hr>
+    
+@endif
 </div>
