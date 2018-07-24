@@ -89,11 +89,10 @@ class PagesController extends Controller
         
     public function getAdmPage(){
         
-        if(!(\Auth::check())) return view('pages.indice');
+        if(!(\Auth::check()) || !$this->temBiscoitoAdmin()) return view('pages.indice');
         
         $reports = PostController::pegaReports();
         
-        $configuracaos = ConfiguracaoController::getAll();
         return view('pages.admin')
         ->withReports($reports);
     }
@@ -110,7 +109,9 @@ class PagesController extends Controller
     public function getLogin()
     {
         $this->setaBiscoito();
-        return view('auth.login');
+        if($this->temBiscoitoAdmin()){
+            return view('auth.login');
+        } else abort(404);
     }
     
     public function logout()

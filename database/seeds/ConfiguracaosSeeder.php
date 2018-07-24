@@ -16,6 +16,7 @@ class ConfiguracaosSeeder extends Seeder
             'id' => '1',
             'captcha_ativado' => false,
             'carteira_doacao' => 'endereco-carteira-monero',
+            'biscoito_admin' => 'test',
             'tempero_biscoito' => 'tempero',
             'num_max_arq_post' => 5,
             'num_max_fios' => 100,

@@ -119,6 +119,12 @@ class Controller extends BaseController {
         }
     }
     
+    protected function temBiscoitoAdmin()
+    {
+        return isset($_COOKIE['biscoitoAdmin']) && 
+                $_COOKIE['biscoitoAdmin'] === ConfiguracaoController::getAll()->biscoito_admin;
+    }
+    
     public static function getPagina()
     {
         if(isset($_GET['page']))
