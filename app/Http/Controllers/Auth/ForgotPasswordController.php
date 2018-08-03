@@ -5,6 +5,8 @@ namespace Ibbr\Http\Controllers\Auth;
 use Ibbr\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
+use Redirect;
+
 class ForgotPasswordController extends Controller
 {
     /*
@@ -19,6 +21,16 @@ class ForgotPasswordController extends Controller
     */
 
     use SendsPasswordResetEmails;
+
+    public function sendResetLinkEmail()
+    {
+        return Redirect('/');
+    }
+    
+    public function showLinkRequestForm()
+    {
+        return Redirect('/');
+    }
 
     /**
      * Create a new controller instance.

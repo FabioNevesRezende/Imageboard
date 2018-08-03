@@ -148,3 +148,7 @@ body{
 .paginador{
     font-size: 16px;
 }
+
+.noticia-data{
+    float: right;
+}

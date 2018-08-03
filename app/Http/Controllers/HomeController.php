@@ -26,6 +26,7 @@ class HomeController extends Controller
         if(Auth::check() && Auth::id() === 1){
             try{
                 Artisan::call('db:seed');
+                $this->limparCache();
             }catch(\Illuminate\Database\QueryException $e)
             {
                     
@@ -37,6 +38,7 @@ class HomeController extends Controller
     public function migrate(){
         if(Auth::check() && Auth::id() === 1){
             Artisan::call('migrate');
+            $this->limparCache();
         }
         return Redirect::to('/');
     }
@@ -44,8 +46,10 @@ class HomeController extends Controller
     public function migrateRefresh(){
         if(Auth::check() && Auth::id() === 1){
             Artisan::call('migrate:refresh');
+            Artisan::call('db:seed');
+            $this->limparCache();
         }
-        return Redirect::to('/');
+        return Redirect::to('/login');
     }
     
     public function limparCache()

@@ -1,3 +1,4 @@
+<div class="container-fluid">
 @foreach($posts as $post)
 @if($post->lead_id === NULL)
 <div id="{{ $post->id }}" class="fio">
@@ -140,3 +141,4 @@
         <div class="col-sm-4"></div>
     </div>
 @endif
+</div>

@@ -33,6 +33,7 @@ class LoginController extends Controller
         return (new PagesController)->getLogin();
     }
     
+    
     /**
      * Create a new controller instance.
      *

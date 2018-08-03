@@ -44,6 +44,11 @@
                         $arq = $post->ytanexos[0];
                         $vid = true;
                     }
+                    else 
+                    {
+                        $arq = new \Ibbr\Arquivo;
+                        $arq->spoiler = true;
+                    }
                     
                 @endphp
                 <div class="catalogo-post-div text-center catalogo-post-div-board-{{ $post->board }}">

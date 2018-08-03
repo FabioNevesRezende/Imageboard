@@ -36,8 +36,11 @@ class PagesController extends Controller
     public function getIndex(){
         $this->setaBiscoito();
         
-        $configuracaos = ConfiguracaoController::getAll();
-        return view('pages.indice');
+        $regras = RegraController::getAll();
+        $noticias = NoticiaController::getAll();
+        return view('pages.indice')
+                ->with('regras', $regras)
+                ->with('noticias', $noticias);
     }
     
     public function getBoard($nomeBoard){
@@ -48,7 +51,6 @@ class PagesController extends Controller
             $posts = PostController::pegaPostsBoard($nomeBoard);
             $subposts = PostController::pegaSubPostsBoard($nomeBoard);
             
-            $configuracaos = ConfiguracaoController::getAll();
             return view('pages.board', ['posts' => $this->reordenaPostsPinados($posts)])
                     ->with('nomeBoard', $nomeBoard)
                     ->with('descrBoard', BoardController::getAll()[$nomeBoard])
@@ -87,14 +89,15 @@ class PagesController extends Controller
         
     }
         
-    public function getAdmPage(){
+    public function getAdmPage($noticiaEditar = null){
         
         if(!(\Auth::check()) || !$this->temBiscoitoAdmin()) return view('pages.indice');
         
         $reports = PostController::pegaReports();
         
         return view('pages.admin')
-        ->withReports($reports);
+        ->withReports($reports)
+        ->with('noticiaEditar', $noticiaEditar);
     }
     
     public function getCatalogo()
