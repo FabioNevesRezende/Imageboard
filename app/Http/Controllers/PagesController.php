@@ -43,17 +43,17 @@ class PagesController extends Controller
                 ->with('noticias', $noticias);
     }
     
-    public function getBoard($nomeBoard){
+    public function getBoard($siglaBoard){
         
         $this->setaBiscoito();
-        if(in_array($nomeBoard, array_keys(BoardController::getAll()) )){
-            
-            $posts = PostController::pegaPostsBoard($nomeBoard);
-            $subposts = PostController::pegaSubPostsBoard($nomeBoard);
+        $board = $this->boardExiste($siglaBoard);
+        if($board){
+            $posts = PostController::pegaPostsBoard($siglaBoard);
+            $subposts = PostController::pegaSubPostsBoard($siglaBoard);
             
             return view('pages.board', ['posts' => $this->reordenaPostsPinados($posts)])
-                    ->with('nomeBoard', $nomeBoard)
-                    ->with('descrBoard', BoardController::getAll()[$nomeBoard])
+                    ->with('siglaBoard', $siglaBoard)
+                    ->with('descrBoard', $board->descricao)
                     ->with('insidePost', 'n')
                     ->with('subPosts', $subposts)
                     ->with('paginador', $posts->appends(\Request::except('page'))->links())
@@ -66,7 +66,7 @@ class PagesController extends Controller
         
     }
     
-    public function getThread($nomeBoard, $thread){
+    public function getThread($siglaBoard, $thread){
         $this->setaBiscoito();
         
         $configuracaos = ConfiguracaoController::getAll();
@@ -81,8 +81,8 @@ class PagesController extends Controller
         
         return view('pages.postshow')
                 ->withPosts($posts)
-                ->with('nomeBoard', $nomeBoard)
-                ->with('descrBoard', BoardController::getAll()[$nomeBoard])
+                ->with('siglaBoard', $siglaBoard)
+                ->with('descrBoard', BoardController::getAll()->where('sigla', '=', $siglaBoard)->first()->descricao)
                 ->with('insidePost', $thread)
                 ->with('captchaImage', captcha_img())
                 ->with('captchaSize', Config::get('captcha.default.length'));
@@ -91,7 +91,8 @@ class PagesController extends Controller
         
     public function getAdmPage($noticiaEditar = null){
         
-        if(!(\Auth::check()) || !$this->temBiscoitoAdmin()) return view('pages.indice');
+            
+        if(!(\Auth::check()) || !$this->temBiscoitoAdmin()) abort(404);
         
         $reports = PostController::pegaReports();
         
@@ -133,5 +134,10 @@ class PagesController extends Controller
     public static function return404()
     {
         return view('pages.notfound');
+    }
+    
+    public function getPhpInfo()
+    {
+        return view('pages.phpinfo');
     }
 }

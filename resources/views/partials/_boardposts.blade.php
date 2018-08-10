@@ -12,9 +12,9 @@
 
      <u>Nro <a class="a-nro-post" href="/{{ $post->board }}/{{ $post->id }}">{{ $post->id }}</a></u>
      <a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a> 
-     <a data-toggle="tooltip" data-placement="top" title="Responder" class="mini-btn" href="/{{ $nomeBoard }}/{{ $post->id }}" target="_blank"><span class="glyphicon glyphicon-pencil"></span></a> 
+     <a data-toggle="tooltip" data-placement="top" title="Responder" class="mini-btn" href="/{{ $siglaBoard }}/{{ $post->id }}" target="_blank"><span class="glyphicon glyphicon-pencil"></span></a> 
      
-     <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/deletepost/{{ $nomeBoard }}/{{ $post->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> 
+     <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/deletepost/{{ $siglaBoard }}/{{ $post->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> 
      
     @if(Auth::check())
     @if($post->pinado)
@@ -58,7 +58,7 @@
     @endif
     
     @if(Auth::check()) 
-    <a data-toggle="tooltip" data-placement="top" title="Deletar arquivo" href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a><br><br>@endif
+    <a data-toggle="tooltip" data-placement="top" title="Deletar arquivo" href="/deleteimg/{{ $siglaBoard }}/{{ $arq->filename }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a><br><br>@endif
     </div>
     @endforeach
     

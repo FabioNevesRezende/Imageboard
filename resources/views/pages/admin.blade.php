@@ -25,6 +25,7 @@
                         <li><a href="/seedar"><button type="button" class="btn btn-success">Seedar</button></a></li>
                         <li><a href="/limparcache"><button type="button" class="btn btn-default">Limpar Cache</button></a></li>
                         <li><a href="/migrate"><button type="button" class="btn btn-warning">Migrate</button></a></li>
+                        <li><a href="/phpinfo" target="_blank"><button type="button" class="btn btn-primary">PhpInfo</button></a></li>
                         <li><a href="/migrate/refresh"><button type="button" class="btn btn-danger">Migrate:refresh + seed</button></a></li>
             @endif
             @if($configuracaos->captcha_ativado)
@@ -43,7 +44,7 @@
         @endif
         <br>
         <div class="row">
-            <div class="col-sm-12 div-indice">
+            <div class="col-sm-6 div-indice">
                 @if(isset($noticiaEditar) && $noticiaEditar != null)
                     <b>Editar noticia</b>
                     {!! Form::open(['route' => 'noticias.update_noticia', 'class'=>'form-post']) !!}
@@ -56,7 +57,7 @@
                             name="conteudo" maxlength="65535" required>{{ $noticiaEditar->conteudo }}</textarea><br>
                         
                         <input type="hidden" name="id" value="{{ $noticiaEditar->id }}"><br><br>
-                        <input type="submit" class="btn btn-primary"><br><br>
+                        <input type="submit" class="btn btn-primary" value="Editar"><br><br>
                     {!! Form::close() !!}
                 @else
                     <b>Divulgar noticia</b>
@@ -66,9 +67,25 @@
                         <input type="text" name="assunto" maxlength="256" required><br><br>
                         Notícia:<br>
                         <textarea rows="6" cols="70" name="conteudo" maxlength="65535" required></textarea><br>
-                        <input type="submit" class="btn btn-primary"><br><br>
+                        <input type="submit" class="btn btn-primary" value="Divulgar"><br><br>
                     {!! Form::close() !!}
                 @endif
+            </div>
+            <div class="col-sm-6 div-indice">
+                <b>Criar nova board</b>
+                {!! Form::open(['route' => 'boards.store', 'class'=>'form-post']) !!}
+                    {{ csrf_field() }}
+                    Nome da board:<br>
+                    <input type="text" name="nome" maxlength="50" required><br><br>
+                    /sigla/:<br>
+                    <input type="text" name="sigla" maxlength="10" required><br><br>
+                    Descrição:<br>
+                    <input type="text" name="descricao" maxlength="300" required><br><br>
+                    Ordem:<br>
+                    <input type="number" name="ordem" max="32767" min="-32767" required><br><br>
+                    <input type="submit" class="btn btn-primary" value="Criar board"><br><br>
+                {!! Form::close() !!}
+                
             </div>
             
         </div>
@@ -88,7 +105,7 @@
                     </select>
                     <br>
                     <br>
-                    <input type="submit" class="btn btn-primary"><br><br>
+                    <input type="submit" class="btn btn-primary" value="Criar regra"><br><br>
                 {!! Form::close() !!}
             </div>
             <div class="col-sm-6 div-indice">
@@ -101,7 +118,7 @@
                     <input type="password" name="confirm_password" maxlength="25" required><br><br>
                     <br>
                     <br>
-                    <input type="submit" class="btn btn-primary"><br><br>
+                    <input type="submit" class="btn btn-primary" value="Alterar senha"><br><br>
                 {!! Form::close() !!}
             </div>
         </div>

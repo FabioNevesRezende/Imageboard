@@ -6,6 +6,13 @@
     </div>
 
 @endif
+@if (Session::has('erro_admin'))
+
+    <div class="alert alert-danger" role="alert">
+        <p><strong>Erro:</strong> {!! Session::get('erro_admin') !!}</p>
+    </div>
+
+@endif
 @if (Session::has('erro_upload'))
 
     <div class="alert alert-warning" role="alert">

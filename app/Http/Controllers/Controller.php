@@ -62,11 +62,11 @@ class Controller extends BaseController {
         $ban->save();
         Cache::forget('bans_gerais');
         
-        return \Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)) );
+        return \Redirect::to('/' . strip_tags(Purifier::clean($request->siglaboard)) );
     }
     
-    public function estaBanido($ip, $nomeBoard=null){
-        if($nomeBoard===null){
+    public function estaBanido($ip, $siglaBoard=null){
+        if($siglaBoard===null){
             $chave = 'bans_gerais';
             if(Cache::has($chave)){
                 $bans = Cache::get($chave);
@@ -77,12 +77,12 @@ class Controller extends BaseController {
             }
             
         } else{
-            $chave = 'bans_board_' . $nomeBoard;
+            $chave = 'bans_board_' . $siglaBoard;
             if(Cache::has($chave)){
                 $bans = Cache::get($chave);
             }
             else{
-                $bans = \DB::table('bans')->where('ip', '=', $ip)->where('board', '=', $nomeBoard)->orderBy('exp_date', 'desc')->get();
+                $bans = \DB::table('bans')->where('ip', '=', $ip)->where('board', '=', $siglaBoard)->orderBy('exp_date', 'desc')->get();
                 Cache::forever($chave, $bans);
             }
         }
@@ -190,4 +190,17 @@ class Controller extends BaseController {
         }
         return $posts;
     }
+    
+    public function boardExiste($siglaBoard)
+    {
+        $boards = BoardController::getAll();
+        foreach($boards as $board)
+        {
+            if($board->sigla === $siglaBoard)
+                return $board;
+        }
+        return false;
+        
+    }
+    
 }

@@ -50,29 +50,29 @@ class PostController extends Controller {
         return $posts;
     }
 
-    public static function pegaPostsBoard($nomeBoard)
+    public static function pegaPostsBoard($siglaBoard)
     {
         $pagina = Controller::getPagina();
-        $chave = 'posts_board_' . $nomeBoard . '_pag_' . $pagina;
+        $chave = 'posts_board_' . $siglaBoard . '_pag_' . $pagina;
         if(Cache::has($chave))
             return Cache::get($chave);
             
         $posts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])
         ->orderBy('updated_at', 'desc')
-        ->where('board', $nomeBoard)->where('lead_id', null)->paginate(ConfiguracaoController::getAll()->num_posts_paginacao);
+        ->where('board', $siglaBoard)->where('lead_id', null)->paginate(ConfiguracaoController::getAll()->num_posts_paginacao);
         $posts = Controller::transformaDatasPortugues($posts);
         Cache::forever($chave, $posts);
         return $posts;
     }
     
-    public static function pegaSubPostsBoard($nomeBoard)
+    public static function pegaSubPostsBoard($siglaBoard)
     {
         $pagina = Controller::getPagina();
-        $chave = 'subposts_board_' . $nomeBoard . '_pag_' . $pagina;
+        $chave = 'subposts_board_' . $siglaBoard . '_pag_' . $pagina;
         if(Cache::has($chave))
             return Cache::get($chave);
             
-        $subposts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])->orderBy('created_at', 'asc')->where('board', $nomeBoard)->where('lead_id', '<>', null)->get();
+        $subposts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])->orderBy('created_at', 'asc')->where('board', $siglaBoard)->where('lead_id', '<>', null)->get();
         $subposts = Controller::transformaDatasPortugues($subposts);
         Cache::forever($chave, $subposts);
         return $subposts;
@@ -131,13 +131,14 @@ class PostController extends Controller {
                 );
     }
     
-    // true se $nomeboard for uma board que existe, caso contrário false
-    public function verificaBoardLegitima($nomeboard){
-        if(!preg_match(Config::get('funcoes.geraRegexBoards')(),  $nomeboard)){
+    // true se $siglaBoard for uma board que existe, caso contrário false
+    /*
+    public function verificaBoardLegitima($siglaBoard){
+        if(!preg_match(Config::get('funcoes.geraRegexBoards')(),  $siglaBoard)){
             Session::flash('erro_upload', 'Board inválida');
             return false;
-        } else return true;
-    }
+        } else return true; 
+    }*/
     
     // retorna array com regras de validação
     public function defineArrayValidacao($request){
@@ -162,7 +163,9 @@ class PostController extends Controller {
                 $regras['arquivos.*'] = 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg';
             }
         }
-        $regras['captcha'] = $configuracaos->captcha_ativado ? 'required|captcha' : '';
+        if($configuracaos->captcha_ativado){
+            $regras['captcha'] = 'required|captcha';
+        }
         
         if($request->sage){
             $regras['sage'] = 'max:4';
@@ -203,16 +206,16 @@ class PostController extends Controller {
     public function store(Request $request) {
         
         // Verifica se a board requisitada para o post realmente existe
-        if(!$this->verificaBoardLegitima(strip_tags(Purifier::clean($request->nomeboard)))){
+        if(!$this->boardExiste(strip_tags(Purifier::clean($request->siglaboard)))){
             return Redirect::to('/');
         }
         
         // Verifica se o postador está banido da board em questão
-        $bantime = $this->estaBanido(\Request::ip(), strip_tags(Purifier::clean($request->nomeboard)));
+        $bantime = $this->estaBanido(\Request::ip(), strip_tags(Purifier::clean($request->siglaboard)));
         if($bantime){
             return $this->redirecionaComMsg('ban', 
-            'Seu IP ' . \Request::ip() . ' está banido da board ' . strip_tags(Purifier::clean($request->nomeboard)) . ' até: ' . $bantime->toDateTimeString() . ' e não pode postar.',
-            '/' . strip_tags(Purifier::clean($request->nomeboard)));
+            'Seu IP ' . \Request::ip() . ' está banido da board ' . strip_tags(Purifier::clean($request->siglaboard)) . ' até: ' . $bantime->toDateTimeString() . ' e não pode postar.',
+            '/' . strip_tags(Purifier::clean($request->siglaboard)));
      
         }
         
@@ -222,7 +225,7 @@ class PostController extends Controller {
         if($bantime){
             return $this->redirecionaComMsg('ban',
             'Seu IP ' . \Request::ip() . ' está banido de todas as boards até: ' . $bantime->toDateTimeString() . ' e não pode postar.',
-            '/' . strip_tags(Purifier::clean($request->nomeboard)));
+            '/' . strip_tags(Purifier::clean($request->siglaboard)));
         }
         
         $arquivos = $request->file('arquivos'); // salva os dados dos arquivos na variável $arquivos
@@ -233,7 +236,7 @@ class PostController extends Controller {
             if($request->file('arquivos')){
                 return $this->redirecionaComMsg('erro_upload',
                 'Sem anexo de arquivos quando há links de youtube',
-                '/' . strip_tags(Purifier::clean($request->nomeboard)));
+                '/' . strip_tags(Purifier::clean($request->siglaboard)));
             }
             $this->validate($request, $regras);
             
@@ -241,7 +244,7 @@ class PostController extends Controller {
             if( (!$request->file('arquivos') && strip_tags(Purifier::clean($request->insidepost)) === 'n') || (is_array($arquivos) && sizeof($arquivos) < 1) ){
                 return $this->redirecionaComMsg('erro_upload',
                 'É necessário postar pelo menos com um arquivo ou um link do youtube',
-                '/' . strip_tags(Purifier::clean($request->nomeboard)));
+                '/' . strip_tags(Purifier::clean($request->siglaboard)));
             }
             $this->validate($request, $regras);
         }
@@ -254,7 +257,7 @@ class PostController extends Controller {
             $links = explode('|' ,strip_tags(Purifier::clean($request->linkyoutube)));
         }
         $post->assunto = strip_tags(Purifier::clean($request->assunto)); // assunto do post
-        $post->board = strip_tags(Purifier::clean($request->nomeboard)); // board que o post pertence
+        $post->board = strip_tags(Purifier::clean($request->siglaboard)); // board que o post pertence
         $post->conteudo = $this->trataLinks(strip_tags(Purifier::clean($request->conteudo))); // adiciona tags <a> ao conteudo das mensagens
         $post->conteudo = $this->addRefPosts(\URL::to('/') . '/' . $post->board, $post->conteudo); // adiciona referência a outros posts iniciados com '>'
         $post->conteudo = $this->addGreenText($post->conteudo); // add verdetexto após os símbolos '>>'
@@ -375,16 +378,13 @@ class PostController extends Controller {
     }
 
     // verifica se ultrapassou o nro máximo de posts para a board [configuracaos.num_max_fios]
-    protected function verificaLimitePosts($nomeBoard){
-        $posts = \DB::select('select * from posts where pinado = false and board = ? order by updated_at desc limit 1 offset ?;', [$nomeBoard, ConfiguracaoController::getAll()->num_max_fios ]);
-        if(count($posts)>0){
-            // destroyArq, destroyArqDb
-            $post_a_deletar = $posts[0]->id;
-            $arqs = \DB::table('arquivos')->where('post_id', $post_a_deletar)->get();
-            foreach($arqs as $arq){
-                $this->destroyArqDb($nomeBoard, $arq->filename, false);
-            }
-            $this->destroy($posts[0]->board, $post_a_deletar);
+    protected function verificaLimitePosts($siglaBoard){
+        $posts = \DB::select('select * from posts where pinado = false and board = ? order by updated_at desc limit 1 offset ?;', [$siglaBoard, ConfiguracaoController::getAll()->num_max_fios ]);
+        if($posts && count($posts)>0){
+            // se houver pelo menos um post retornado desta query
+            // significa que a boarda atingiu o nro máximo de fios
+            // então deleta o fio mais antigo
+            $this->deletaUmPost($posts[0]);
         }
     }
 
@@ -399,24 +399,24 @@ class PostController extends Controller {
     }
     
     // atualiza variável pinado fazendo que o post fique sempre no topo da primeira página entre outros pinados
-    public function pinarPost($nomeBoard, $post_id, $val){
+    public function pinarPost($siglaBoard, $post_id, $val){
         $post = Post::find($post_id);
         if($post){
             $post->pinado = $val;
             $post->save();
-            $this->limpaCachePosts($nomeBoard, $post_id);
+            $this->limpaCachePosts($siglaBoard, $post_id);
             return Redirect::to('/' . $post->board );
         }
         return Redirect::to('/');
     }
     
     // atualiza variável trancado fazendo que o post não possa mais ser respondido
-    public function trancarPost($nomeBoard, $post_id, $val){
+    public function trancarPost($siglaBoard, $post_id, $val){
         $post = Post::find($post_id);
         if($post){
             $post->trancado = $val;
             $post->save();
-            $this->limpaCachePosts($nomeBoard, $post_id);
+            $this->limpaCachePosts($siglaBoard, $post_id);
             return Redirect::to('/' . $post->board );
         }
         return Redirect::to('/');
@@ -431,12 +431,12 @@ class PostController extends Controller {
       
         $report->motivo = strip_tags(Purifier::clean($request->motivo));
         $report->post_id = strip_tags(Purifier::clean($request->idpost));
-        $report->board = strip_tags(Purifier::clean($request->nomeboard));
+        $report->board = strip_tags(Purifier::clean($request->siglaboard));
         
         $report->save();
         Cache::forget('reports');
         
-        return Redirect::to('/' . strip_tags(Purifier::clean($request->nomeboard)));  
+        return Redirect::to('/' . strip_tags(Purifier::clean($request->siglaboard)));  
     }
     
     protected function podeDeletarFio($postId){
@@ -446,15 +446,15 @@ class PostController extends Controller {
         {
             return false;
         }
-        if($post->biscoito === $bisc)
+        if(Auth::check() || $post->biscoito === $bisc)
             return $post;
         else return false;
     }
 
     // deleta uma postagem e dados relacionados a ele (links, arquivos)
-    public function destroy($nomeBoard, $postId) {
+    public function destroy($siglaBoard, $postId) {
         $post = $this->podeDeletarFio($postId);
-        if(Auth::check() || $post)
+        if($post)
         {
             $arquivos = $post->arquivos;
 
@@ -476,40 +476,50 @@ class PostController extends Controller {
             }
             
             $post->delete();
-            $this->limpaCachePosts($nomeBoard, $postId);
-            return Redirect::to('/' . $nomeBoard );
+            $this->limpaCachePosts($siglaBoard, $postId);
+            return Redirect::to('/' . $siglaBoard );
             
         } else {
-            return $this->redirecionaComMsg('ban', 'Não foi possível deletar este post', '/' . $nomeBoard);
+            return $this->redirecionaComMsg('ban', 'Não foi possível deletar este post', '/' . $siglaBoard);
         }
     }
     
     private function deletaUmPost($post)
     {
-        $arquivos = $post->arquivos;
+        if($post){
+            $arquivos = $post->arquivos;
 
-        foreach($arquivos as $arq){
-            $this->destroyArq($arq->filename);
-            \DB::table('arquivos')->where('post_id', '=', $post->id)->delete();
+            foreach($arquivos as $arq){
+                $this->destroyArq($arq->filename);
+                \DB::table('arquivos')->where('post_id', '=', $post->id)->delete();
+            }
+            if($post->ytanexos){
+                \DB::table('ytanexos')->where('post_id', '=', $post->id)->delete();
+            }
+            $post->delete();
         }
-        if($post->ytanexos){
-            \DB::table('ytanexos')->where('post_id', '=', $post->id)->delete();
-        }
-        $post->delete();
     }
     
     // deleta arquivo da pasta pública
     public function destroyArq($filename){
-        \File::delete(public_path() . '/storage/' . $filename);
+        Storage::disk('public')->delete($filename);
     }
     
     // deleta arquivo da pasta pública e remove sua referência do banco de dados
-    public function destroyArqDb($nomeBoard, $filename, $redirect=true){
-        \File::delete(public_path() . '/storage/' . $filename);
-        \DB::table('arquivos')->where('filename', '=', $filename)->delete();
-        Cache::forget('posts');
-    
-        if($redirect) return Redirect::to('/' . $nomeBoard );
+    public function destroyArqDb($siglaBoard, $filename, $redirect=true){
+        $arq = Arquivo::where('filename', '=', $filename)->first();
+        if($arq){
+            $thread = Post::where('id', '=', $arq->post_id)->first();
+            if($thread){
+                Storage::disk('public')->delete($filename);
+
+                $arq->delete();
+                $this->limpaCachePosts($siglaBoard, $thread->lead_id === null ? $thread->id : $thread->lead_id );
+
+                return Redirect::to('/' . $redirect ? $siglaBoard : '' );
+            } else abort(400);
+        } else abort(400);
+        
     }
 
 }

@@ -1,8 +1,12 @@
 
-<h1 class="board-header"> /{{ $nomeBoard }}/ - {{ $descrBoard }} </h1><br>
+<h1 class="board-header"> /{{ $siglaBoard }}/ - {{ $descrBoard }} </h1>
+@if(Auth::check() && Auth::id() === 1)
+<a  data-toggle="modal" data-target="#modalDeleteBoard" class="btn btn-danger">Deletar board</a>
+@endif
+<br>
 {!! Form::open(['route' => 'posts.store', 'enctype' => 'multipart/form-data', 'class'=>'form-post']) !!}
 {{ csrf_field() }}
-{{  Form::hidden('nomeboard', $nomeBoard) }}
+{{  Form::hidden('siglaboard', $siglaBoard) }}
 {{  Form::hidden('insidepost', $insidePost) }}
 @if(Auth::check()) 
 <div style="float: left; margin-bottom: 20px; margin-left: 15px;">

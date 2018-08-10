@@ -1,7 +1,7 @@
 @extends('boardbase')
 
 
-@section('titulo', $nomeBoard)
+@section('titulo', $siglaBoard)
 
 @section('conteudo')
 
@@ -10,4 +10,5 @@
 @include('partials._postposts')
 @include('partials._modalban')
 @include('partials._modalreport')
+@include('partials._modaldeleteboard')
 @endsection

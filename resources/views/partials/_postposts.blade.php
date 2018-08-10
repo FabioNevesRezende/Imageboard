@@ -21,9 +21,9 @@
  
 <a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a> 
 @if($ind === 0) 
-<a data-toggle="tooltip" data-placement="top" title="Voltar" class="mini-btn" href="/{{ $nomeBoard }}"><span class="glyphicon glyphicon-circle-arrow-left"></span></a>  
+<a data-toggle="tooltip" data-placement="top" title="Voltar" class="mini-btn" href="/{{ $siglaBoard }}"><span class="glyphicon glyphicon-circle-arrow-left"></span></a>  
 @endif 
-     <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/deletepost/{{ $nomeBoard }}/{{ $post->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> 
+     <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/deletepost/{{ $siglaBoard }}/{{ $post->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> 
      
 @if(Auth::check()) 
     @if($ind === 0) 
@@ -67,7 +67,7 @@
         <source src="/storage/{{ $arq->filename }}" type="audio/mpeg">
      </audio>
     @endif
-@if(Auth::check()) <a data-toggle="tooltip" data-placement="top" title="Deletar arquivo" href="/deleteimg/{{ $nomeBoard }}/{{ $arq->filename }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> @endif
+@if(Auth::check()) <a data-toggle="tooltip" data-placement="top" title="Deletar arquivo" href="/deleteimg/{{ $siglaBoard }}/{{ $arq->filename }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> @endif
 </div>
 @endforeach
 

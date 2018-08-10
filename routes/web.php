@@ -18,18 +18,18 @@ Route::group(['middleware'=>['verificaCookieArquivo']], function(){
 Route::group(['middleware'=>['web']], function(){
     Route::get('/', 'PagesController@getIndex');
     
-    Route::get('/{nomeBoard}', ['uses' => 'PagesController@getBoard'])
-        ->where('nomeBoard', Config::get('funcoes.geraRegexBoards')());
+    Route::get('/{siglaBoard}', ['uses' => 'PagesController@getBoard'])
+        ->where('siglaBoard', Config::get('funcoes.geraRegexBoards')());
         
-    Route::get('/{nomeBoard}/{thread}', ['as' => 'post.single', 'uses' => 'PagesController@getThread'])
-        ->where('nomeBoard', Config::get('funcoes.geraRegexBoards')())->where('thread', '[0-9]+');
+    Route::get('/{siglaBoard}/{thread}', ['as' => 'post.single', 'uses' => 'PagesController@getThread'])
+        ->where('siglaBoard', Config::get('funcoes.geraRegexBoards')())->where('thread', '[0-9]+');
     
     Route::post('/posts', ['as' => 'posts.store', 'uses' => 'PostController@store']);
     Route::post('/report', ['as' => 'posts.report', 'uses' => 'PostController@report']);
     Route::get('/catalogo', 'PagesController@getCatalogo');
     
-    Route::get('/deletepost/{nomeBoard}/{post_id}', ['uses' => 'PostController@destroy'])
-        ->where('nomeBoard', Config::get('funcoes.geraRegexBoards')())
+    Route::get('/deletepost/{siglaBoard}/{post_id}', ['uses' => 'PostController@destroy'])
+        ->where('siglaBoard', Config::get('funcoes.geraRegexBoards')())
         ->where('post_id', '[0-9]+');
         
     Route::get('/logout', 'PagesController@logout');
@@ -37,22 +37,27 @@ Route::group(['middleware'=>['web']], function(){
 
 Route::group(['middleware'=>['auth']], function(){
     
-    Route::get('/pinarpost/{nomeBoard}/{post_id}/{val}', ['uses' => 'PostController@pinarPost'])
+    Route::get('/phpinfo', 'PagesController@getPhpInfo');
+    
+    Route::get('/pinarpost/{siglaBoard}/{post_id}/{val}', ['uses' => 'PostController@pinarPost'])
         ->where('post_id', '[0-9]+')
-        ->where('nomeBoard', Config::get('funcoes.geraRegexBoards')())
+        ->where('siglaBoard', Config::get('funcoes.geraRegexBoards')())
         ->where('val', '(1|0)');
         
-    Route::get('/trancarpost/{nomeBoard}/{post_id}/{val}', ['uses' => 'PostController@trancarPost'])
+    Route::get('/trancarpost/{siglaBoard}/{post_id}/{val}', ['uses' => 'PostController@trancarPost'])
         ->where('post_id', '[0-9]+')
-        ->where('nomeBoard', Config::get('funcoes.geraRegexBoards')())
+        ->where('siglaBoard', Config::get('funcoes.geraRegexBoards')())
         ->where('val', '(1|0)');
     
-    Route::get('/deleteimg/{nomeBoard}/{filename}', ['uses' => 'PostController@destroyArqDb'])
+    Route::get('/deleteimg/{siglaBoard}/{filename}', ['uses' => 'PostController@destroyArqDb'])
         ->where('filename', '[0-9\-]+\.[a-zA-Z]+')
-        ->where('nomeBoard', Config::get('funcoes.geraRegexBoards')());
+        ->where('siglaBoard', Config::get('funcoes.geraRegexBoards')());
         
     Route::get('/deleteregra/{id}', ['uses' => 'RegraController@destroy'])
         ->where('id', '[0-9]+');
+    
+    Route::get('/deleteboard/{id}', ['uses' => 'BoardController@destroy'])
+        ->where('id', Config::get('funcoes.geraRegexBoards')());
         
     Route::get('/deletenoticia/{id}', ['uses' => 'NoticiaController@destroy'])
         ->where('id', '[0-9]+');
@@ -75,6 +80,9 @@ Route::group(['middleware'=>['auth']], function(){
     Route::get('/migrate/refresh', 'HomeController@migrateRefresh');
     Route::get('/togglecaptcha/{val}', 'ConfiguracaoController@toggleCaptcha')
         ->where('val', '(1|0)');
+    
+    
+    Route::post('/boards', ['as' => 'boards.store', 'uses' => 'BoardController@store']);
 });
 
 Auth::routes();

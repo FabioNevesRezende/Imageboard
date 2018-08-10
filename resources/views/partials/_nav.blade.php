@@ -2,10 +2,9 @@
 @if(isset($boards))
     <div class="ibnavl">
         [
-        @foreach($boards as $board => $boardnome)
-        <a href="{{ URL::action('PagesController@getBoard', $board) }}">{{ $board }}</a> /
+        @foreach($boards as $board)
+            <a href="{{ URL::action('PagesController@getBoard', $board->sigla) }}">{{ $board->sigla }}</a> /
         @endforeach
-        
         ]
     </div>
 

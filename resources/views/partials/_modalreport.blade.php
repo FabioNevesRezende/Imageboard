@@ -1,6 +1,5 @@
 <div id="modalReport" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -18,7 +17,7 @@
             <div class="col-sm-2"></div>
         </div>
         
-        {{  Form::hidden('nomeboard', $nomeBoard) }}
+        {{  Form::hidden('siglaboard', $siglaBoard) }}
                
         {{  Form::hidden('idpost', '', ['id' => 'idPostReportInput']) }}
         

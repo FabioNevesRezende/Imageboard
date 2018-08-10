@@ -16,11 +16,11 @@
         {{  Form::number('nro_dias', null, array('class' => 'novo-post-form-item form-control', 'placeholder' => 'Qtdade de dias', 'min' => '1' )) }}
 
         {{ Form::select('board', [
-            $nomeBoard => $nomeBoard,
+            $siglaBoard => $siglaBoard,
             'todas' => 'Todas as boards'],  null, array('class' => 'novo-post-form-item form-control', 'required', 'maxlength' => '10')) 
         }}
         
-        {{  Form::hidden('nomeboard', $nomeBoard) }}
+        {{  Form::hidden('siglaboard', $siglaBoard) }}
         {{  Form::hidden('idpost', '', ['id' => 'idPostInput']) }}
         {{ Form::submit('Banir', array('class' => 'btn btn-primary form-control') ) }}
     
