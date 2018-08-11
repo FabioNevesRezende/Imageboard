@@ -379,7 +379,14 @@ class PostController extends Controller {
 
     // verifica se ultrapassou o nro máximo de posts para a board [configuracaos.num_max_fios]
     protected function verificaLimitePosts($siglaBoard){
-        $posts = \DB::select('select * from posts where pinado = false and board = ? order by updated_at desc limit 1 offset ?;', [$siglaBoard, ConfiguracaoController::getAll()->num_max_fios ]);
+        $posts = Post::where('pinado', '=', false)
+                ->where('board', '=', $siglaBoard)
+                ->whereNull('lead_id')
+                ->orderBy('updated_at', 'desc')
+                ->offset(ConfiguracaoController::getAll()->num_max_fios)
+                ->limit(1)
+                ->get();
+        
         if($posts && count($posts)>0){
             // se houver pelo menos um post retornado desta query
             // significa que a boarda atingiu o nro máximo de fios
