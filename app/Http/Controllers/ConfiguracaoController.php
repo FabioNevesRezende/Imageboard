@@ -10,8 +10,7 @@ use Redirect;
 
 class ConfiguracaoController extends Controller
 {
-    public static function getAll()
-    {
+    public static function getAll(){
         if(Cache::has('configs'))
             return Cache::get('configs');
 

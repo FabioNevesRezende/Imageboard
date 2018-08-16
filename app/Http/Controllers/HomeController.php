@@ -17,8 +17,7 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware('auth');
     }
     
@@ -27,8 +26,7 @@ class HomeController extends Controller
             try{
                 Artisan::call('db:seed');
                 $this->limparCache();
-            }catch(\Illuminate\Database\QueryException $e)
-            {
+            }catch(\Illuminate\Database\QueryException $e){
                     
             }
         }

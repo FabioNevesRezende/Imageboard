@@ -11,8 +11,7 @@ use Purifier;
 
 class NoticiaController extends Controller
 {
-    public static function getAll()
-    {
+    public static function getAll(){
         if(Cache::has('noticias'))
             return Cache::get('noticias');
 
@@ -22,10 +21,8 @@ class NoticiaController extends Controller
         return $noticias;
     }
     
-    public function store(Request $request)
-    {
-        if(Auth::check())
-        {
+    public function store(Request $request){
+        if(Auth::check()){
             $noticia = new Noticia;
             
             $noticia->assunto = strip_tags(Purifier::clean($request->assunto)); 
@@ -42,12 +39,10 @@ class NoticiaController extends Controller
         return Redirect('/');
     }
     
-    public function destroy($id)
-    {
-        {
+    public function destroy($id){
+        if(Auth::check()){
             $noticia = Noticia::find($id);
-            if($noticia && $noticia->autor_id === Auth::id() || Auth::id() === 1)
-            {
+            if($noticia && $noticia->autor_id === Auth::id() || Auth::id() === 1){
                 $noticia->delete();
                 Cache::forget('noticias');
             }
@@ -55,27 +50,20 @@ class NoticiaController extends Controller
         return Redirect('/');
     }
     
-    public function edit($id)
-    {
-        if(Auth::check())
-        {
+    public function edit($id){
+        if(Auth::check()){
             $noticia = Noticia::find($id);
-            if($noticia && $noticia->autor_id === Auth::id() || Auth::id() === 1)
-            {
+            if($noticia && $noticia->autor_id === Auth::id() || Auth::id() === 1){
                 return (new PagesController)->getAdmPage($noticia);
             }
         }
         return Redirect('/');
     }
     
-    public function update(Request $request)
-    {
-        if(Auth::check())
-        {
+    public function update(Request $request){
+        if(Auth::check()){
             $noticia = Noticia::find($request->id);
-            if($noticia && $noticia->autor_id === Auth::id() || Auth::id() === 1)
-            {
-                
+            if($noticia && $noticia->autor_id === Auth::id() || Auth::id() === 1){
                 $noticia->id = strip_tags(Purifier::clean($request->id)); 
                 $noticia->assunto = strip_tags(Purifier::clean($request->assunto)); 
                 $noticia->conteudo = strip_tags(Purifier::clean($request->conteudo));

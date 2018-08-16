@@ -20,7 +20,8 @@ class ConfiguracaosSeeder extends Seeder
             'tempero_biscoito' => 'tempero',
             'num_max_arq_post' => 5,
             'num_max_fios' => 100,
-            'num_posts_paginacao' => 10
+            'num_posts_paginacao' => 10,
+            'num_max_posts_fio' => 500
         ]);
     }
 }

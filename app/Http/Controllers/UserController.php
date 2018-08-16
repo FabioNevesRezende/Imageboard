@@ -11,13 +11,10 @@ use Hash;
 
 class UserController extends Controller
 {
-    public function updatePassword(Request $request)
-    {
-        if(Auth::check())
-        {
+    public function updatePassword(Request $request){
+        if(Auth::check()){
             $user = Auth::user();
-            if($user && $request->password === $request->confirm_password)
-            {
+            if($user && $request->password === $request->confirm_password){
                 $user->password = Hash::make($request->password);
                 
                 $user->save();

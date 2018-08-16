@@ -16,7 +16,6 @@ class PagesController extends Controller
 {
     
     protected function reordenaPostsPinados($posts){
-        
         $postsFinal = array();
         
         foreach($posts->getCollection()->all() as $post){
@@ -44,7 +43,6 @@ class PagesController extends Controller
     }
     
     public function getBoard($siglaBoard){
-        
         $this->setaBiscoito();
         $board = $this->boardExiste($siglaBoard);
         if($board){
@@ -90,8 +88,6 @@ class PagesController extends Controller
     }
         
     public function getAdmPage($noticiaEditar = null){
-        
-            
         if(!(\Auth::check()) || !$this->temBiscoitoAdmin()) abort(404);
         
         $reports = PostController::pegaReports();
@@ -101,43 +97,32 @@ class PagesController extends Controller
         ->with('noticiaEditar', $noticiaEditar);
     }
     
-    public function getCatalogo()
-    {
-        
+    public function getCatalogo(){
         $this->setaBiscoito();
         $posts = PostController::pegaPostsCatalogo();
         return view('pages.catalogo')
         ->withPosts($posts);
     }
     
-    public function getLogin()
-    {
+    public function getLogin(){
         $this->setaBiscoito();
         if($this->temBiscoitoAdmin()){
             return view('auth.login');
         } else abort(404);
     }
     
-    public function logout()
-    {
+    public function logout(){
         if(Auth::check())
             Auth::logout();
         return $this->getIndex();
     }
     
-    public function getArquivo($filename)
-    {
+    public function getArquivo($filename){
         $fullpath = "app/public/" . $filename;
         return response()->download(storage_path($fullpath), null, [], null);
     }
-    
-    public static function return404()
-    {
-        return view('pages.notfound');
-    }
-    
-    public function getPhpInfo()
-    {
+        
+    public function getPhpInfo(){
         return view('pages.phpinfo');
     }
 }

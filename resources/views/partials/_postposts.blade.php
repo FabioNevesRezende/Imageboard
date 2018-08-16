@@ -2,16 +2,9 @@
 @foreach($posts as $ind=>$post)
 @if($ind !== 0) <div class="fio-subpost"> @endif
 
-@if($post->pinado) 
-<span class="glyphicon glyphicon-pushpin"></span> 
-@endif 
-@if($post->trancado) 
-<span class="glyphicon glyphicon-lock"></span> 
-@endif 
-@if($post->modpost) 
-    <p class="modpost">### Administrador ###</p>  
-@else <span class="anonpost-title">Anônimo</span> 
-@endif 
+@if($post->pinado) <span class="glyphicon glyphicon-pushpin"></span> @endif 
+@if($post->trancado) <span class="glyphicon glyphicon-lock"></span> @endif 
+@if($post->modpost)   <p class="modpost">### Administrador ###</p> @else <span class="anonpost-title">Anônimo</span> @endif  
 @if($post->anao->countrycode)
   <img src="/storage/res/flags/{{ $post->anao->countrycode }}.png" alt="{{ $post->anao->countrycode }}"> 
 @endif 

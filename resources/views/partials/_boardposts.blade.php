@@ -10,7 +10,7 @@
      <strong class="assunto">{{ $post->assunto }}</strong>  
      <i>{{ $post->data_post }} </i>
 
-     <u>Nro <a class="a-nro-post" href="/{{ $post->board }}/{{ $post->id }}">{{ $post->id }}</a></u>
+     <u>Nro <a class="a-nro-post">{{ $post->id }}</a></u>
      <a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a> 
      <a data-toggle="tooltip" data-placement="top" title="Responder" class="mini-btn" href="/{{ $siglaBoard }}/{{ $post->id }}" target="_blank"><span class="glyphicon glyphicon-pencil"></span></a> 
      

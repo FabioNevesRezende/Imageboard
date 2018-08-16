@@ -12,8 +12,7 @@ use Purifier;
 
 class RegraController extends Controller
 {
-    public static function getAll()
-    {
+    public static function getAll(){
         if(Cache::has('regras'))
             return Cache::get('regras');
 
@@ -23,12 +22,8 @@ class RegraController extends Controller
         return $regras;
     }
     
-    
-    
-    public function store(Request $request)
-    {
-        if(Auth::check())
-        {
+    public function store(Request $request){
+        if(Auth::check()){
             $regra = new Regra;
             
             $regra->descricao = strip_tags(Purifier::clean($request->descricao)); 
@@ -45,13 +40,10 @@ class RegraController extends Controller
         return Redirect('/');
     }
     
-    public function destroy($id)
-    {
-        if(Auth::check())
-        {
+    public function destroy($id){
+        if(Auth::check()){
             $regra = Regra::find($id);
-            if($regra)
-            {
+            if($regra){
                 $regra->delete();
                 Cache::forget('regras');
             }

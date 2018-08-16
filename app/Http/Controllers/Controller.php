@@ -35,7 +35,6 @@ class Controller extends BaseController {
         fclose($logArq);
     }
     
-    
     protected function redirecionaComMsg($tagMsg, $msg, $enderecoRed='/')
     {
         Session::flash($tagMsg, $msg);
@@ -49,7 +48,7 @@ class Controller extends BaseController {
         $ban->exp_date = strip_tags(Purifier::clean($request->permaban)) === 'permaban' ?  Carbon::now()->addYears(100) : Carbon::now()->addHours(strip_tags(Purifier::clean($request->nro_horas)))->addDays(strip_tags(Purifier::clean($request->nro_dias)));
         $post = Post::find(strip_tags(Purifier::clean($request->idpost)));
         if(!$post)
-            return $this->redirecionaComMsg('ban', 'Erro ao banir usuário: post inexistente', '/');
+            return $this->redirecionaComMsg('ban', 'Erro ao banir usuário: post inexistente', $request->headers->get('referer'));
         $ban->post_id = $post->id;
         
         if( strip_tags(Purifier::clean($request->board)) !== 'todas'){
@@ -62,7 +61,7 @@ class Controller extends BaseController {
         $ban->save();
         Cache::forget('bans_gerais');
         
-        return \Redirect::to('/' . strip_tags(Purifier::clean($request->siglaboard)) );
+        return \Redirect::to($request->headers->get('referer'));
     }
     
     public function estaBanido($ip, $siglaBoard=null){
@@ -100,8 +99,7 @@ class Controller extends BaseController {
         }
     }
     
-    public function temBiscoito()
-    {
+    public function temBiscoito(){
         if(isset($_COOKIE[$this->nomeBiscoitoSessao]))
             return $_COOKIE[$this->nomeBiscoitoSessao];
         else return false;
@@ -119,30 +117,23 @@ class Controller extends BaseController {
         }
     }
     
-    protected function temBiscoitoAdmin()
-    {
+    protected function temBiscoitoAdmin(){
         return isset($_COOKIE['biscoitoAdmin']) && 
                 $_COOKIE['biscoitoAdmin'] === ConfiguracaoController::getAll()->biscoito_admin;
     }
     
-    public static function getPagina()
-    {
-        if(isset($_GET['page']))
-        {
+    public static function getPagina(){
+        if(isset($_GET['page'])){
             if(strlen($_GET['page']) > 3) return 1;
             return intval($_GET['page']);
         }
-        else
-        {
+        else{
             return 1;
         }
     }
     
-      
-    public static function pegaMesPortugues($numMes)
-    {
-        switch($numMes)
-        {
+    public static function pegaMesPortugues($numMes){
+        switch($numMes){
             case 1:
                 return 'Janeiro';
             case 2:
@@ -172,10 +163,8 @@ class Controller extends BaseController {
         }
     }
     
-    public static function transformaDatasPortugues($posts)
-    {
-        foreach($posts as $post)
-        {
+    public static function transformaDatasPortugues($posts){
+        foreach($posts as $post){
             $temp = strlen($post->created_at->day) === 1 ? '0' . $post->created_at->day : $post->created_at->day ;
             $temp .= ' de ';
             $temp .= PostController::pegaMesPortugues($post->created_at->month);
@@ -191,16 +180,13 @@ class Controller extends BaseController {
         return $posts;
     }
     
-    public function boardExiste($siglaBoard)
-    {
+    public function boardExiste($siglaBoard){
         $boards = BoardController::getAll();
-        foreach($boards as $board)
-        {
+        foreach($boards as $board){
             if($board->sigla === $siglaBoard)
                 return $board;
         }
         return false;
-        
     }
     
 }

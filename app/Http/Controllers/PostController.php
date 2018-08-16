@@ -20,27 +20,7 @@ use Auth;
 
 class PostController extends Controller {
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index() {
-        return Redirect('/');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-    */
-      public function create(){
-        return Redirect('/');
-      } 
-      
-
-    public static function pegaPostsCatalogo()
-    {
+    public static function pegaPostsCatalogo(){
         $chave = 'posts_catalogo';
         if(Cache::has($chave))
             return Cache::get($chave);
@@ -50,8 +30,7 @@ class PostController extends Controller {
         return $posts;
     }
 
-    public static function pegaPostsBoard($siglaBoard)
-    {
+    public static function pegaPostsBoard($siglaBoard){
         $pagina = Controller::getPagina();
         $chave = 'posts_board_' . $siglaBoard . '_pag_' . $pagina;
         if(Cache::has($chave))
@@ -65,8 +44,7 @@ class PostController extends Controller {
         return $posts;
     }
     
-    public static function pegaSubPostsBoard($siglaBoard)
-    {
+    public static function pegaSubPostsBoard($siglaBoard){
         $pagina = Controller::getPagina();
         $chave = 'subposts_board_' . $siglaBoard . '_pag_' . $pagina;
         if(Cache::has($chave))
@@ -78,8 +56,7 @@ class PostController extends Controller {
         return $subposts;
     }
     
-    public static function pegaPostsThread($thread)
-    {
+    public static function pegaPostsThread($thread){
         $chave = 'posts_thread_' . $thread;
         if(Cache::has($chave))
             return Cache::get($chave);
@@ -90,8 +67,7 @@ class PostController extends Controller {
         return $posts;
     }
     
-    public static function pegaReports()
-    {
+    public static function pegaReports(){
         $chave = 'reports';
         if(Cache::has($chave))
             return Cache::get($chave);
@@ -131,14 +107,11 @@ class PostController extends Controller {
                 );
     }
     
-    // true se $siglaBoard for uma board que existe, caso contrário false
-    /*
-    public function verificaBoardLegitima($siglaBoard){
-        if(!preg_match(Config::get('funcoes.geraRegexBoards')(),  $siglaBoard)){
-            Session::flash('erro_upload', 'Board inválida');
-            return false;
-        } else return true; 
-    }*/
+    private function verificaBoardLegitima($request){
+        if(!$this->boardExiste(strip_tags(Purifier::clean($request->siglaboard)))){
+            abort(400);
+        }
+    }
     
     // retorna array com regras de validação
     public function defineArrayValidacao($request){
@@ -186,8 +159,7 @@ class PostController extends Controller {
         return $regras;
     }
     
-    private function limpaCachePosts($board, $thread)
-    {
+    private function limpaCachePosts($board, $thread){
         $num_paginas = 10;
         for($i = 0 ; $i < $num_paginas ; $i++ ){
             Cache::forget('posts_board_' . $board . '_pag_' . $i);
@@ -197,65 +169,74 @@ class PostController extends Controller {
         Cache::forget('posts_catalogo');
     }
     
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request) {
-        
-        // Verifica se a board requisitada para o post realmente existe
-        if(!$this->boardExiste(strip_tags(Purifier::clean($request->siglaboard)))){
-            return Redirect::to('/');
-        }
-        
+    private function verificaBanimentos($request){
         // Verifica se o postador está banido da board em questão
         $bantime = $this->estaBanido(\Request::ip(), strip_tags(Purifier::clean($request->siglaboard)));
         if($bantime){
-            return $this->redirecionaComMsg('ban', 
-            'Seu IP ' . \Request::ip() . ' está banido da board ' . strip_tags(Purifier::clean($request->siglaboard)) . ' até: ' . $bantime->toDateTimeString() . ' e não pode postar.',
-            '/' . strip_tags(Purifier::clean($request->siglaboard)));
-     
+            return 'Seu IP ' 
+                    . \Request::ip() 
+                    . ' está banido da board ' 
+                    . strip_tags(Purifier::clean($request->siglaboard)) 
+                    . ' até: ' 
+                    . $bantime->toDateTimeString() 
+                    . ' e não pode postar.'; 
         }
         
         // verifica se o postador esta banido para todas as boards
         $bantime = null;
         $bantime = $this->estaBanido(\Request::ip());
         if($bantime){
-            return $this->redirecionaComMsg('ban',
-            'Seu IP ' . \Request::ip() . ' está banido de todas as boards até: ' . $bantime->toDateTimeString() . ' e não pode postar.',
-            '/' . strip_tags(Purifier::clean($request->siglaboard)));
+            return 'Seu IP ' 
+                    . \Request::ip() 
+                    . ' está banido de todas as boards até: ' 
+                    . $bantime->toDateTimeString() 
+                    . ' e não pode postar.';
         }
-        
-        $arquivos = $request->file('arquivos'); // salva os dados dos arquivos na variável $arquivos
+        return false;
+    }
+    
+    private function validaRequest($request, $arquivos, $links){
         // valida os inputs
         $regras = $this->defineArrayValidacao($request);
+        $this->validate($request, $regras);
+        
         // validação caso haja link do youtube provido na postagem
-        if($request->linkyoutube){
+        if($links){
             if($request->file('arquivos')){
-                return $this->redirecionaComMsg('erro_upload',
-                'Sem anexo de arquivos quando há links de youtube',
-                '/' . strip_tags(Purifier::clean($request->siglaboard)));
+                return 'Sem anexo de arquivos quando há links de youtube';
             }
-            $this->validate($request, $regras);
             
+            foreach($links as $link){
+                if(!preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $link)){
+                    return 'Link inválido';
+                } 
+            }
+        
         } else { // se não houver nenhum link do youtube
             if( (!$request->file('arquivos') && strip_tags(Purifier::clean($request->insidepost)) === 'n') || (is_array($arquivos) && sizeof($arquivos) < 1) ){
-                return $this->redirecionaComMsg('erro_upload',
-                'É necessário postar pelo menos com um arquivo ou um link do youtube',
-                '/' . strip_tags(Purifier::clean($request->siglaboard)));
+                return 'É necessário postar pelo menos com um arquivo ou um link do youtube';
             }
-            $this->validate($request, $regras);
         }
-        // termina validação dos inputs
         
-        // salva os dados do post na variável $post
-        $post = new Post;
-        $links = null;
-        if($request->linkyoutube){ // caso haja links do youtube, divida a strings por pipe characters | 
-            $links = explode('|' ,strip_tags(Purifier::clean($request->linkyoutube)));
+        $num_max_arq_post = ConfiguracaoController::getAll()->num_max_arq_post;
+        // verifica se há mais arquivos/links que o máximo permitido
+        if((is_array($arquivos) && sizeof($arquivos) >  $num_max_arq_post) || ($links && sizeof($links) >  $num_max_arq_post ) ){
+            return 'Número máximo de arquivos ou links do youtube permitidos: ' . $num_max_arq_post;
         }
+        
+        // termina validação dos inputs
+        return false;
+    }
+    
+    private function getLinksYoutube($request){
+        if($request->linkyoutube){ // caso haja links do youtube, divida a strings por pipe characters | 
+            return explode('|' ,strip_tags(Purifier::clean($request->linkyoutube)));
+        }
+        return null;
+    }
+    
+    private function getObjetoPost($request){
+        $post = new Post;
         $post->assunto = strip_tags(Purifier::clean($request->assunto)); // assunto do post
         $post->board = strip_tags(Purifier::clean($request->siglaboard)); // board que o post pertence
         $post->conteudo = $this->trataLinks(strip_tags(Purifier::clean($request->conteudo))); // adiciona tags <a> ao conteudo das mensagens
@@ -265,112 +246,65 @@ class PostController extends Controller {
         $post->pinado = false; // define se a thread está pinada, por padrão, não
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost))); // caso o post seja dentro de um fio, define qual fio "pai" da postagem
         $post->trancado = false; // define se o fio pode receber novos posts ou não
+        // flag "modpost" definido pelo mod
+        $post->modpost = $request->modpost && Auth::check() && strip_tags(Purifier::clean($request->modpost)) === 'modpost';
         
-        
-        
+        return $post;
+    }
+    
+    private function verificaBiscoitoPostar(){
         if(!isset($_COOKIE[$this->nomeBiscoitoSessao]))
-        {
-            return $this->redirecionaComMsg('erro_upload', 
-            'Erro ao postar. Você quer biscoito, amigo?',
-            '/' . $post->board . '/' . ($post->lead_id ? $post->lead_id : ''));
-        }
+            return false;
         
         $biscoito = strip_tags(Purifier::clean($_COOKIE[$this->nomeBiscoitoSessao]));
-        $anao = Anao::where('biscoito', $biscoito)->first();
+        $anao = Anao::find($biscoito);
         
         if(!$anao)
-        {
-            return $this->redirecionaComMsg('erro_upload', 
-            'Erro ao postar. Você quer biscoito, amigo?',
-            '/' . $post->board . '/' . ($post->lead_id ? $post->lead_id : ''));    
-        }
+            return false;
         
-        $post->biscoito = $anao->biscoito;
-        
-        if($post->lead_id)
-        {
-            $lead_fio = Post::find($post->lead_id);
-            if($lead_fio && $lead_fio->trancado)
-            {
-                return $this->redirecionaComMsg('erro_upload', 
-                'Este fio já está trancado',
-                '/' . $post->board . '/' . $post->lead_id);
-            }
-        }
-        
-        // flag "modpost" definido pelo mod
-        if($request->modpost && Auth::check()){
-            $post->modpost = strip_tags(Purifier::clean($request->modpost)) === 'modpost';
-        }
-        $num_max_arq_post = ConfiguracaoController::getAll()->num_max_arq_post;
-        // verifica se há mais arquivos/links que o máximo permitido
-        if((is_array($arquivos) && sizeof($arquivos) >  $num_max_arq_post) || ($links && sizeof($links) >  $num_max_arq_post ) ){
-            return $this->redirecionaComMsg('erro_upload',
-            'Número máximo de arquivos ou links do youtube permitidos: ' . $num_max_arq_post,
-            '/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
-        }
-        
-        // salva o post em banco de dados
-        $post->save();
-        $this->limpaCachePosts($post->board, $post->lead_id);
-
-        // caso haja arquivos, salva-os em disco e seus paths em banco
-        if (!empty($arquivos)) {            
-            foreach ($arquivos as $index => $arq) {
-                if ($arq->isValid()) {
-                                 
-                    // define o filename baseado no nro da postagem concatenado com a qtdade de arquivos updados
-                    // exemplo, se fio nro 1234 e a postagem tem 3 arquivos, gerará 3 filenames do tipo 1234-0, 1234-1, 1234-2 seguido da extensão do arquivo
-                    $contador = 0;
-                    do{
-                        $nomeArquivo = $post->id . "-{$contador}"  . "." . $arq->extension();
+        return $anao;
+    }
+    
+    private function salvaArquivosDisco($request, $post, $arquivos){
+        foreach ($arquivos as $index => $arq) {
+            if ($arq->isValid()) {
+                // define o filename baseado no nro da postagem concatenado com a qtdade de arquivos updados
+                // exemplo, se fio nro 1234 e a postagem tem 3 arquivos, gerará 3 filenames do tipo 1234-0, 1234-1, 1234-2 seguido da extensão do arquivo
+                $contador = 0;
+                do{
+                    $nomeArquivo = $post->id . "-{$contador}"  . "." . $arq->extension();
                         
-                        $contador++;
-                    //}while(\File::exists(public_path() . '/storage/' . $nomeArquivo));
-                    }while(Storage::disk('public')->exists($nomeArquivo));
+                    $contador++;
+                }while(Storage::disk('public')->exists($nomeArquivo));
                     
-                    // salva em disco na pasta public/storage
-                    //Storage::disk('disk2')->putFileAs('/storage', $arq, $nomeArquivo);
-                    Storage::disk('public')->putFileAs('', $arq, $nomeArquivo);
+                // salva em disco na pasta public/storage
+                Storage::disk('public')->putFileAs('', $arq, $nomeArquivo);
                     
-                    $spoilerVal =  $request->input('arquivos-spoiler-' . ($index+1)) !== null ? $request->input('arquivos-spoiler-' . ($index+1)) === 'spoiler' : false;
-                    $post->arquivos()->save(new Arquivo(
-                    ['filename' => $nomeArquivo, 
-                     'mime' => $arq->getMimeType(), 
-                     'spoiler' => $spoilerVal ,
-                     'original_filename' => $arq->getClientOriginalName()
-                     ]));
+                $spoilerVal =  $request->input('arquivos-spoiler-' . ($index+1)) !== null ? $request->input('arquivos-spoiler-' . ($index+1)) === 'spoiler' : false;
+                $post->arquivos()->save(new Arquivo(
+                ['filename' => $nomeArquivo, 
+                 'mime' => $arq->getMimeType(), 
+                 'spoiler' => $spoilerVal ,
+                 'original_filename' => $arq->getClientOriginalName()
+                ]));
                     
-                }
-            }
-        } else if($links){ // caso haja links, salva suas referências em banco
-            foreach($links as $link){
-                if(preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $link, $match)){
-                    $post->ytanexos()->save(new Ytanexo(['ytcode' => $match[1], 'post_id' => $post->id ]));
-                    
-                } else {
-                    $this->postRollback($post);
-                    return $this->redirecionaComMsg('erro_upload',
-                    'Link inválido',
-                    '/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id ));
-                    
-                }
             }
         }
+    }
 
-        // se for post dentro de fio e não for sage, atualiza sua ultima atualização para que "bumpe"
-        if($post->lead_id && !($post->sage)){
-            $this->atualizaUpdatedAt($post->lead_id);
+    private function salvaLinksYoutube($request, $post, $links){
+        foreach($links as $link){
+            if(preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $link, $match)){
+                $post->ytanexos()->save(new Ytanexo(['ytcode' => $match[1], 'post_id' => $post->id ]));
+                    
+            } else {
+                $this->postRollback($post);
+                return $this->redirecionaComMsg('erro_upload',
+                'Link inválido',
+                $request->headers->get('referer'));
+                    
+            }
         }
-        
-        // verifica se ultrapassou o limite máximo de fios dentro da board
-        $this->verificaLimitePosts($post->board);
-        
-        // prepara mensagem de aviso de post criado com sucesso
-        $flashmsg = $post->lead_id ? 'Post número ' . $post->id . ' criado' : 'Post número <a target="_blank" href="/' . $post->board . '/' . $post->id . '">' . $post->id . '</a> criado';
-        return $this->redirecionaComMsg('post_criado', $flashmsg,
-        '/' . $post->board . (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? '' : '/' . $post->lead_id));
-        
     }
     
     protected function postRollback($post){
@@ -449,8 +383,7 @@ class PostController extends Controller {
     protected function podeDeletarFio($postId){
         $post = Post::find($postId);
         $bisc = $this->temBiscoito();
-        if(!$post || !$bisc)
-        {
+        if(!$post || !$bisc){
             return false;
         }
         if(Auth::check() || $post->biscoito === $bisc)
@@ -461,8 +394,7 @@ class PostController extends Controller {
     // deleta uma postagem e dados relacionados a ele (links, arquivos)
     public function destroy($siglaBoard, $postId) {
         $post = $this->podeDeletarFio($postId);
-        if($post)
-        {
+        if($post){
             $arquivos = $post->arquivos;
 
             foreach($arquivos as $arq){
@@ -473,11 +405,9 @@ class PostController extends Controller {
                 \DB::table('ytanexos')->where('post_id', '=', $postId)->delete();
             }
             
-            if(!$post->lead_id)
-            {
+            if(!$post->lead_id){
                 $posts = Post::where('lead_id', $post->id)->get();
-                foreach($posts as $p)
-                {
+                foreach($posts as $p){
                     $this->deletaUmPost($p);
                 }
             }
@@ -491,8 +421,7 @@ class PostController extends Controller {
         }
     }
     
-    private function deletaUmPost($post)
-    {
+    private function deletaUmPost($post){
         if($post){
             $arquivos = $post->arquivos;
 
@@ -528,5 +457,94 @@ class PostController extends Controller {
         } else abort(400);
         
     }
+    
+    private function deveTrancarFio($postId)
+    {
+        return Post::where('lead_id', '=', $postId)->count() >= ConfiguracaoController::getAll()->num_max_posts_fio - 1;
+        
+    }
 
+    /**
+     * Valida e cria uma nova postagem
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request) {
+        
+        // Verifica se a board requisitada para o post realmente existe
+        // se não existe, aborta com http 400
+        $this->verificaBoardLegitima($request);
+        
+        //se houver banimentos, retorna
+        $msgBan = $this->verificaBanimentos($request);
+        if($msgBan){
+            return $this->redirecionaComMsg('ban', 
+             $msgBan,
+            $request->headers->get('referer'));
+        }
+        $arquivos = $request->file('arquivos'); // salva os dados dos arquivos na variável $arquivos
+        $links = $this->getLinksYoutube($request); // pega links do youtube se tiverem
+        
+        // valida inputs
+        $msgValidacao = $this->validaRequest($request, $arquivos, $links);
+        if($msgValidacao){
+            return $this->redirecionaComMsg('erro_upload', 
+            $msgValidacao,
+            $request->headers->get('referer'));
+        }
+        
+        $post = $this->getObjetoPost($request); // transforma os campos do form da request num objeto Post
+        
+        // verifica se tem biscoito para postar
+        $anao = $this->verificaBiscoitoPostar();
+        if($anao){
+            $post->biscoito = $anao->biscoito;
+        }
+        else{
+            return $this->redirecionaComMsg('erro_upload', 
+            'Erro ao postar. Você quer biscoito, amigo?',
+            $request->headers->get('referer'));
+        }
+        
+        if($post->lead_id){
+            $lead_fio = Post::find($post->lead_id);
+            if($lead_fio && $lead_fio->trancado){
+                return $this->redirecionaComMsg('erro_upload', 
+                'Este fio já está trancado',
+                $request->headers->get('referer'));
+            } elseif($lead_fio 
+                    && !$lead_fio->trancado
+                    && $this->deveTrancarFio($lead_fio->id)){
+                $lead_fio->trancado = true;
+                $lead_fio->save();
+                
+            }
+        }
+                
+        // salva o post em banco de dados
+        $post->save();
+        $this->limpaCachePosts($post->board, $post->lead_id);
+
+        // caso haja arquivos, salva-os em disco e seus paths em banco
+        if (!empty($arquivos)) {
+            $this->salvaArquivosDisco($request, $post, $arquivos);
+        } else if($links){ // caso haja links, salva suas referências em banco
+            $this->salvaLinksYoutube($request, $post, $links);
+        }
+
+        // se for post dentro de fio e não for sage, atualiza sua ultima atualização para que "bumpe"
+        if($post->lead_id && !($post->sage)){
+            $this->atualizaUpdatedAt($post->lead_id);
+        }
+        
+        // verifica se ultrapassou o limite máximo de fios dentro da board
+        $this->verificaLimitePosts($post->board);
+        
+        // prepara mensagem de aviso de post criado com sucesso
+        $flashmsg = $post->lead_id ? 'Post número ' . $post->id . ' criado' : 'Post número <a target="_blank" href="/' . $post->board . '/' . $post->id . '">' . $post->id . '</a> criado';
+        return $this->redirecionaComMsg('post_criado', $flashmsg,
+        $request->headers->get('referer'));
+        
+    }    
 }

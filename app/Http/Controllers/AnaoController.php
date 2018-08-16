@@ -19,8 +19,7 @@ class AnaoController extends Controller
         
     }
     
-    public function salvaAnao($biscoito, $userAgent, $ip)
-    {
+    public function salvaAnao($biscoito, $userAgent, $ip){
         $anao = new Anao;
         $anao->biscoito = $biscoito;
         $anao->ip = $ip; // ip do postador

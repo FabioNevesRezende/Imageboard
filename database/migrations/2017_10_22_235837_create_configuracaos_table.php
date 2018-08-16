@@ -22,6 +22,7 @@ class CreateConfiguracaosTable extends Migration
             $table->tinyInteger('num_max_arq_post')->nullable();
             $table->tinyInteger('num_max_fios')->nullable();
             $table->tinyInteger('num_posts_paginacao')->nullable();
+            $table->smallInteger('num_max_posts_fio')->nullable();
         });
     }
 
