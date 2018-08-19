@@ -7,24 +7,24 @@
         <h4 class="modal-title">Banir usuário</h4>
       </div>
       <div class="modal-body">
-        {!! Form::open(['route' => 'bans.userban']) !!}
+        <form class="form-horizontal" role="form" method="POST" action="{{ route('bans.userban') }}">
         {{ csrf_field() }}
-        {{  Form::text('motivo', null, array('class' => 'novo-post-form-item form-control', 'maxlength' => '255', 'placeholder' => 'Motivo' )) }}
-        Permaban: {{ Form::checkbox('permaban', 'permaban', false,array('class'=>'novo-post-form-item')) }}
+        <input type="text" class="novo-post-form-item form-control" maxlength="255" placeholder="Motivo" name="motivo">
+        Permaban: <input type="checkbox" class="novo-post-form-item" value="permaban" name="permaban">
     
-        {{  Form::number('nro_horas', null, array('class' => 'novo-post-form-item form-control', 'placeholder' => 'Qtdade de horas', 'min' => '1', 'max'=>'24')) }}
-        {{  Form::number('nro_dias', null, array('class' => 'novo-post-form-item form-control', 'placeholder' => 'Qtdade de dias', 'min' => '1' )) }}
+        <input type="number" class="novo-post-form-item form-control" placeholder="Qtdade de horas" min="1" max="24" name="nro_horas">
+        <input type="number" class="novo-post-form-item form-control" placeholder="Qtdade de dias" min="1" name="nro_dias">
 
-        {{ Form::select('board', [
-            $siglaBoard => $siglaBoard,
-            'todas' => 'Todas as boards'],  null, array('class' => 'novo-post-form-item form-control', 'required', 'maxlength' => '10')) 
-        }}
+        <select name="board" class="novo-post-form-item form-control" maxlength="10" required>
+            <option value="{{ $siglaBoard }}">{{ $siglaBoard }}</option>
+            <option value="todas">Todas as boards</option>
+        </select>
         
-        {{  Form::hidden('siglaboard', $siglaBoard) }}
-        {{  Form::hidden('idpost', '', ['id' => 'idPostInput']) }}
-        {{ Form::submit('Banir', array('class' => 'btn btn-primary form-control') ) }}
+        <input type="hidden" name="siglaboard" value="{{ $siglaBoard }}">
+        <input type="hidden" id="idPostInput" name="idpost" value="">
+        <input type="submit" class="btn btn-primary form-control" value="Banir">
     
-        {!! Form::close() !!} 
+        </form>
               
       </div>
       <div class="modal-footer">

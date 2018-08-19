@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('stylesheets')
-{!! Html::style('css/style.css') !!}
+    <link rel="stylesheet" href="/css/style.css" >
 @stop
 
 

@@ -4,16 +4,16 @@
 <a  data-toggle="modal" data-target="#modalDeleteBoard" class="btn btn-danger">Deletar board</a>
 @endif
 <br>
-{!! Form::open(['route' => 'posts.store', 'enctype' => 'multipart/form-data', 'class'=>'form-post']) !!}
+<form class="form-post" role="form" method="POST" enctype="multipart/form-data" action="{{ route('posts.store') }}">
 {{ csrf_field() }}
-{{  Form::hidden('siglaboard', $siglaBoard) }}
-{{  Form::hidden('insidepost', $insidePost) }}
+<input type="hidden" name="siglaboard" value="{{ $siglaBoard }}">
+<input type="hidden" name="insidepost" value="{{ $insidePost }}">
 @if(Auth::check()) 
 <div style="float: left; margin-bottom: 20px; margin-left: 15px;">
-Modpost {{ Form::checkbox('modpost', 'modpost', false,array('class'=>'novo-post-form-item', 'checked' => '')) }}
+Modpost <input type="checkbox" class="novo-post-form-item" name="modpost" value="modpost" checked>
 </div>
 @endif
-{{  Form::text('assunto', null, array('class' => 'novo-post-form-item form-control', 'maxlength' => '255', 'placeholder' => 'Assunto' )) }}
+<input type="text" class="novo-post-form-item form-control" maxlength="255" placeholder="Assunto" name="assunto" >
 <div class="row">
     <div class="col-sm-1"></div>
     <div class="col-sm-11">
@@ -26,15 +26,16 @@ Modpost {{ Form::checkbox('modpost', 'modpost', false,array('class'=>'novo-post-
     </div>
 </div>
 
-{{ Form::text('linkyoutube', null, array('class' => 'novo-post-form-item form-control', 'maxlength' => '255', 'placeholder' => 'Link(s) para vídeo(s) do youtube, separados por |' )) }}
-{{  Form::textarea('conteudo', null, array('id' => 'novo-post-conteudo','class' => 'novo-post-form-item form-control', 'placeholder' => 'Mensagem', 'rows'=>'5', 'maxlength' => '65535')) }}
+<input type="text" class="novo-post-form-item form-control" maxlength="255" placeholder="Link(s) para vídeo(s) do youtube, separados por |" name="linkyoutube" >
+<textarea class="novo-post-form-item form-control" id="novo-post-conteudo" placeholder="Mensagem" rows="5" maxlength="65535" name="conteudo"></textarea>
 <p style="margin-left: 15px;">Mime types: image/jpeg, image/png, image/gif, video/webm, video/mp4, audio/mpeg</p>
 <div class="row">
     <div class="col-sm-6">
-        Sage {{ Form::checkbox('sage', 'sage', false,array('class'=>'novo-post-form-item')) }}
+        Sage <input type="checkbox" class="novo-post-form-item" name="sage" value="sage" checked>
+        
     </div>
     <div class="col-sm-6">
-        {{ Form::submit('Postar', array('class' => 'mini-btn form-control') ) }}
+        <input type="submit" value="Postar" class="mini-btn form-control">
     </div>
 </div>
 
@@ -52,4 +53,4 @@ Modpost {{ Form::checkbox('modpost', 'modpost', false,array('class'=>'novo-post-
 </div><br>
 @endif
 
-{!! Form::close() !!}
+</form>

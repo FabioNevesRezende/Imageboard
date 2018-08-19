@@ -162,7 +162,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,
 
@@ -229,8 +228,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Html' => Collective\Html\HtmlFacade::class,
-        'Form' => Collective\Html\FormFacade::class,
         'Purifier' => Mews\Purifier\Facades\Purifier::class,
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
 

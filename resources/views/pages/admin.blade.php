@@ -47,7 +47,7 @@
             <div class="col-sm-6 div-indice">
                 @if(isset($noticiaEditar) && $noticiaEditar != null)
                     <b>Editar noticia</b>
-                    {!! Form::open(['route' => 'noticias.update_noticia', 'class'=>'form-post']) !!}
+                    <form class="form-post" role="form" method="POST" action="{{ route('noticias.update_noticia') }}">
                         {{ csrf_field() }}
                         Título:<br>
                         <input type="text" name="assunto" maxlength="256" 
@@ -58,22 +58,22 @@
                         
                         <input type="hidden" name="id" value="{{ $noticiaEditar->id }}"><br><br>
                         <input type="submit" class="btn btn-primary" value="Editar"><br><br>
-                    {!! Form::close() !!}
+                    </form>
                 @else
                     <b>Divulgar noticia</b>
-                    {!! Form::open(['route' => 'noticias.nova_noticia', 'class'=>'form-post']) !!}
+                    <form class="form-post" role="form" method="POST" action="{{ route('noticias.nova_noticia') }}">
                         {{ csrf_field() }}
                         Título:<br>
                         <input type="text" name="assunto" maxlength="256" required><br><br>
                         Notícia:<br>
                         <textarea rows="6" cols="70" name="conteudo" maxlength="65535" required></textarea><br>
                         <input type="submit" class="btn btn-primary" value="Divulgar"><br><br>
-                    {!! Form::close() !!}
+                    </form>
                 @endif
             </div>
             <div class="col-sm-6 div-indice">
                 <b>Criar nova board</b>
-                {!! Form::open(['route' => 'boards.store', 'class'=>'form-post']) !!}
+                <form class="form-post" role="form" method="POST" action="{{ route('boards.store') }}">
                     {{ csrf_field() }}
                     Nome da board:<br>
                     <input type="text" name="nome" maxlength="50" required><br><br>
@@ -84,7 +84,7 @@
                     Ordem:<br>
                     <input type="number" name="ordem" max="32767" min="-32767" required><br><br>
                     <input type="submit" class="btn btn-primary" value="Criar board"><br><br>
-                {!! Form::close() !!}
+                </form>
                 
             </div>
             
@@ -92,7 +92,7 @@
         <div class="row" >
             <div class="col-sm-6 div-indice">
                 <b>Definir nova regra</b>
-                {!! Form::open(['route' => 'regras.regra', 'class'=>'form-post']) !!}
+                <form class="form-post" role="form" method="POST" action="{{ route('regras.regra') }}">
                     {{ csrf_field() }}
                     Descrição:<br>
                     <input type="text" name="descricao" maxlength="256" required><br><br>
@@ -106,11 +106,11 @@
                     <br>
                     <br>
                     <input type="submit" class="btn btn-primary" value="Criar regra"><br><br>
-                {!! Form::close() !!}
+                </form>
             </div>
             <div class="col-sm-6 div-indice">
                 <b>Alterar senha</b>
-                {!! Form::open(['route' => 'users.update_password', 'class'=>'form-post']) !!}
+                <form class="form-post" role="form" method="POST" action="{{ route('users.update_password') }}">
                     {{ csrf_field() }}
                     Nova senha:<br>
                     <input type="password" name="password" maxlength="25" required><br><br>
@@ -119,7 +119,7 @@
                     <br>
                     <br>
                     <input type="submit" class="btn btn-primary" value="Alterar senha"><br><br>
-                {!! Form::close() !!}
+                </form>
             </div>
         </div>
         
