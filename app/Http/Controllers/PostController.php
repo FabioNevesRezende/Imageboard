@@ -6,14 +6,11 @@ use Ibbr\Post;
 use Illuminate\Http\Request;
 use Purifier;
 use Storage;
-use Session;
-use Config;
 use Redirect;
 use Ibbr\Arquivo;
 use Ibbr\Ytanexo;
 use Ibbr\Anao;
 use Ibbr\Report;
-use Ibbr\Configuracao;
 use Carbon\Carbon;
 use Cache;
 use Auth;
@@ -158,17 +155,7 @@ class PostController extends Controller {
         
         return $regras;
     }
-    
-    private function limpaCachePosts($board, $thread){
-        $num_paginas = 10;
-        for($i = 0 ; $i < $num_paginas ; $i++ ){
-            Cache::forget('posts_board_' . $board . '_pag_' . $i);
-            Cache::forget('subposts_board_' . $board  . '_pag_' . $i);
-        }
-        Cache::forget('posts_thread_' . $thread);
-        Cache::forget('posts_catalogo');
-    }
-    
+        
     private function verificaBanimentos($request){
         // Verifica se o postador está banido da board em questão
         $bantime = $this->estaBanido(\Request::ip(), strip_tags(Purifier::clean($request->siglaboard)));

@@ -19,14 +19,12 @@ var addNovoInputFile = function(elem, max){
 
 $(document).ready(function(){
     $('.btn-ban').on('click', function(){
-        document.getElementById('idPostInput').value = $(this).data('id-post');
+        $('#idPostInput').val($(this).data('id-post'));
         
     });
     
     $('.btn-report').on('click', function(){
-        console.log("valor id post: ");
-        console.log($(this).data('id-post'));
-        document.getElementById('idPostReportInput').value = $(this).data('id-post');
+        $('#idPostReportInput').val($(this).data('id-post'));
         
     });
     

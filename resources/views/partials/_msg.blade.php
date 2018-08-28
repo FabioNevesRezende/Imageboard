@@ -6,6 +6,13 @@
     </div>
 
 @endif
+@if (Session::has('sucesso_admin'))
+
+    <div class="alert alert-success" role="alert">
+        <p><strong>Sucesso:</strong> {!! Session::get('sucesso_admin') !!}</p>
+    </div>
+
+@endif
 @if (Session::has('erro_admin'))
 
     <div class="alert alert-danger" role="alert">

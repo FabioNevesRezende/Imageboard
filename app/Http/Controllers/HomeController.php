@@ -8,8 +8,6 @@ use Auth;
 use Illuminate\Support\Facades\Redirect;
 use Cache;
 
-use Ibbr\Configuracao;
-
 class HomeController extends Controller
 {
     /**

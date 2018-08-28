@@ -112,6 +112,8 @@
                 <b>Alterar senha</b>
                 <form class="form-post" role="form" method="POST" action="{{ route('users.update_password') }}">
                     {{ csrf_field() }}
+                    Senha antiga:<br>
+                    <input type="password" name="old_password" maxlength="25" required><br><br>
                     Nova senha:<br>
                     <input type="password" name="password" maxlength="25" required><br><br>
                     Confirmação nova senha:<br>

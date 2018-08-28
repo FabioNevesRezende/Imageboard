@@ -11,7 +11,6 @@ use Ibbr\Ban;
 use Ibbr\Post;
 use Purifier;
 use Carbon\Carbon;
-use Cookie;
 use Cache;
 use Redirect;
 use Session;
@@ -41,6 +40,16 @@ class Controller extends BaseController {
         return Redirect::to($enderecoRed);
     }
     
+    protected function limpaCachePosts($board, $thread){
+        $num_paginas = 10;
+        for($i = 0 ; $i < $num_paginas ; $i++ ){
+            Cache::forget('posts_board_' . $board . '_pag_' . $i);
+            Cache::forget('subposts_board_' . $board  . '_pag_' . $i);
+        }
+        Cache::forget('posts_thread_' . $thread);
+        Cache::forget('posts_catalogo');
+    }
+    
     public function banirUsuario(Request $request){
         
         $ban = new Ban;
@@ -60,6 +69,7 @@ class Controller extends BaseController {
         
         $ban->save();
         Cache::forget('bans_gerais');
+        $this->limpaCachePosts($request->board, $post->lead_id === null ? $post->id : $post->lead_id );
         
         return \Redirect::to($request->headers->get('referer'));
     }

@@ -18,6 +18,7 @@ class ConfiguracaosSeeder extends Seeder
             'carteira_doacao' => 'endereco-carteira-monero',
             'biscoito_admin' => 'test',
             'tempero_biscoito' => 'tempero',
+            'url_repo' => 'https://gitlab.com',
             'num_max_arq_post' => 5,
             'num_max_fios' => 100,
             'num_posts_paginacao' => 10,

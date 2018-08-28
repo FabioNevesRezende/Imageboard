@@ -11,15 +11,37 @@ use Hash;
 
 class UserController extends Controller
 {
+    public function defineArrayValidacao(){
+        $regras = array();
+        $regras['password'] = 'required|max:25';
+        $regras['confirm_password'] = 'required|max:25';
+        $regras['old_password'] = 'required|max:25';
+        
+        return $regras;
+    }
+    
     public function updatePassword(Request $request){
         if(Auth::check()){
             $user = Auth::user();
-            if($user && $request->password === $request->confirm_password){
-                $user->password = Hash::make($request->password);
-                
-                $user->save();
-                return Redirect('/admin');
+            $regras = $this->defineArrayValidacao();
+            $this->validate($request, $regras);
+            if(!$user)
+            {
+                return $this->redirecionaComMsg('erro_admin', 'Erro inesperado', '/admin');
             }
+            if($request->password !== $request->confirm_password)
+            {
+                return $this->redirecionaComMsg('erro_admin', 'A nova senha e sua confirmação não batem', '/admin');
+            }
+            if(!Hash::check($request->old_password, $user->password))
+            {
+                return $this->redirecionaComMsg('erro_admin', 'Erro ao validar senha antiga', '/admin');
+            }
+            $user->password = Hash::make($request->password);
+                
+            $user->save();
+            return $this->redirecionaComMsg('sucesso_admin', 'Senha alterada com sucesso', '/admin');
+            
         }
         return Redirect('/');
     }

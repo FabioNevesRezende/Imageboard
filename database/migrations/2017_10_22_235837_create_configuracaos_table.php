@@ -19,6 +19,7 @@ class CreateConfiguracaosTable extends Migration
             $table->string('biscoito_admin', 40);
             $table->string('tempero_biscoito', 15);
             $table->string('carteira_doacao', 300)->nullable();
+            $table->string('url_repo', 300)->nullable();
             $table->tinyInteger('num_max_arq_post')->nullable();
             $table->tinyInteger('num_max_fios')->nullable();
             $table->tinyInteger('num_posts_paginacao')->nullable();

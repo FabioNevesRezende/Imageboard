@@ -4,13 +4,9 @@ namespace Ibbr\Http\Controllers;
 
 //use Illuminate\Http\Request;
 use Ibbr\Post;
-use Ibbr\Report;
-use Ibbr\Configuracao;
 use Ibbr\Http\Controllers\BoardController;
-use Cache;
 use Config;
 use Auth;
-use Carbon\Carbon;
 
 class PagesController extends Controller
 {
