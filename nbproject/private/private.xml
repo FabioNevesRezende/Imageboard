@@ -5,7 +5,6 @@
         <group>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/ConfiguracaoController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/User.php</file>
-            <file>file:/home/fabio/criação/imageboard-brasil/storage/framework/views/014c99e4c1a382bb39f097bc56d12da164d08fdc.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_10_22_235837_create_configuracaos_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Middleware/RedirectIfAuthenticated.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/postshow.blade.php</file>
@@ -23,6 +22,7 @@
             <file>file:/home/fabio/criação/imageboard-brasil/server.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/config/funcoes.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_boardpostheader.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/storage/framework/views/5122cedaf0a871298f4a181b8c39da0eb0a4e818.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Controller.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/RegisterController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/.env</file>
@@ -71,7 +71,6 @@
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/AnaoController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_06_10_022138_create_reports_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Noticia.php</file>
-            <file>file:/home/fabio/criação/imageboard-brasil/storage/framework/views/450d1a6425ffdd16f8d6a2f32c193ba9628f1260.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/seeds/ConfiguracaosSeeder.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/PagesController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Providers/ViewComposerProvider.php</file>

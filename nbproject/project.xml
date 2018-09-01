@@ -10,6 +10,7 @@
             <word>emoji</word>
             <word>endforeach</word>
             <word>foreach</word>
+            <word>php</word>
         </spellchecker-wordlist>
     </configuration>
 </project>

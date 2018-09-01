@@ -11,6 +11,7 @@ npm-debug.log
 .env
 *~
 inserts.sql
+inserts_prod.sql
 infos\ host
 public/*.jpg
 public/*.png
