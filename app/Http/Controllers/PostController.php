@@ -96,7 +96,7 @@ class PostController extends Controller {
     // adiciona verdetexto na postagem
     protected function addGreenText($str){
         return preg_replace(
-                '/&gt;(.+)/m', 
+                '/&gt;(.+)\n?/m', 
                 '<span class="green-text">&gt;$1</span><br>', 
                 $str
                 );
