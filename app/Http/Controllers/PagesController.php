@@ -108,9 +108,10 @@ class PagesController extends Controller
     }
     
     public function logout(){
-        if(Auth::check())
+        if(Auth::check()){
             Auth::logout();
-        return $this->getIndex();
+            return $this->getIndex();
+        } else abort(404);
     }
     
     public function getArquivo($filename){

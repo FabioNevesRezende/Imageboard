@@ -28,6 +28,7 @@
             <file>file:/home/fabio/criação/imageboard-brasil/.env</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Board.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Post.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_modalmoverpost.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/config/app.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/ForgotPasswordController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Providers/AuthServiceProvider.php</file>
@@ -46,6 +47,7 @@
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_05_20_223047_create_posts_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/config/filesystems.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/routes/web.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/public/web.config</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/auth/login.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/board.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Exceptions/Handler.php</file>

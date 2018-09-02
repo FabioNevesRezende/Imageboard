@@ -86,6 +86,8 @@ Route::group(['middleware'=>['auth']], function(){
     
     Route::get('/deletereport/{id}', ['uses' => 'PostController@destroyReport'])
         ->where('id', '[0-9]+');
+    
+    Route::post('/movepost', ['as' => 'posts.mover', 'uses' => 'PostController@movePost']);
 });
 
 Auth::routes();

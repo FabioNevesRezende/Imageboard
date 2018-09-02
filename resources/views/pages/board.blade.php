@@ -12,6 +12,7 @@
 @if(Auth::check())
 @include('partials._modalban')
 @include('partials._modaldeleteboard')
+@include('partials._modalmoverpost')
 @endif
 
 @include('partials._modalreport')

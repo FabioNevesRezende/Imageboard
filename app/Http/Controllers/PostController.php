@@ -468,6 +468,42 @@ class PostController extends Controller {
         }
         abort(400);
     }
+    
+    public function movePost(Request $request)
+    {
+        if(Auth::check())
+        {
+            $postMover = Post::find($request->idpost);
+            if($postMover){
+                if($request->novopost > $request->idpost)
+                {
+                    return $this->redirecionaComMsg('erro_admin', 'O ID do novo post tem que ser menor do post a ser movido', '/' . $request->novaboard);
+                }
+                $velhaBoard = $postMover->board;
+                if($postMover->lead_id !== null)
+                {
+                    $postsFio = Post::where('lead_id', '=', $request->idpost)->get();
+                    foreach($postsFio as $postFio)
+                    {
+                        $postFio->lead_id = $request->novopost;
+                        $postFio->board = $request->novaboard;
+                        $postFio->save();
+                    }
+                }
+                $postMover->lead_id = $request->novopost;
+                $postMover->board = $request->novaboard;
+                $postMover->pinado = false;
+                $postMover->trancado = false;
+                $postMover->save();
+                
+                $this->limpaCachePosts($velhaBoard, $postMover->lead_id);
+                $this->limpaCachePosts($request->novaboard, $request->novopost);
+                return $this->redirecionaComMsg('sucesso_admin', 'Post ' . $request->idpost . ' movido com sucesso para /' . $request->novaboard . '/' . $request->novopost, '/' . $request->novaboard);
+            }
+            return $this->redirecionaComMsg('erro_admin', 'Post ' . $request->idpost . ' não encontrado', '/' . $request->novaboard);
+        }
+        abort(400);
+    }
 
     /**
      * Valida e cria uma nova postagem

@@ -28,6 +28,11 @@ $(document).ready(function(){
         
     });
     
+    $('.btn-mover-post').on('click', function(){
+        $('.idPostMover').val($(this).data('id-post'));
+        
+    });
+    
     $('.a-nro-post').on('click', function(){
         document.getElementById('novo-post-conteudo').value += ">>" + $(this).text() + "\n";
     });

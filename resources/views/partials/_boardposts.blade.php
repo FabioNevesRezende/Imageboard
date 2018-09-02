@@ -31,6 +31,8 @@
         @endif
 
         <a class="mini-btn btn-ban" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalBan"><span data-toggle="tooltip" data-placement="top" title="Banir usuário" class="glyphicon glyphicon-ban-circle"></span></a> 
+        <a class="mini-btn btn-mover-post" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalMoverPost"><span data-toggle="tooltip" data-placement="top" title="Mover postagem" class="glyphicon glyphicon-circle-arrow-right"></span></a> 
+    
     @endif <br>
     
     <div class="fio-imgs-div">
@@ -96,9 +98,14 @@
                     <strong class="assunto">{{ $sb->assunto }}</strong> 
                     <i>{{ $sb->data_post }}</i>
                     <u>Nro <a class="a-nro-post">{{ $sb->id }}</a></u> 
-                      <a class="mini-btn btn-report" data-id-post="{{ $sb->id }}" data-toggle="modal" data-target="#modalReport">
-                          <span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span>
-                      </a>
+                    <a class="mini-btn btn-report" data-id-post="{{ $sb->id }}" data-toggle="modal" data-target="#modalReport">
+                        <span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/deletepost/{{ $siglaBoard }}/{{ $sb->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a>
+                    @if(Auth::check())
+                    <a class="mini-btn btn-ban" data-id-post="{{ $sb->id }}" data-toggle="modal" data-target="#modalBan"><span data-toggle="tooltip" data-placement="top" title="Banir usuário" class="glyphicon glyphicon-ban-circle"></span></a> 
+                    <a class="mini-btn btn-mover-post" data-id-post="{{ $sb->id }}" data-toggle="modal" data-target="#modalMoverPost"><span data-toggle="tooltip" data-placement="top" title="Mover postagem" class="glyphicon glyphicon-circle-arrow-right"></span></a> 
+                    @endif
                     <br>
                     @foreach ($sb->arquivos as $sbarq)
                         <div class="fio-img-div">
