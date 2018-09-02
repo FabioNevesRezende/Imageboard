@@ -272,7 +272,8 @@ class PostController extends Controller {
                 ['filename' => $nomeArquivo, 
                  'mime' => $arq->getMimeType(), 
                  'spoiler' => $spoilerVal ,
-                 'original_filename' => $arq->getClientOriginalName()
+                 'original_filename' => $arq->getClientOriginalName(),
+                 'filesize' => $arq->getSize()
                 ]));
                     
             }
