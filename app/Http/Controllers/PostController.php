@@ -99,7 +99,7 @@ class PostController extends Controller {
         return preg_replace(
                 
                 '/&gt;(.+)/m', 
-                '<p class="green-text">&gt;$1</p>', 
+                '<span class="green-text">&gt;$1</span><br>', 
                 $str
                 );
     }

@@ -53,7 +53,7 @@
                 @endphp
                 <div class="catalogo-post-div text-center catalogo-post-div-board-{{ $post->board }}">
                     <span style="font-weight: bold;">
-                        @if($post->assunto) {!! substr($post->conteudo, 0, 15) !!} | @endif /{{ $post->board }}/
+                        @if($post->assunto) {{ substr($post->assunto, 0, 15) }} | @endif /{{ $post->board }}/
                     </span>
                     <br>
                     <a href="/{{ $post->board }}/{{ $post->id }}" target="_blank">
@@ -69,7 +69,7 @@
                     <img class="img-responsive img-thumbnail" src="//img.youtube.com/vi/{{$arq->ytcode}}/0.jpg" width="150px" height="150px" >
                     @endif
                     </a>
-                    {!! substr($post->conteudo, 0, 50) !!}
+                    {!! strip_tags(substr($post->conteudo, 0, 80), '<br>') !!}
                     <hr>
                 </div>
             @endforeach

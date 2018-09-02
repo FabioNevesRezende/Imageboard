@@ -9,6 +9,7 @@
             <word>assunto</word>
             <word>emoji</word>
             <word>endforeach</word>
+            <word>endif</word>
             <word>foreach</word>
             <word>php</word>
         </spellchecker-wordlist>

@@ -15,7 +15,9 @@
      <a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a> 
      <a data-toggle="tooltip" data-placement="top" title="Responder" class="mini-btn" href="/{{ $siglaBoard }}/{{ $post->id }}" target="_blank"><span class="glyphicon glyphicon-pencil"></span></a> 
      
+     @if()
      <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/deletepost/{{ $siglaBoard }}/{{ $post->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> 
+     @endif
      
     @if(Auth::check())
         @if($post->pinado)
@@ -36,7 +38,7 @@
     <div class="fio-imgs-div">
     @foreach ($post->arquivos as $arq)
     <div class="fio-img-div">
-    {{ $arq->original_filename }}<br>
+        <span data-toggle="tooltip" data-placement="top" title="{{ $arq->original_filename }}">{{ substr($arq->original_filename,0,10) }}</span><br>
     @if($arq->mime === 'image/jpeg' || $arq->mime === 'image/png' || $arq->mime === 'image/gif' )
         <a href="/storage/{{ $arq->filename }}" target="_blank">
         <img class="img-responsive img-thumbnail" 
@@ -98,7 +100,7 @@
                     <br>
                     @foreach ($sb->arquivos as $sbarq)
                         <div class="fio-img-div">
-                        {{ $arq->original_filename }}<br>
+                        <span data-toggle="tooltip" data-placement="top" title="{{ $arq->original_filename }}">{{ substr($arq->original_filename,0,10) }}</span><br>
                         @if($sbarq->mime === 'image/jpeg' || $sbarq->mime === 'image/png' || $sbarq->mime === 'image/gif' )
                             <a href="/storage/{{ $sbarq->filename }}" target="_blank">
                             <img class="img-responsive img-thumbnail" 

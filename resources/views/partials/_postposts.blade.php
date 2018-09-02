@@ -40,7 +40,7 @@
 @foreach ($post->arquivos as $arq)
 
 <div class="fio-img-div">
-{{ $arq->original_filename }}<br>
+<span data-toggle="tooltip" data-placement="top" title="{{ $arq->original_filename }}">{{ substr($arq->original_filename,0,10) }}</span><br>
 @if($arq->mime === 'image/jpeg' || $arq->mime === 'image/png' || $arq->mime === 'image/gif' )
         <a href="/storage/{{ $arq->filename }}" target="_blank">
         <img class="img-responsive img-thumbnail" 
