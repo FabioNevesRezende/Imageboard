@@ -99,8 +99,8 @@
                     Board:<br>
                     <select name="board_name">
                         <option value="todas" selected>todas</option>
-                        @foreach($boards as $board => $boardnome)
-                        <option value="{{ $board }}"> {{ $board }}</option>
+                        @foreach($boards as $board)
+                        <option value="{{ $board->sigla }}"> {{ $board->sigla }}</option>
                         @endforeach
                     </select>
                     <br>

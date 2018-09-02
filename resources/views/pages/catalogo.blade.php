@@ -25,8 +25,8 @@
         <div class="col-sm-12">
             <select id="select-board-catalogo">
                 <option value="todas" selected>todas</option>
-                @foreach($boards as $board => $boardnome)
-                <option value="{{ $board }}"> {{ $board }}</option>
+                @foreach($boards as $board)
+                <option value="{{ $board->sigla }}"> {{ $board->sigla }}</option>
                 @endforeach
             </select>
         </div>
