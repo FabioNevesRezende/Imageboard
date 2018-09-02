@@ -85,7 +85,7 @@
     @if($sbtemp)
         @foreach($sbtemp as $sb)
             @if($k > sizeof($sbtemp) - ($configuracaos->num_subposts_post + 1))
-                <div class="fio-subpost">
+                <div id="{{ $sb->id }}" class="fio-subpost">
                     @if($sb->modpost) <p class="modpost">### Administrador ###</p>  
                     @else <span class="anonpost-title">Anônimo</span> 
                     @endif  

@@ -66,6 +66,7 @@
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Middleware/VerifyCsrfToken.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Providers/AppServiceProvider.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Anao.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2018_09_02_062427_add_filesize_arq.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_modalban.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/pages/catalogo.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/composer.json</file>

@@ -199,4 +199,13 @@ class Controller extends BaseController {
         return false;
     }
     
+    // adiciona tags <br>
+    protected function saltaLinhas($str){
+        return preg_replace(
+                '/\n/m', 
+                '<br>', 
+                $str
+                );
+    }
+    
 }

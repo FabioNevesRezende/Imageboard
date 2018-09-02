@@ -87,7 +87,6 @@ class PostController extends Controller {
     // adiciona referencia aos posts, para o usuário clicar e ser direcionado ao mesmo
     protected function addRefPosts($url, $str){
         return preg_replace(
-                
                 '/&gt;&gt;([0-9]+)/s', 
                 '<a href="' . $url . '#$1">&gt;&gt;$1</a>', 
                 $str
@@ -97,7 +96,6 @@ class PostController extends Controller {
     // adiciona verdetexto na postagem
     protected function addGreenText($str){
         return preg_replace(
-                
                 '/&gt;(.+)/m', 
                 '<span class="green-text">&gt;$1</span><br>', 
                 $str
@@ -225,13 +223,14 @@ class PostController extends Controller {
     private function getObjetoPost($request){
         $post = new Post;
         $post->assunto = strip_tags(Purifier::clean($request->assunto)); // assunto do post
+        $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost))); // caso o post seja dentro de um fio, define qual fio "pai" da postagem
         $post->board = strip_tags(Purifier::clean($request->siglaboard)); // board que o post pertence
         $post->conteudo = $this->trataLinks(strip_tags(Purifier::clean($request->conteudo))); // adiciona tags <a> ao conteudo das mensagens
-        $post->conteudo = $this->addRefPosts(\URL::to('/') . '/' . $post->board, $post->conteudo); // adiciona referência a outros posts iniciados com '>'
+        $post->conteudo = $this->addRefPosts('/' . $post->board . ($post->lead_id ? '/' . $post->lead_id : ''), $post->conteudo); // adiciona referência a outros posts iniciados com '>'
         $post->conteudo = $this->addGreenText($post->conteudo); // add verdetexto após os símbolos '>>'
+        $post->conteudo = $this->saltaLinhas($post->conteudo);
         $post->sage = strip_tags(Purifier::clean($request->sage)) === 'sage'; // define se o post foi sageado ou não
         $post->pinado = false; // define se a thread está pinada, por padrão, não
-        $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost))); // caso o post seja dentro de um fio, define qual fio "pai" da postagem
         $post->trancado = false; // define se o fio pode receber novos posts ou não
         // flag "modpost" definido pelo mod
         $post->modpost = $request->modpost && Auth::check() && strip_tags(Purifier::clean($request->modpost)) === 'modpost';

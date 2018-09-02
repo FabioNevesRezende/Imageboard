@@ -1,6 +1,6 @@
-<div class="fio">
 @foreach($posts as $ind=>$post)
-@if($ind !== 0) <div class="fio-subpost"> @endif
+@if($ind === 0) <div id="{{ $post->id }}" class="fio">
+@else <div id="{{ $post->id }}" class="fio-subpost"> @endif
 
 @if($post->pinado) <span class="glyphicon glyphicon-pushpin"></span> @endif 
 @if($post->trancado) <span class="glyphicon glyphicon-lock"></span> @endif 
@@ -75,7 +75,6 @@
     </iframe> 
 @endforeach
 
-<br>
 {!! $post->conteudo !!}
 @if($post->ban) <p class="ban-msg">({{ $post->ban->motivo }})</p>  @endif
 @if($ind !== 0) </div> @endif
