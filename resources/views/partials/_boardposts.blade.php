@@ -15,9 +15,7 @@
      <a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a> 
      <a data-toggle="tooltip" data-placement="top" title="Responder" class="mini-btn" href="/{{ $siglaBoard }}/{{ $post->id }}" target="_blank"><span class="glyphicon glyphicon-pencil"></span></a> 
      
-     @if()
      <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/deletepost/{{ $siglaBoard }}/{{ $post->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> 
-     @endif
      
     @if(Auth::check())
         @if($post->pinado)
