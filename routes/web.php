@@ -55,7 +55,7 @@ Route::group(['middleware'=>['auth']], function(){
         
     Route::get('/deleteregra/{id}', ['uses' => 'RegraController@destroy'])
         ->where('id', '[0-9]+');
-    
+        
     Route::get('/deleteboard/{id}', ['uses' => 'BoardController@destroy'])
         ->where('id', Config::get('funcoes.geraRegexBoards')());
         
@@ -83,6 +83,9 @@ Route::group(['middleware'=>['auth']], function(){
     
     
     Route::post('/boards', ['as' => 'boards.store', 'uses' => 'BoardController@store']);
+    
+    Route::get('/deletereport/{id}', ['uses' => 'PostController@destroyReport'])
+        ->where('id', '[0-9]+');
 });
 
 Auth::routes();

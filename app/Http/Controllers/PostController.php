@@ -450,6 +450,24 @@ class PostController extends Controller {
         return Post::where('lead_id', '=', $postId)->count() >= ConfiguracaoController::getAll()->num_max_posts_fio - 1;
         
     }
+    
+    public function destroyReport($id)
+    {
+        if(Auth::check())
+        {
+            $report = Report::find($id);
+            if($report){
+                $report->delete();
+                Cache::forget('reports');
+                return $this->redirecionaComMsg('sucesso_admin', 'Report ' . $id . ' deletado com sucesso', '/admin');
+            }
+            else
+            {
+                return $this->redirecionaComMsg('erro_admin', 'Report ' . $id . ' deletado não encontrado', '/admin');
+            }
+        }
+        abort(400);
+    }
 
     /**
      * Valida e cria uma nova postagem

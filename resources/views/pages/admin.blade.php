@@ -8,6 +8,7 @@
     <div class="container-fluid">
         @foreach($reports as $report)
             <div class="alert alert-success" role="alert">
+                <a class="btn btn-danger" style="float: right" href="/deletereport/{{ $report->id }}">Deletar</a><br>
                 <strong>Report número: </strong>{{ $report->id }}<br>
                 <strong>Referência: </strong><a href="/{{ $report->board }}/{{ $report->post_id }}">{{ $report->post_id }}</a><br>
                 <strong>Motivo: </strong><p>{{ $report->motivo }}</p>
