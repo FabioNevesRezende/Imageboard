@@ -40,6 +40,7 @@
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/NoticiaController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Ytanexo.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Ban.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2018_09_01_044414_add_num_subposts_post_conf.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/main.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/public/css/style.css</file>
             <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2017_05_20_223047_create_posts_table.php</file>
@@ -58,6 +59,7 @@
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/HomeController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/BoardController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_modaldeleteboard.blade.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2018_07_25_043804_create_noticias_table.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/PostController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Middleware/EncryptCookies.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_msg.blade.php</file>

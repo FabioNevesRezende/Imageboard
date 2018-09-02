@@ -10,7 +10,7 @@
 <input type="hidden" name="insidepost" value="{{ $insidePost }}">
 @if(Auth::check()) 
 <div style="float: left; margin-bottom: 20px; margin-left: 15px;">
-Modpost <input type="checkbox" class="novo-post-form-item" name="modpost" value="modpost" checked>
+Modpost <input type="checkbox" class="novo-post-form-item" name="modpost" value="modpost">
 </div>
 @endif
 <input type="text" class="novo-post-form-item form-control" maxlength="255" placeholder="Assunto" name="assunto" >
