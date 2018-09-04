@@ -15,7 +15,7 @@ Route::group(['middleware'=>['verificaCookieArquivo']], function(){
     Route::get('/storage/{filename}', 'PagesController@getArquivo');
 });
 
-Route::group(['middleware'=>['web']], function(){
+Route::group(['middleware'=>['xFrameOptionsHeader']], function(){
     Route::get('/', 'PagesController@getIndex');
     
     Route::get('/{siglaBoard}', ['uses' => 'PagesController@getBoard'])

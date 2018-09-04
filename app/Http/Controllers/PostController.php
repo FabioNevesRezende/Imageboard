@@ -352,19 +352,22 @@ class PostController extends Controller {
     
     // gera um report (denuncia)
     public function report(Request $request){
-        $this->validate($request, array(
-                'motivo' => 'max:255'
-            ));
-        $report = new Report;
-      
-        $report->motivo = strip_tags(Purifier::clean($request->motivo));
-        $report->post_id = strip_tags(Purifier::clean($request->idpost));
-        $report->board = strip_tags(Purifier::clean($request->siglaboard));
-        
-        $report->save();
-        Cache::forget('reports');
-        
-        return Redirect::to('/' . strip_tags(Purifier::clean($request->siglaboard)));  
+        if($request && $request->motivo && $request->idpost && $request->siglaboard){
+            $this->validate($request, array(
+                    'motivo' => 'max:255'
+                ));
+            $report = new Report;
+
+            $report->motivo = strip_tags(Purifier::clean($request->motivo));
+            $report->post_id = strip_tags(Purifier::clean($request->idpost));
+            $report->board = strip_tags(Purifier::clean($request->siglaboard));
+
+            $report->save();
+            Cache::forget('reports');
+
+            return Redirect::to('/' . strip_tags(Purifier::clean($request->siglaboard)));  
+        }
+        abort(400);
     }
     
     protected function podeDeletarFio($postId){

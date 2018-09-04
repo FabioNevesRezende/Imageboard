@@ -123,7 +123,7 @@ class Controller extends BaseController {
             . ConfiguracaoController::getAll()->tempero_biscoito;
             $valorBiscoito = hash("sha512", $stringGerarBiscoito);
             (new AnaoController)->salvaAnao($valorBiscoito, $request->server('HTTP_USER_AGENT'), $request->server('REMOTE_ADDR'));
-            setcookie($this->nomeBiscoitoSessao, $valorBiscoito);
+            header("Set-Cookie: $this->nomeBiscoitoSessao=$valorBiscoito; httpOnly");
         }
     }
     
