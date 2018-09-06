@@ -354,7 +354,9 @@ class PostController extends Controller {
     public function report(Request $request){
         if($request && $request->motivo && $request->idpost && $request->siglaboard){
             $this->validate($request, array(
-                    'motivo' => 'max:255'
+                    'motivo' => 'max:255',
+                    'siglaboard' => 'max:10',
+                    'idpost' => 'max:4294967294'
                 ));
             $report = new Report;
 
