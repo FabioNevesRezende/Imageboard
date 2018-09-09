@@ -33,10 +33,10 @@ class PostController extends Controller {
         if(Cache::has($chave))
             return Cache::get($chave);
             
-        $posts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])
+        $posts = Controller::transformaDatasPortugues(Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])
+        ->orderBy('pinado', 'desc')
         ->orderBy('updated_at', 'desc')
-        ->where('board', $siglaBoard)->where('lead_id', null)->paginate(ConfiguracaoController::getAll()->num_posts_paginacao);
-        $posts = Controller::transformaDatasPortugues($posts);
+        ->where('board', $siglaBoard)->where('lead_id', null)->paginate(ConfiguracaoController::getAll()->num_posts_paginacao));
         Cache::forever($chave, $posts);
         return $posts;
     }
@@ -47,7 +47,10 @@ class PostController extends Controller {
         if(Cache::has($chave))
             return Cache::get($chave);
             
-        $subposts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])->orderBy('created_at', 'asc')->where('board', $siglaBoard)->where('lead_id', '<>', null)->get();
+        $subposts = Post::with(['arquivos', 'ytanexos', 'anao', 'ban', 'board'])
+                ->orderBy('created_at', 'asc')
+                ->where('board', $siglaBoard)
+                ->where('lead_id', '<>', null)->get();
         $subposts = Controller::transformaDatasPortugues($subposts);
         Cache::forever($chave, $subposts);
         return $subposts;

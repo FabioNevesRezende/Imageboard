@@ -10,24 +10,6 @@ use Auth;
 
 class PagesController extends Controller
 {
-    
-    protected function reordenaPostsPinados($posts){
-        $postsFinal = array();
-        
-        foreach($posts->getCollection()->all() as $post){
-            if($post->pinado){
-                array_push($postsFinal, $post);
-            }
-        }
-        
-        foreach($posts->getCollection()->all() as $post){
-            if(!($post->pinado)){
-                array_push($postsFinal, $post);
-            }
-        }
-        return $postsFinal;
-    }
-    
     public function getIndex(){
         $this->setaBiscoito();
         
@@ -45,7 +27,7 @@ class PagesController extends Controller
             $posts = PostController::pegaPostsBoard($siglaBoard);
             $subposts = PostController::pegaSubPostsBoard($siglaBoard);
             
-            return view('pages.board', ['posts' => $this->reordenaPostsPinados($posts)])
+            return view('pages.board', ['posts' => $posts])
                     ->with('siglaBoard', $siglaBoard)
                     ->with('descrBoard', $board->descricao)
                     ->with('insidePost', 'n')

@@ -34,6 +34,7 @@
             <file>file:/home/fabio/criação/imageboard-brasil/config/app.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Http/Controllers/Auth/ForgotPasswordController.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/app/Providers/AuthServiceProvider.php</file>
+            <file>file:/home/fabio/criação/imageboard-brasil/database/migrations/2018_09_09_050510_add_block_posts.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/boardbase.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/auth/passwords/email.blade.php</file>
             <file>file:/home/fabio/criação/imageboard-brasil/resources/views/partials/_boardposts.blade.php</file>

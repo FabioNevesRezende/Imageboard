@@ -77,7 +77,7 @@ Route::group(['middleware'=>['auth']], function(){
     Route::get('/migrate', 'HomeController@migrate');
     Route::get('/seedar', 'HomeController@seedar');
     Route::get('/limparcache', 'HomeController@limparCache');
-    Route::get('/migrate/refresh', 'HomeController@migrateRefresh');
+    //Route::get('/migrate/refresh', 'HomeController@migrateRefresh');
     Route::get('/togglecaptcha/{val}', 'ConfiguracaoController@toggleCaptcha')
         ->where('val', '(1|0)');
     

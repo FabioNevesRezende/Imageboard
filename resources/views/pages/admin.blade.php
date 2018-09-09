@@ -27,7 +27,7 @@
                         <li><a href="/limparcache"><button type="button" class="btn btn-default">Limpar Cache</button></a></li>
                         <li><a href="/migrate"><button type="button" class="btn btn-warning">Migrate</button></a></li>
                         <li><a href="/phpinfo" target="_blank"><button type="button" class="btn btn-primary">PhpInfo</button></a></li>
-                        <li><a href="/migrate/refresh"><button type="button" class="btn btn-danger">Migrate:refresh + seed</button></a></li>
+                        <!--<li><a href="/migrate/refresh"><button type="button" class="btn btn-danger">Migrate:refresh + seed</button></a></li>-->
             @endif
             @if($configuracaos->captcha_ativado)
                         <li><a href="/togglecaptcha/0"><button type="button" class="btn btn-danger">Desativar captcha</button></a></li>
