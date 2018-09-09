@@ -77,7 +77,7 @@
     </iframe> 
 @endforeach
 
-{!! $post->conteudo !!}
+<span class="post-conteudo">{!! $post->conteudo !!}</span>
 @if($post->ban) <p class="ban-msg">({{ $post->ban->motivo }})</p>  @endif
 @if($ind !== 0) </div> @endif
 @endforeach

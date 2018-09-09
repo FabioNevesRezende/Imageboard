@@ -121,11 +121,11 @@ class PostController extends Controller {
         
         // caso seja uma nova postagem fora de um fio
         if(strip_tags(Purifier::clean($request->insidepost)) === 'n'){
-            $regras['conteudo'] = 'required|max:65535';
+            $regras['conteudo'] = 'required|max:32768';
             $regras['arquivos.*'] = 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg';
         }else if( preg_match('/^[0-9]+$/s',strip_tags(Purifier::clean($request->insidepost))) ) { // caso seja dentro de um fio, 
             if($request->conteudo){
-                $regras['conteudo'] = 'max:65535';
+                $regras['conteudo'] = 'max:32768';
                 $regras['arquivos.*'] = 'mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg';
             } else {
                 $regras['arquivos.*'] = 'required|mimetypes:image/jpeg,image/png,image/gif,video/webm,video/mp4,audio/mpeg';
@@ -225,10 +225,7 @@ class PostController extends Controller {
         $post->assunto = strip_tags(Purifier::clean($request->assunto)); // assunto do post
         $post->lead_id = (strip_tags(Purifier::clean($request->insidepost)) === 'n' ? null : strip_tags(Purifier::clean($request->insidepost))); // caso o post seja dentro de um fio, define qual fio "pai" da postagem
         $post->board = strip_tags(Purifier::clean($request->siglaboard)); // board que o post pertence
-        $post->conteudo = $this->trataLinks(strip_tags(Purifier::clean($request->conteudo))); // adiciona tags <a> ao conteudo das mensagens
-        $post->conteudo = $this->addRefPosts('/' . $post->board . ($post->lead_id ? '/' . $post->lead_id : ''), $post->conteudo); // adiciona referência a outros posts iniciados com '>'
-        $post->conteudo = $this->addGreenText($post->conteudo); // add verdetexto após os símbolos '>>'
-        $post->conteudo = $this->saltaLinhas($post->conteudo);
+        $post->conteudo = strip_tags(Purifier::clean($request->conteudo));
         $post->sage = strip_tags(Purifier::clean($request->sage)) === 'sage'; // define se o post foi sageado ou não
         $post->pinado = false; // define se a thread está pinada, por padrão, não
         $post->trancado = false; // define se o fio pode receber novos posts ou não
@@ -517,6 +514,13 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+        
+        if(ConfiguracaoController::getAll()->posts_block)
+        {
+            return $this->redirecionaComMsg('erro_upload', 
+            'Postagens bloqueadas temporariamente. Por favor, tente mais tarde.',
+            $request->headers->get('referer'));
+        }
         
         // Verifica se a board requisitada para o post realmente existe
         // se não existe, aborta com http 400

@@ -81,6 +81,8 @@ Route::group(['middleware'=>['auth']], function(){
     Route::get('/togglecaptcha/{val}', 'ConfiguracaoController@toggleCaptcha')
         ->where('val', '(1|0)');
     
+    Route::get('/togglepostsblock/{val}', 'ConfiguracaoController@togglePostsBlock')
+        ->where('val', '(1|0)');
     
     Route::post('/boards', ['as' => 'boards.store', 'uses' => 'BoardController@store']);
     

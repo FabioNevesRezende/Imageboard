@@ -35,5 +35,21 @@ class ConfiguracaoController extends Controller
             return Redirect::to('/');
         }
     }
+    
+    public function togglePostsBlock($val){
+        if(Auth::check()){
+            $config = Configuracao::find(1);
+            if($val === "1" || $val === "0"){
+                $config->posts_block = $val;
+                $config->save();
+                Cache::forget('configs');
+                return Redirect::to('/admin');
+            } else {
+                return 'input invalido';
+            }
+        } else {
+            return Redirect::to('/');
+        }
+    }
 
 }

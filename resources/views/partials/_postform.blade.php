@@ -27,7 +27,7 @@ Modpost <input type="checkbox" class="novo-post-form-item" name="modpost" value=
 </div>
 
 <input type="text" class="novo-post-form-item form-control" maxlength="255" placeholder="Link(s) para vídeo(s) do youtube, separados por |" name="linkyoutube" >
-<textarea class="novo-post-form-item form-control" id="novo-post-conteudo" placeholder="Mensagem" rows="5" maxlength="65535" name="conteudo"></textarea>
+<textarea class="novo-post-form-item form-control" id="novo-post-conteudo" placeholder="Mensagem" rows="5" maxlength="32768" name="conteudo"></textarea>
 <p style="margin-left: 15px;">Mime types: image/jpeg, image/png, image/gif, video/webm, video/mp4, audio/mpeg</p>
 <div class="row">
     <div class="col-sm-6">

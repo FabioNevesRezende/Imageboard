@@ -17,6 +17,27 @@ var addNovoInputFile = function(elem, max){
     $(novoInput).appendTo(".form-post #form-post-file-input-div");
 };
 
+var trataTexto = function()
+{
+    $('.post-conteudo').each(function(index){
+        var conteudo = $(this).html();
+        console.log("conteudo:");
+        console.log(conteudo);
+        var res = conteudo.replace(/\*{2}(.*)\*{2}/g, '<span class="spoiler">$1</span>'); // add spoiler
+        res = res.replace(/~{2}(.*)~{2}/g, '<s>$1</s>'); // add traço
+        res = res.replace(/'{3}(.*)'{3}/g, '<b>$1</b>'); // add negrito
+        res = res.replace(/'{2}(.*)'{2}/g, '<i>$1</i>'); // add itálico
+        res = res.replace(/={2}(.*)={2}/g, '<span class="vermelhotexto">$1</span>'); // add texto vermelho
+        res = res.replace(/&gt;(.+)\n?/g, '<span class="green-text">&gt;$1</span><br>'); // add texto verde
+        res = res.replace(/&gt;&gt;([0-9]+)/s, '<a href="#$1">&gt;&gt;$1</a>'); // add ref-posts
+        res = res.replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/g, '<a href="https://href.li/?$1" ref="nofollow" target="_blank">$1</a>'); // add <a> nos links
+        res = res.replace(/\n/g, '<br>'); // salta linhas
+        console.log("res:");
+        console.log(res);
+        $(this).html(res);
+    });
+};
+
 $(document).ready(function(){
     $('.btn-ban').on('click', function(){
         $('#idPostInput').val($(this).data('id-post'));
@@ -46,4 +67,6 @@ $(document).ready(function(){
             $('.catalogo-post-div').not('.catalogo-post-div-board-' + boardMostrar).css("display", "none");   
         }
     });
+    
+    trataTexto();
 });

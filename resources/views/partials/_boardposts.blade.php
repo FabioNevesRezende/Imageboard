@@ -76,7 +76,7 @@
     @endforeach
     </div>
 
-{!! substr($post->conteudo, 0, 500) !!}
+    <span class="post-conteudo">{!! substr($post->conteudo, 0, 500) !!}</span>
 @if($post->ban) <p class="ban-msg">({{ $post->ban->motivo }})</p>  @endif
 <br><br>
 
@@ -143,7 +143,7 @@
                     </iframe> 
                     @endforeach
 
-                    {!! substr($sb->conteudo, 0, 500) !!}
+                    <span class="post-conteudo">{!! substr($sb->conteudo, 0, 500) !!}</span>
                     @if($sb->ban) <p class="ban-msg">({{ $sb->ban->motivo }})</p>  @endif
                     <br>
                 </div>

@@ -34,6 +34,12 @@
             @elseif(!$configuracaos->captcha_ativado)
                         <li><a href="/togglecaptcha/1"><button type="button" class="btn btn-primary">Ativar captcha</button></a></li>
             @endif
+            
+            @if($configuracaos->posts_block)
+                        <li><a href="/togglepostsblock/0"><button type="button" class="btn btn-primary">Desbloquear novas postagens</button></a></li>
+            @elseif(!$configuracaos->posts_block)
+                        <li><a href="/togglepostsblock/1"><button type="button" class="btn btn-danger">Bloquear novas postagens</button></a></li>
+            @endif
                         <li>
                         <li><a href="/logout"><button type="button" class="btn btn-danger">Logout</button></a></li>
                         </li>
