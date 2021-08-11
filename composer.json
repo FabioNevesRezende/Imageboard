@@ -5,11 +5,12 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=5.6.4",
-        "laravel/framework": "5.7.*",
-        "laravel/tinker": "~1.0",
-        "mews/purifier": "~2.0",
-        "mews/captcha": "~2.0"
+        "php": ">=7.4",
+        "laravel/framework": "^8.0",
+        "laravel/tinker": "~2.0",
+        "laravel/ui": "4.x-dev",
+        "mews/captcha": "^3.2",
+        "mews/purifier": "~3.0"
     },
     "minimum-stability": "dev",
     "require-dev": {

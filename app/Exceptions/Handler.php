@@ -2,7 +2,7 @@
 
 namespace Ibbr\Exceptions;
 
-use Exception;
+use Throwable;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -30,7 +30,7 @@ class Handler extends ExceptionHandler {
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Exception $exception) {
+    public function report(Throwable $exception) {
         parent::report($exception);
     }
 
@@ -41,7 +41,7 @@ class Handler extends ExceptionHandler {
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception) {
+    public function render($request, Throwable $exception) {
         if ($exception instanceof \Illuminate\Http\Exceptions\PostTooLargeException) {
 
             return response(View('pages.erro')->with('msgErro', 'Tamanho do arquivo excedeu o máximo permitido'), 413);
@@ -76,23 +76,13 @@ class Handler extends ExceptionHandler {
         return redirect()->guest(url('/'));
     }
 
-    /**
-     * Create a Symfony response for the given exception.
-     *
-     * @param  \Exception  $e
-     * @return mixed
-     */
-    protected function convertExceptionToResponse(Exception $e) {
-        if (config('app.debug')) {
-            $whoops = new \Whoops\Run;
-            $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-
-            return response()->make(
-                            $whoops->handleException($e), method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500, method_exists($e, 'getHeaders') ? $e->getHeaders() : []
-            );
+    protected function whoopsHandler()
+    {
+        try {
+            return app(\Whoops\Handler\HandlerInterface::class);
+        } catch (\Illuminate\Contracts\Container\BindingResolutionException $e) {
+            return parent::whoopsHandler();
         }
-
-        return parent::convertExceptionToResponse($e);
     }
 
 }
