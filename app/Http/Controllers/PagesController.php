@@ -48,7 +48,7 @@ class PagesController extends Controller
         $configuracaos = ConfiguracaoController::getAll();
         $ver = Post::find($thread);
         if($ver){
-            if($ver->lead_id){
+            if($ver->lead_id || $ver->board != $siglaBoard){
                 abort(404);
             }
         } else abort(404);
