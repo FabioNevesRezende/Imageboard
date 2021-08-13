@@ -41,7 +41,7 @@ class Controller extends BaseController {
     }
     
     protected function limpaCachePosts($board, $thread){
-        $num_paginas = 10;
+        $num_paginas = ConfiguracaoController::getAll()->num_posts_paginacao;
         for($i = 0 ; $i < $num_paginas ; $i++ ){
             Cache::forget('posts_board_' . $board . '_pag_' . $i);
             Cache::forget('subposts_board_' . $board  . '_pag_' . $i);

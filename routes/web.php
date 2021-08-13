@@ -33,6 +33,7 @@ Route::group(['middleware'=>['xFrameOptionsHeader']], function(){
         ->where('post_id', '[0-9]+');
         
     Route::get('/logout', 'PagesController@logout');
+    Route::get('/login', 'PagesController@getLogin');
 });
 
 Route::group(['middleware'=>['auth']], function(){
