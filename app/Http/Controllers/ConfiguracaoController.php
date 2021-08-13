@@ -11,9 +11,6 @@ use Redirect;
 class ConfiguracaoController extends Controller
 {
     public static function getAll(){
-        if(Cache::has('configs'))
-            return Cache::get('configs');
-
         $configs = Configuracao::orderBy('id')->first();
                 
         Cache::forever('configs', $configs);
