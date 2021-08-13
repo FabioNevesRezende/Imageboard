@@ -4,6 +4,7 @@ namespace Ibbr\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Ibbr\Anao;
+use Config;
 
 class AnaoController extends Controller
 {
@@ -29,7 +30,7 @@ class AnaoController extends Controller
             $anao->save();
         }catch(\Illuminate\Database\QueryException $e)
         {
-            
+            Config::get('funcoes.consolelog')('AnaoController::salvaAnao erro: ', $e->getMessage());
         }
     }
 }

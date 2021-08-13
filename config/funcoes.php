@@ -2,6 +2,10 @@
 
 use Ibbr\Http\Controllers\BoardController;
 
+if(!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
+if(!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
+if(!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
+
 return [
     'geraRegexBoards' => function () {
         $result = '(';
@@ -28,5 +32,16 @@ return [
         }
 
         return $bytes;
+    },
+    'consolelog' => function(...$args): void{
+        foreach ($args as $arg) {
+            if (is_object($arg) || is_array($arg) || is_resource($arg)) {
+                $output = print_r($arg, true);
+            } else {
+                $output = (string) $arg;
+            }
+
+            fwrite(STDOUT, $output . "\n");
+         }
     }
 ];
