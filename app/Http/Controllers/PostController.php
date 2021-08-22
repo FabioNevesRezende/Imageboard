@@ -405,7 +405,7 @@ class PostController extends Controller {
             }
             
             $post->delete();
-            $this->limpaCachePosts($siglaBoard, $postId);
+            $this->limpaCachePosts($siglaBoard, $post->lead_id);
             return Redirect::to('/' . $siglaBoard );
             
         } else {
