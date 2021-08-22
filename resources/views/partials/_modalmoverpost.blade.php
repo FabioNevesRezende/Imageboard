@@ -13,21 +13,12 @@
                       <div class="col-sm-8 text-center">                          
                         <select class="novo-post-form-item form-control" name="novaboard" required>
                             @foreach($boards as $board)
-                            <option value="{{ $board->sigla }}"> {{ $board->sigla }}</option>
+                            <option value="{{ $board->sigla }}"> {{ $board->sigla }} - {{ $board->nome }}</option>
                             @endforeach
                         </select>
                       </div>
                       <div class="col-sm-2"></div>
                   </div>
-            
-                  <div class="row">
-                      <div class="col-sm-2"></div>
-                      <div class="col-sm-8 text-center">
-                          <input type="number" class="novo-post-form-item form-control" min="1" placeholder="Novo post" name="novopost" required>
-                      </div>
-                      <div class="col-sm-2"></div>
-                  </div>
-
                   <input type="hidden" class="idPostMover" name="idpost" value="">
 
             </div>

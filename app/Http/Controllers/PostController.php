@@ -478,32 +478,31 @@ class PostController extends Controller {
     {
         if(Auth::check())
         {
+            $request->idpost = strip_tags(Purifier::clean($request->idpost));
+            $request->novaboard = strip_tags(Purifier::clean($request->novaboard));
+
             $postMover = Post::find($request->idpost);
             if($postMover){
-                if($request->novopost > $request->idpost)
-                {
-                    return $this->redirecionaComMsg('erro_admin', 'O ID do novo post tem que ser menor do post a ser movido', '/' . $request->novaboard);
-                }
                 $velhaBoard = $postMover->board;
                 if($postMover->lead_id !== null)
                 {
-                    $postsFio = Post::where('lead_id', '=', $request->idpost)->get();
-                    foreach($postsFio as $postFio)
-                    {
-                        $postFio->lead_id = $request->novopost;
-                        $postFio->board = $request->novaboard;
-                        $postFio->save();
-                    }
+                    return $this->redirecionaComMsg('erro_admin', 'Não foi possível mover esta postagem', '/' . $velhaBoard);
                 }
-                $postMover->lead_id = $request->novopost;
                 $postMover->board = $request->novaboard;
                 $postMover->pinado = false;
                 $postMover->trancado = false;
                 $postMover->save();
+
+                $subposts = Post::where('lead_id', '=', $postMover->id)->get();
+                
+                foreach($subposts as $post){
+                    $post->board = $request->novaboard;
+                    $post->save();
+                }
                 
                 $this->limpaCachePosts($velhaBoard, $postMover->lead_id);
-                $this->limpaCachePosts($request->novaboard, $request->novopost);
-                return $this->redirecionaComMsg('sucesso_admin', 'Post ' . $request->idpost . ' movido com sucesso para /' . $request->novaboard . '/' . $request->novopost, '/' . $request->novaboard);
+                $this->limpaCachePosts($request->novaboard, $request->idpost);
+                return $this->redirecionaComMsg('sucesso_admin', 'Post ' . $request->idpost . ' movido com sucesso para /' . $request->novaboard, '/' . $request->novaboard);
             }
             return $this->redirecionaComMsg('erro_admin', 'Post ' . $request->idpost . ' não encontrado', '/' . $request->novaboard);
         }
