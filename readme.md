@@ -1,0 +1,50 @@
+ImageBoard Brasil ![logo]
+======
+
+### Tecnologias utilizadas
++ [PHP 7](https://www.php.net/)
++ [Laravel 8](https://laravel.com/)
++ [Bootstrap](https://getbootstrap.com/)
++ [JQuery](https://jquery.com/)
++ [Fontawesome](https://fontawesome.com/)
++ [MySQL](https://www.mysql.com/)
+
+Instalação
+=====
+
+Após instalar os componentes citados acima, criar um usuário SQL e um banco de dados para ele:
+
+```SQL
+create user NOME_USUARIO@localhost identified by 'SENHA_USUARIO';
+
+create database NOME_BANCO_DE_DADOS;
+
+grant all privileges on NOME_BANCO_DE_DADOS.* to NOME_USUARIO@localhost with grant option;
+```
+
+Criar um arquivo chamado .env e apontar as configurações do sistema:
+
+```
+APP_NAME=Exemplo
+APP_ENV=local
+APP_KEY=base64:CHAVE_DO_APP_BASE64
+APP_DEBUG=true
+APP_LOG_LEVEL=debug
+APP_URL=http://exemplo.com
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=NOME_BANCO_DE_DADOS
+DB_USERNAME=NOME_USUARIO
+DB_PASSWORD=SENHA_USUARIO
+```
+
+Iniciar a aplicação usando o Artisan:
+
+
+```
+php7 artisan serve
+```
+
+[logo]: /icon-ibbr.png "Icon"
