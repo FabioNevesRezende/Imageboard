@@ -43,7 +43,10 @@
         <div class="col-sm-2"></div>
         <div class="col-sm-8 text-center div-indice"> 
         <h4>Doações para pagamento de hospedagem e domínio:</h4>
-        <a href="https://getmonero.org/" target="_blank">{{ $configuracaos->carteira_doacao }}</a> <br><br>
+        <a href="https://getmonero.org/" target="_blank">{{ $configuracaos->carteira_doacao }}</a>
+        <div class="text-center">
+            <img src="/storage/res/doacao-monero.png" alt="qrcode">
+        </div> <br><br>
         
         </div>
         <div class="col-sm-2"></div>
