@@ -69,6 +69,12 @@ class PagesController extends Controller
         if(!(\Auth::check()) || !$this->temBiscoitoAdmin()) abort(404);
         
         $reports = PostController::pegaReports();
+
+        foreach($reports as $report){
+            $post = Post::find($report->post_id);
+            $report->lead_id = $post->lead_id;
+            
+        }
         
         return view('pages.admin')
         ->withReports($reports)
