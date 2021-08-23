@@ -21,8 +21,6 @@ var trataTexto = function()
 {
     $('.post-conteudo').each(function(index){
         var conteudo = $(this).html();
-        console.log("conteudo:");
-        console.log(conteudo);
         var res = conteudo.replace(/\*{2}(.*)\*{2}/g, '<span class="spoiler">$1</span>'); // add spoiler
         res = res.replace(/~{2}(.*)~{2}/g, '<s>$1</s>'); // add traço
         res = res.replace(/'{3}(.*)'{3}/g, '<b>$1</b>'); // add negrito
@@ -32,8 +30,6 @@ var trataTexto = function()
         res = res.replace(/&gt;&gt;([0-9]+)/g, '<a href="#$1">&gt;&gt;$1</a>'); // add ref-posts
         res = res.replace(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/g, '<a href="https://href.li/?$1" ref="nofollow" target="_blank">$1</a>'); // add <a> nos links
         res = res.replace(/\n/g, '<br>'); // salta linhas
-        console.log("res:");
-        console.log(res);
         $(this).html(res);
     });
 };

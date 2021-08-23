@@ -8,7 +8,6 @@
                 <p>Confira <a href="{{ $configuracaos->url_repo }}" target="_blank">aqui</a> e contribua!</p>
                 <p>Tecnologias usadas: <a href="https://getbootstrap.com" target="_blank">Bootstrap</a> 
                 - <a href="https://jquery.com/" target="_blank">JQuery</a> 
-                - <a href="https://fontawesome.com/" target="_blank">FontAwesome</a> 
                 - <a href="https://php.net/" target="_blank">PHP</a>
                 - <a href="https://laravel.com/" target="_blank">Laravel</a>
                 - <a href="https://www.mysql.com/" target="_blank">MySQL</a>

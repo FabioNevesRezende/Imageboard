@@ -6,7 +6,6 @@ ImageBoard Brasil ![logo]
 + [Laravel 8](https://laravel.com/)
 + [Bootstrap](https://getbootstrap.com/)
 + [JQuery](https://jquery.com/)
-+ [Fontawesome](https://fontawesome.com/)
 + [MySQL](https://www.mysql.com/)
 
 Instalação
