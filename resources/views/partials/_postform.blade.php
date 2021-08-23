@@ -1,5 +1,5 @@
 
-<h1 class="board-header"> /{{ $siglaBoard }}/ - {{ $descrBoard }} </h1>
+<h1 class="board-header" id="id-board-{{ $siglaBoard }}"> /{{ $siglaBoard }}/ - {{ $descrBoard }} </h1>
 @if(Auth::check() && Auth::id() === 1)
 <a  data-toggle="modal" data-target="#modalDeleteBoard" class="btn btn-danger">Deletar board</a>
 @endif

@@ -34,6 +34,17 @@ var trataTexto = function()
     });
 };
 
+var criaÇandom = function()
+{
+    $('body').css('background-image', 'url(/storage/res/çandom.gif)')
+    var $audioElement = $("<audio>");
+    $audioElement.attr({
+        'src': '/storage/res/çandom.mp3',
+        'autoplay':'autoplay',
+        'loop':'loop'
+    });
+}
+
 $(document).ready(function(){
     $('.btn-ban').on('click', function(){
         $('#idPostInput').val($(this).data('id-post'));
@@ -63,6 +74,10 @@ $(document).ready(function(){
             $('.catalogo-post-div').not('.catalogo-post-div-board-' + boardMostrar).css("display", "none");   
         }
     });
+
+    if( $('#id-board-ç').length ){
+        criaÇandom()
+    }
     
     trataTexto();
 });

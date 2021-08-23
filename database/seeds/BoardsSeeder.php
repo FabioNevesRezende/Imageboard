@@ -73,5 +73,12 @@ class BoardsSeeder extends Seeder
             'descricao' => 'Desenhos chineses inventados por Mitsubishi Toyota',
             'ordem' => 8
         ]);
+        
+        Ibbr\Board::create([
+            'sigla' => 'ç',
+            'nome' => 'Çandom',
+            'descricao' => 'FESTA DURO',
+            'ordem' => 9
+        ]);
     }
 }
