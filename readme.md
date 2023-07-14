@@ -2,8 +2,8 @@ ImageBoard Brasil ![logo]
 ======
 
 ### Tecnologias utilizadas
-+ [PHP 7](https://www.php.net/)
-+ [Laravel 8](https://laravel.com/)
++ [PHP 8](https://www.php.net/)
++ [Laravel 10](https://laravel.com/)
 + [Bootstrap](https://getbootstrap.com/)
 + [JQuery](https://jquery.com/)
 + [MySQL](https://www.mysql.com/)
@@ -39,11 +39,25 @@ DB_USERNAME=NOME_USUARIO
 DB_PASSWORD=SENHA_USUARIO
 ```
 
+Instalar dependências do composer:
+
+```
+composer install
+```
+
+Preparar o banco de dados:
+
+```
+php8 artisan migrate
+
+php8 artisan db:seed
+```
+
 Iniciar a aplicação usando o Artisan:
 
 
 ```
-php7 artisan serve
+php8 artisan serve
 ```
 
 [logo]: /icon-ibbr.png "Icon"
