@@ -9,6 +9,7 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 .env
+.env.backup
 *~
 inserts.sql
 inserts_prod.sql
