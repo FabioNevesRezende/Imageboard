@@ -40,7 +40,7 @@
     <div class="fio-img-div">
         <span data-toggle="tooltip" 
               data-placement="top" 
-              title="@if($arq->filesize)Tamanho: {{ Config::get('funcoes.trataFilesize')($arq->filesize) }}  @endif{{ $arq->original_filename }}">
+              title="@if($arq->filesize)Tamanho: {{ Ibbr\Helpers\Funcoes::trataFilesize($arq->filesize) }}  @endif{{ $arq->original_filename }}">
             {{ substr($arq->original_filename,0,10) }}
         </span><br>
     @if($arq->mime === 'image/jpeg' || $arq->mime === 'image/png' || $arq->mime === 'image/gif' )
@@ -110,7 +110,7 @@
                         <div class="fio-img-div">
                             <span data-toggle="tooltip" 
                                 data-placement="top" 
-                                title="@if($sbarq->filesize)Tamanho: {{ Config::get('funcoes.trataFilesize')($sbarq->filesize) }}  @endif{{ $sbarq->original_filename }}">
+                                title="@if($sbarq->filesize)Tamanho: {{ Ibbr\Helpers\Funcoes::trataFilesize($sbarq->filesize) }}  @endif{{ $sbarq->original_filename }}">
                                 {{ substr($sbarq->original_filename,0,10) }}
                             </span><br>
                         @if($sbarq->mime === 'image/jpeg' || $sbarq->mime === 'image/png' || $sbarq->mime === 'image/gif' )

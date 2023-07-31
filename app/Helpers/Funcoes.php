@@ -1,13 +1,12 @@
 <?php
 
+namespace Ibbr\Helpers;
+
 use Ibbr\Http\Controllers\BoardController;
 
-if(!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
-if(!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
-if(!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
-
-return [
-    'geraRegexBoards' => function () {
+class Funcoes
+{
+    public static function geraRegexBoards() {
         $result = '(';
         foreach (BoardController::getAll() as $board) {
             $result .= $board->sigla . '|';
@@ -15,8 +14,9 @@ return [
         $result = substr($result, 0, strlen($result) - 1); // retira o último caracter |
         $result .= ')';
         return $result;
-    },
-    'trataFilesize' => function($bytes) {
+    }
+
+    public static function trataFilesize($bytes) {
         if ($bytes >= 1073741824) {
             $bytes = number_format($bytes / 1073741824, 2) . ' GB';
         } elseif ($bytes >= 1048576) {
@@ -32,8 +32,9 @@ return [
         }
 
         return $bytes;
-    },
-    'consolelog' => function(...$args): void{
+    }
+
+    public static function consolelog(...$args): void{
         foreach ($args as $arg) {
             if (is_object($arg) || is_array($arg) || is_resource($arg)) {
                 $output = print_r($arg, true);
@@ -44,4 +45,4 @@ return [
             fwrite(STDOUT, $output . "\n");
          }
     }
-];
+}

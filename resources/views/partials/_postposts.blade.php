@@ -44,7 +44,7 @@
 <div class="fio-img-div">
     <span data-toggle="tooltip" 
         data-placement="top" 
-        title="@if($arq->filesize)Tamanho: {{ Config::get('funcoes.trataFilesize')($arq->filesize) }}  @endif{{ $arq->original_filename }}">
+        title="@if($arq->filesize)Tamanho: {{ Ibbr\Helpers\Funcoes::trataFilesize($arq->filesize) }}  @endif{{ $arq->original_filename }}">
         {{ substr($arq->original_filename,0,10) }}
     </span><br>
 @if($arq->mime === 'image/jpeg' || $arq->mime === 'image/png' || $arq->mime === 'image/gif' )

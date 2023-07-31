@@ -179,6 +179,7 @@ return [
         Ibbr\Providers\EventServiceProvider::class,
         Ibbr\Providers\RouteServiceProvider::class,
         Ibbr\Providers\ViewComposerProvider::class,
+        Ibbr\Providers\FuncoesProvider::class,
 
     ],
 
