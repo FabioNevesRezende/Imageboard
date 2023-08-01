@@ -1,6 +1,10 @@
 <?php
 
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+
 
 class ConfiguracaosSeeder extends Seeder
 {
@@ -12,11 +16,11 @@ class ConfiguracaosSeeder extends Seeder
      */
     public function run()
     {
-        Ibbr\Configuracao::create([
+        \Ibbr\Configuracao::create([
             'id' => '1',
             'captcha_ativado' => false,
             'carteira_doacao' => 'endereco-carteira-monero',
-            'biscoito_admin' => 'test',
+            'biscoito_admin' => 'secret_cookie',
             'tempero_biscoito' => 'tempero',
             'url_repo' => 'https://gitlab.com',
             'num_max_arq_post' => 5,

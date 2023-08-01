@@ -24,7 +24,9 @@
             "database"
         ],
         "psr-4": {
-            "Ibbr\\": "app/"
+            "Ibbr\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
