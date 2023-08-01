@@ -59,6 +59,5 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'xFrameOptionsHeader' => \Ibbr\Http\Middleware\XFrameOptionsHeader::class,
         'verificaCookieArquivo' => \Ibbr\Http\Middleware\VerificaCookieArquivo::class,
-        'verificaBanco' => \Ibbr\Http\Middleware\VerificaBanco::class,
     ];
 }
