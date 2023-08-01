@@ -37,7 +37,7 @@ class PagesController extends Controller
                     ->with('captchaSize', Config::get('captcha.default.length'));
             
         } else{
-            return view('pages.indice'); 
+            abort(404);
         }
         
     }
@@ -45,6 +45,11 @@ class PagesController extends Controller
     public function getThread($siglaBoard, $thread){
         $this->setaBiscoito();
         
+        $board = $this->boardExiste($siglaBoard);
+        if(!$board){
+            abort(404);
+        }
+
         $configuracaos = ConfiguracaoController::getAll();
         $ver = Post::find($thread);
         if($ver){

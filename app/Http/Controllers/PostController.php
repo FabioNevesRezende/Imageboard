@@ -328,6 +328,11 @@ class PostController extends Controller {
     
     // atualiza variável pinado fazendo que o post fique sempre no topo da primeira página entre outros pinados
     public function pinarPost($siglaBoard, $post_id, $val){
+        $board = $this->boardExiste($siglaBoard);
+        if(!$board){
+            abort(404);
+        }
+
         $post = Post::find($post_id);
         if($post){
             $post->pinado = $val;
@@ -340,6 +345,11 @@ class PostController extends Controller {
     
     // atualiza variável trancado fazendo que o post não possa mais ser respondido
     public function trancarPost($siglaBoard, $post_id, $val){
+        $board = $this->boardExiste($siglaBoard);
+        if(!$board){
+            abort(404);
+        }
+        
         $post = Post::find($post_id);
         if($post){
             $post->trancado = $val;
@@ -385,6 +395,11 @@ class PostController extends Controller {
 
     // deleta uma postagem e dados relacionados a ele (links, arquivos)
     public function destroy($siglaBoard, $postId) {
+        $board = $this->boardExiste($siglaBoard);
+        if(!$board){
+            abort(404);
+        }
+
         $post = $this->podeDeletarFio($postId);
         if($post){
             $arquivos = $post->arquivos;

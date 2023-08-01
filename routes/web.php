@@ -21,17 +21,17 @@ Route::group(['middleware'=>['xFrameOptionsHeader']], function(){
     Route::get('/', 'PagesController@getIndex');
     
     Route::get('/{siglaBoard}', ['uses' => 'PagesController@getBoard'])
-        ->where('siglaBoard', Funcoes::geraRegexBoards());
+        ->where('siglaBoard', '[a-zA-Zç]{1,10}');
         
     Route::get('/{siglaBoard}/{thread}', ['as' => 'post.single', 'uses' => 'PagesController@getThread'])
-        ->where('siglaBoard', Funcoes::geraRegexBoards())->where('thread', '[0-9]+');
+        ->where('siglaBoard', '[a-zA-Zç]{1,10}')->where('thread', '[0-9]+');
     
     Route::post('/posts', ['as' => 'posts.store', 'uses' => 'PostController@store']);
     Route::post('/report', ['as' => 'posts.report', 'uses' => 'PostController@report']);
     Route::get('/catalogo', 'PagesController@getCatalogo');
     
     Route::get('/deletepost/{siglaBoard}/{post_id}', ['uses' => 'PostController@destroy'])
-        ->where('siglaBoard', Funcoes::geraRegexBoards())
+        ->where('siglaBoard', '[a-zA-Zç]{1,10}')
         ->where('post_id', '[0-9]+');
         
     Route::get('/logout', 'PagesController@logout');
@@ -44,23 +44,23 @@ Route::group(['middleware'=>['auth']], function(){
     
     Route::get('/pinarpost/{siglaBoard}/{post_id}/{val}', ['uses' => 'PostController@pinarPost'])
         ->where('post_id', '[0-9]+')
-        ->where('siglaBoard', Funcoes::geraRegexBoards())
+        ->where('siglaBoard', '[a-zA-Zç]{1,10}')
         ->where('val', '(1|0)');
         
     Route::get('/trancarpost/{siglaBoard}/{post_id}/{val}', ['uses' => 'PostController@trancarPost'])
         ->where('post_id', '[0-9]+')
-        ->where('siglaBoard', Funcoes::geraRegexBoards())
+        ->where('siglaBoard', '[a-zA-Zç]{1,10}')
         ->where('val', '(1|0)');
     
     Route::get('/deleteimg/{siglaBoard}/{filename}', ['uses' => 'PostController@destroyArqDb'])
         ->where('filename', '[0-9\-]+\.[a-zA-Z]+')
-        ->where('siglaBoard', Funcoes::geraRegexBoards());
+        ->where('siglaBoard', '[a-zA-Zç]{1,10}');
         
     Route::get('/deleteregra/{id}', ['uses' => 'RegraController@destroy'])
         ->where('id', '[0-9]+');
         
     Route::get('/deleteboard/{id}', ['uses' => 'BoardController@destroy'])
-        ->where('id', Funcoes::geraRegexBoards());
+        ->where('id', '[a-zA-Zç]{1,10}');
         
     Route::get('/deletenoticia/{id}', ['uses' => 'NoticiaController@destroy'])
         ->where('id', '[0-9]+');

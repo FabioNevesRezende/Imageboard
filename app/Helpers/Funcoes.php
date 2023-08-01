@@ -6,15 +6,6 @@ use Ibbr\Http\Controllers\BoardController;
 
 class Funcoes
 {
-    public static function geraRegexBoards() {
-        $result = '(';
-        foreach (BoardController::getAll() as $board) {
-            $result .= $board->sigla . '|';
-        }
-        $result = substr($result, 0, strlen($result) - 1); // retira o último caracter |
-        $result .= ')';
-        return $result;
-    }
 
     public static function trataFilesize($bytes) {
         if ($bytes >= 1073741824) {
