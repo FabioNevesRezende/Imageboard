@@ -10,22 +10,41 @@ use Config;
 class AnaoController extends Controller
 {
     // obtem código do país baseado no IP
-    protected function obtemCountryCode($ip){
+    protected function obtemCountryCode($ip) {
         if(preg_match('/^127\..+$/', $ip) 
         || preg_match('/^192\.168\..+$/', $ip)
         || preg_match('/^10\..+$/', $ip)
         ) return 'br'; // se teste em rede local/loopback, retorna brasil
-        $iptolocation = 'http://www.geoplugin.net/xml.gp?ip=' . $ip;
-        $creatorlocation = simplexml_load_string(file_get_contents($iptolocation));
-        return strtolower(preg_replace('/<geoplugin_countryCode>([a-zA-Z]+)<\/geoplugin_countryCode>/s', '$1', $creatorlocation->geoplugin_countryCode->asXML()));
-        
+
+        $url = "http://ip-api.com/json/{$ip}";
+        $ch = curl_init();
+    
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        $response = curl_exec($ch);
+    
+        curl_close($ch);
+    
+        $data = json_decode($response, true);
+    
+        if (isset($data['proxy']) && $data['proxy']) {
+            return 'on';
+        }
+    
+        if (isset($data['countryCode'])) {
+            return strtoupper($data['countryCode']);
+        }
+    
+        return 'on';
     }
     
     public function salvaAnao($biscoito, $userAgent, $ip){
         $anao = new Anao;
         $anao->biscoito = $biscoito;
         $anao->ip = $ip; // ip do postador
-        $anao->countrycode = $this->obtemCountryCode($ip); // country code do IP é armazenado para não ter que ficar recalculando em tempo de execução
+        //$anao->countrycode = $this->obtemCountryCode($ip); // country code do IP é armazenado para não ter que ficar recalculando em tempo de execução
+        $anao->countrycode = 'on'; // por enquanto apenas onion
         $anao->user_agent = $userAgent;
         try{
             $anao->save();
