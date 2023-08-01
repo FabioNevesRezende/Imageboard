@@ -12,6 +12,7 @@ RUN apt-get update && \
         unzip \
         libonig-dev \
         openssl \
+        ncat \
         libpng-dev \
         && docker-php-ext-install \
         pdo_mysql \
@@ -37,11 +38,17 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
+#COPY docker-compose/ibbr/docker-entrypoint.sh /usr/local/bin/
+#RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Set working directory
 WORKDIR /var/www
 
+EXPOSE 80
+
 USER $user
 
+#ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 # setup: 
 # docker compose build app
