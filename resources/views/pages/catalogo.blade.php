@@ -56,7 +56,7 @@
                         @if($post->assunto) {{ substr($post->assunto, 0, 15) }} | @endif /{{ $post->board }}/
                     </span>
                     <br>
-                    <a href="/{{ $post->board }}/{{ $post->id }}" target="_blank">
+                    <a href="/boards/{{ $post->board }}/{{ $post->id }}" target="_blank">
                     @if(!$vid)
                     <img class="img-responsive img-thumbnail" 
                     @if($arq->spoiler) src="{{ \Storage::url('res/spoiler.png') }}"

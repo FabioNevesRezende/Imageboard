@@ -11,9 +11,9 @@
                 <a class="btn btn-danger" style="float: right" href="/deletereport/{{ $report->id }}">Deletar</a><br>
                 <strong>Report número: </strong>{{ $report->id }}<br>
                 @if($report->lead_id)
-                    <strong>Referência: </strong><a href="/{{ $report->board }}/{{ $report->lead_id }}#{{ $report->post_id }}">{{ $report->post_id }}</a><br>
+                    <strong>Referência: </strong><a href="/boards/{{ $report->board }}/{{ $report->lead_id }}#{{ $report->post_id }}">{{ $report->post_id }}</a><br>
                 @else
-                    <strong>Referência: </strong><a href="/{{ $report->board }}/{{ $report->post_id }}">{{ $report->post_id }}</a><br>
+                    <strong>Referência: </strong><a href="/boards/{{ $report->board }}/{{ $report->post_id }}">{{ $report->post_id }}</a><br>
                 @endif
                 <strong>Motivo: </strong><p>{{ $report->motivo }}</p>
             </div>

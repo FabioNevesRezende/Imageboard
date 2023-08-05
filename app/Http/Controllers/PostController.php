@@ -161,9 +161,7 @@ class PostController extends Controller {
         // Verifica se o postador está banido da board em questão
         $bantime = $this->estaBanido(\Request::ip(), strip_tags(Purifier::clean($request->siglaboard)));
         if($bantime){
-            return 'Seu IP ' 
-                    . \Request::ip() 
-                    . ' está banido da board ' 
+            return  'Você está banido da board ' 
                     . strip_tags(Purifier::clean($request->siglaboard)) 
                     . ' até: ' 
                     . $bantime->toDateTimeString() 
@@ -174,9 +172,7 @@ class PostController extends Controller {
         $bantime = null;
         $bantime = $this->estaBanido(\Request::ip());
         if($bantime){
-            return 'Seu IP ' 
-                    . \Request::ip() 
-                    . ' está banido de todas as boards até: ' 
+            return  'Você está banido de todas as boards até: ' 
                     . $bantime->toDateTimeString() 
                     . ' e não pode postar.';
         }
@@ -338,7 +334,7 @@ class PostController extends Controller {
             $post->pinado = $val;
             $post->save();
             $this->limpaCachePosts($siglaBoard, $post_id);
-            return Redirect::to('/' . $post->board );
+            return Redirect::to('/boards/' . $post->board );
         }
         return Redirect::to('/');
     }
@@ -355,7 +351,7 @@ class PostController extends Controller {
             $post->trancado = $val;
             $post->save();
             $this->limpaCachePosts($siglaBoard, $post_id);
-            return Redirect::to('/' . $post->board );
+            return Redirect::to('/boards/' . $post->board );
         }
         return Redirect::to('/');
     }
@@ -377,7 +373,7 @@ class PostController extends Controller {
             $report->save();
             Cache::forget('reports');
 
-            return Redirect::to('/' . strip_tags(Purifier::clean($request->siglaboard)));  
+            return Redirect::to('/boards/' . strip_tags(Purifier::clean($request->siglaboard)));  
         }
         abort(400);
     }
@@ -404,6 +400,11 @@ class PostController extends Controller {
         if($post){
             $arquivos = $post->arquivos;
 
+            if($post->reports){
+                \DB::table('reports')->where('post_id', '=', $postId)->delete();
+            }
+            Cache::forget('reports');
+
             foreach($arquivos as $arq){
                 $this->destroyArq($arq->filename);
                 \DB::table('arquivos')->where('post_id', '=', $postId)->delete();
@@ -421,10 +422,10 @@ class PostController extends Controller {
             
             $post->delete();
             $this->limpaCachePosts($siglaBoard, $post->lead_id);
-            return Redirect::to('/' . $siglaBoard );
+            return Redirect::to('/boards/' . $siglaBoard );
             
         } else {
-            return $this->redirecionaComMsg('ban', 'Não foi possível deletar este post', '/' . $siglaBoard);
+            return $this->redirecionaComMsg('ban', 'Não foi possível deletar este post', '/boards/' . $siglaBoard);
         }
     }
     
@@ -459,7 +460,7 @@ class PostController extends Controller {
                 $arq->delete();
                 $this->limpaCachePosts($siglaBoard, $thread->lead_id === null ? $thread->id : $thread->lead_id );
 
-                return Redirect::to('/' . $redirect ? $siglaBoard : '' );
+                return Redirect::to('/' . $redirect ? 'boards/' . $siglaBoard : '' );
             } else abort(400);
         } else abort(400);
         
@@ -501,7 +502,7 @@ class PostController extends Controller {
                 $velhaBoard = $postMover->board;
                 if($postMover->lead_id !== null)
                 {
-                    return $this->redirecionaComMsg('erro_admin', 'Não foi possível mover esta postagem', '/' . $velhaBoard);
+                    return $this->redirecionaComMsg('erro_admin', 'Não foi possível mover esta postagem', '/boards/' . $velhaBoard);
                 }
                 $postMover->board = $request->novaboard;
                 $postMover->pinado = false;
@@ -517,9 +518,9 @@ class PostController extends Controller {
                 
                 $this->limpaCachePosts($velhaBoard, $postMover->lead_id);
                 $this->limpaCachePosts($request->novaboard, $request->idpost);
-                return $this->redirecionaComMsg('sucesso_admin', 'Post ' . $request->idpost . ' movido com sucesso para /' . $request->novaboard, '/' . $request->novaboard);
+                return $this->redirecionaComMsg('sucesso_admin', 'Post ' . $request->idpost . ' movido com sucesso para /boards/' . $request->novaboard, '/boards/' . $request->novaboard);
             }
-            return $this->redirecionaComMsg('erro_admin', 'Post ' . $request->idpost . ' não encontrado', '/' . $request->novaboard);
+            return $this->redirecionaComMsg('erro_admin', 'Post ' . $request->idpost . ' não encontrado', '/boards/' . $request->novaboard);
         }
         abort(400);
     }

@@ -11,7 +11,7 @@
           <p>Serão deletados todos seus posts e arquivos. Esta ação não pode ser desfeita.</p>
       </div>
       <div class="modal-footer">
-        <a href="/deleteboard/{{ $siglaBoard }}" class="btn btn-danger">Deletar board</a>
+        <a href="/boards/deleteboard/{{ $siglaBoard }}" class="btn btn-danger">Deletar board</a>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
       </div>
     </div>

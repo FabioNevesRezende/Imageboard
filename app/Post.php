@@ -16,6 +16,10 @@ class Post extends Model
         return $this->hasMany('Ibbr\Ytanexo');
     }
     
+    public function reports(){
+        return $this->hasMany('Ibbr\Report');
+    }
+    
     public function anao()
     {
         return $this->hasOne('Ibbr\Anao', 'biscoito', 'biscoito');

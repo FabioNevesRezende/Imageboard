@@ -15,23 +15,23 @@
  
 <a class="mini-btn btn-report" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalReport"><span data-toggle="tooltip" data-placement="top" title="Denunciar" class="glyphicon glyphicon-exclamation-sign"></span></a> 
 @if($ind === 0) 
-<a data-toggle="tooltip" data-placement="top" title="Voltar" class="mini-btn" href="/{{ $siglaBoard }}"><span class="glyphicon glyphicon-circle-arrow-left"></span></a>  
+<a data-toggle="tooltip" data-placement="top" title="Voltar" class="mini-btn" href="/boards/{{ $siglaBoard }}"><span class="glyphicon glyphicon-circle-arrow-left"></span></a>  
 @endif 
-     <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/deletepost/{{ $siglaBoard }}/{{ $post->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> 
+     <a data-toggle="tooltip" data-placement="top" title="Deletar post" href="/boards/deletepost/{{ $siglaBoard }}/{{ $post->id }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> 
      
 @if(Auth::check()) 
     @if($ind === 0) 
         
         @if($post->pinado)
-            <a data-toggle="tooltip" data-placement="top" title="Despinar fio" href="/pinarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn"><span class="glyphicon glyphicon-pushpin"></span></a>
+            <a data-toggle="tooltip" data-placement="top" title="Despinar fio" href="/boards/pinarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn"><span class="glyphicon glyphicon-pushpin"></span></a>
         @elseif(!$post->pinado)
-        <a data-toggle="tooltip" data-placement="top" title="Pinar fio" href="/pinarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn"><span class="glyphicon glyphicon-pushpin"></span></a> 
+        <a data-toggle="tooltip" data-placement="top" title="Pinar fio" href="/boards/pinarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn"><span class="glyphicon glyphicon-pushpin"></span></a> 
         @endif
          
         @if($post->trancado)
-            <a data-toggle="tooltip" data-placement="top" title="Destrancar fio" href="/trancarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn"><span class="glyphicon glyphicon-lock"></span></a>
+            <a data-toggle="tooltip" data-placement="top" title="Destrancar fio" href="/boards/trancarpost/{{ $post->board }}/{{ $post->id }}/0" class="mini-btn"><span class="glyphicon glyphicon-lock"></span></a>
         @elseif(!$post->trancado)
-        <a data-toggle="tooltip" data-placement="top" title="Trancar fio" href="/trancarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn"><span class="glyphicon glyphicon-lock"></span></a> 
+        <a data-toggle="tooltip" data-placement="top" title="Trancar fio" href="/boards/trancarpost/{{ $post->board }}/{{ $post->id }}/1" class="mini-btn"><span class="glyphicon glyphicon-lock"></span></a> 
         @endif
     <a class="mini-btn btn-mover-post" data-id-post="{{ $post->id }}" data-toggle="modal" data-target="#modalMoverPost"><span data-toggle="tooltip" data-placement="top" title="Mover postagem" class="glyphicon glyphicon-circle-arrow-right"></span></a> 
     @endif
@@ -67,7 +67,7 @@
         <source src="/storage/{{ $arq->filename }}" type="audio/mpeg">
      </audio>
     @endif
-@if(Auth::check()) <a data-toggle="tooltip" data-placement="top" title="Deletar arquivo" href="/deleteimg/{{ $siglaBoard }}/{{ $arq->filename }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> @endif
+@if(Auth::check()) <a data-toggle="tooltip" data-placement="top" title="Deletar arquivo" href="/boards/deleteimg/{{ $siglaBoard }}/{{ $arq->filename }}" class="mini-btn"><span class="glyphicon glyphicon-trash"></span></a> @endif
 </div>
 @endforeach
 
