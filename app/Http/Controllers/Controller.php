@@ -120,6 +120,7 @@ class Controller extends BaseController {
         if(!($this->temBiscoito())){
             $stringGerarBiscoito = $request->server('HTTP_USER_AGENT')
             . $request->server('REMOTE_ADDR')
+            . $request->server('REQUEST_TIME')
             . ConfiguracaoController::getAll()->tempero_biscoito;
             $valorBiscoito = hash("sha512", $stringGerarBiscoito);
             (new AnaoController)->salvaAnao($valorBiscoito, $request->server('HTTP_USER_AGENT'), $request->server('REMOTE_ADDR'));
