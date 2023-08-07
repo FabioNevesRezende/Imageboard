@@ -7,10 +7,12 @@ use Ibbr\Post;
 use Ibbr\Http\Controllers\BoardController;
 use Config;
 use Auth;
+use Ibbr\Helpers\Funcoes;
 
 class PagesController extends Controller
 {
     public function getIndex(){
+        Funcoes::consolelog('PagesController::getIndex');
         $this->setaBiscoito();
         
         $regras = RegraController::getAll();
@@ -28,6 +30,7 @@ class PagesController extends Controller
             $posts = PostController::pegaPostsBoard($siglaBoard);
             $subposts = PostController::pegaSubPostsBoard($siglaBoard);
             
+            Funcoes::consolelog('PagesController::getBoard retornando board ' . $siglaBoard);
             return view('pages.board', ['posts' => $posts])
                     ->with('siglaBoard', $siglaBoard)
                     ->with('descrBoard', $board->descricao)
@@ -38,29 +41,36 @@ class PagesController extends Controller
                     ->with('captchaSize', Config::get('captcha.default.length'));
             
         } else{
+            Funcoes::consolelog('PagesController::getBoard Board não encontrada');
             abort(404);
         }
         
     }
     
     public function getThread($siglaBoard, $thread){
+        Funcoes::consolelog('PagesController::getThread');
         $this->setaBiscoito();
         
         $board = $this->boardExiste($siglaBoard);
         if(!$board){
+            Funcoes::consolelog('PagesController::getThread Board não encontrada');
             abort(404);
         }
 
-        $configuracaos = ConfiguracaoController::getAll();
         $ver = Post::find($thread);
         if($ver){
             if($ver->lead_id || $ver->board != $siglaBoard){
+                Funcoes::consolelog('PagesController::getThread requisição inconsistente');
                 abort(404);
             }
-        } else abort(404);
+        } else {
+            Funcoes::consolelog('PagesController::getThread fio não encontrado');
+            abort(404);
+        }
         
         $posts = PostController::pegaPostsThread($thread);
         
+        Funcoes::consolelog('PagesController::getThread retornando fio ' . $thread . ' da board ' . $siglaBoard);
         return view('pages.postshow')
                 ->withPosts($posts)
                 ->with('siglaBoard', $siglaBoard)
@@ -72,7 +82,11 @@ class PagesController extends Controller
     }
         
     public function getAdmPage($noticiaEditar = null){
-        if(!(\Auth::check()) || !$this->temBiscoitoAdmin()) abort(404);
+        Funcoes::consolelog('PagesController::getAdmPage');
+        if(!(\Auth::check()) || !$this->temBiscoitoAdmin()){ 
+            Funcoes::consolelog('PagesController::getAdmPage erro: não autenticado ou não tem biscoito admin');
+            abort(404);
+        }
         
         $reports = PostController::pegaReports();
 
@@ -88,6 +102,7 @@ class PagesController extends Controller
     }
     
     public function getCatalogo(){
+        Funcoes::consolelog('PagesController::getCatalogo');
         $this->setaBiscoito();
         $posts = PostController::pegaPostsCatalogo();
         return view('pages.catalogo')->with('nomeib', ConfiguracaoController::getAll()->nomeib)
@@ -97,24 +112,34 @@ class PagesController extends Controller
     public function getLogin(){
         $this->setaBiscoito();
         if($this->temBiscoitoAdmin()){
+            Funcoes::consolelog('PagesController::getLogin');
             return view('auth.login')
             ->with('nomeib', ConfiguracaoController::getAll()->nomeib);
-        } else abort(404);
+        } else {
+            Funcoes::consolelog('PagesController::getLogin erro: não tem biscoito admin');
+            abort(404);
+        }
     }
     
     public function logout(){
         if(Auth::check()){
+            Funcoes::consolelog('PagesController::logout');
             Auth::logout();
             return $this->getIndex();
-        } else abort(404);
+        } else {
+            Funcoes::consolelog('PagesController::logout erro: não está autenticado');
+            abort(404);
+        }
     }
     
     public function getArquivo($filename){
+        Funcoes::consolelog('PagesController::getArquivo ' . $filename);
         $fullpath = "app/public/" . $filename;
         return response()->download(storage_path($fullpath), null, [], null);
     }
         
     public function getPhpInfo(){
+        Funcoes::consolelog('PagesController::getPhpInfo');
         return view('pages.phpinfo');
     }
 }

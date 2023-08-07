@@ -8,6 +8,7 @@ use Auth;
 use Redirect;
 use Purifier;
 use Hash;
+use Ibbr\Helpers\Funcoes;
 
 class UserController extends Controller
 {
@@ -22,6 +23,7 @@ class UserController extends Controller
     
     public function updatePassword(Request $request){
         if(Auth::check()){
+            Funcoes::consolelog('UserController::updatePassword');
             $user = Auth::user();
             $regras = $this->defineArrayValidacao();
             $this->validate($request, $regras);

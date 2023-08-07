@@ -11,6 +11,7 @@ use Auth;
 use Redirect;
 use Purifier;
 use Session;
+use Ibbr\Helpers\Funcoes;
 
 class BoardController extends Controller
 {
@@ -31,6 +32,7 @@ class BoardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+        Funcoes::consolelog('BoardController::store');
         if(Auth::check()){
             $board = new Board;
             
@@ -38,7 +40,7 @@ class BoardController extends Controller
             $board->nome = strip_tags(Purifier::clean($request->nome));
             $board->descricao = strip_tags(Purifier::clean($request->descricao));
             $board->ordem = strip_tags(Purifier::clean($request->ordem));
-                
+
             if( strlen($board->nome) > 50 
                     || strlen($board->sigla) > 10
                     || strlen($board->descricao) > 300
@@ -50,6 +52,7 @@ class BoardController extends Controller
                 abort(400);
             
             try{
+                Funcoes::consolelog('BoardController::store salvando nova board: ' . $board->sigla);
                 $board->save();
             }
             catch(\Illuminate\Database\QueryException $e){
@@ -75,6 +78,7 @@ class BoardController extends Controller
                 $this->deletaPostsBoard($board);
                 $this->deletaRegrasBoard($board);
                 
+                Funcoes::consolelog('BoardController::destroy: ' . $board->sigla);
                 $board->delete();
                 Cache::forget('boards');
             }

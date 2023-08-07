@@ -14,6 +14,7 @@ use Ibbr\Report;
 use Carbon\Carbon;
 use Cache;
 use Auth;
+use Ibbr\Helpers\Funcoes;
 
 class PostController extends Controller {
 
@@ -270,6 +271,7 @@ class PostController extends Controller {
                  'original_filename' => $arq->getClientOriginalName(),
                  'filesize' => $arq->getSize()
                 ]));
+                Funcoes::consolelog('PostController::salvaArquivosDisco: filename: ' . $nomeArquivo . ' original filename ' . $arq->getClientOriginalName());
                     
             }
         }
@@ -308,6 +310,7 @@ class PostController extends Controller {
             // se houver pelo menos um post retornado desta query
             // significa que a boarda atingiu o nro máximo de fios
             // então deleta o fio mais antigo
+            Funcoes::consolelog('PostController::verificaLimitePosts limite atingido, deletando o ultimo fio de ID: ' . $posts[0]->id);
             $this->deletaUmPost($posts[0]);
         }
     }
@@ -532,7 +535,8 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        
+        Funcoes::consolelog('PostController::store');
+
         if(ConfiguracaoController::getAll()->posts_block)
         {
             return $this->redirecionaComMsg('erro_upload', 
@@ -557,6 +561,7 @@ class PostController extends Controller {
         // valida inputs
         $msgValidacao = $this->validaRequest($request, $arquivos, $links);
         if($msgValidacao){
+            Funcoes::consolelog('PostController::store erro: ' . $msgValidacao);
             return $this->redirecionaComMsg('erro_upload', 
             $msgValidacao,
             $request->headers->get('referer'));
@@ -570,6 +575,7 @@ class PostController extends Controller {
             $post->biscoito = $anao->biscoito;
         }
         else{
+            Funcoes::consolelog('PostController::store erro: tentativa de post sem biscoito');
             return $this->redirecionaComMsg('erro_upload', 
             'Erro ao postar. Você quer biscoito, amigo?',
             $request->headers->get('referer'));

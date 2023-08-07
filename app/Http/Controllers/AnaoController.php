@@ -11,6 +11,7 @@ class AnaoController extends Controller
 {
     // obtem código do país baseado no IP
     protected function obtemCountryCode($ip) {
+        Funcoes::consolelog('AnaoController::obtemCountryCode: ip: ' . $ip);
         if(preg_match('/^127\..+$/', $ip) 
         || preg_match('/^192\.168\..+$/', $ip)
         || preg_match('/^10\..+$/', $ip)
@@ -40,6 +41,7 @@ class AnaoController extends Controller
     }
     
     public function salvaAnao($biscoito, $userAgent, $ip){
+        Funcoes::consolelog('AnaoController::salvaAnao: ' . $biscoito . ' userAgent: ' . $userAgent . ' ip: ' . $ip);
         $anao = new Anao;
         $anao->biscoito = $biscoito;
         $anao->ip = $ip; // ip do postador
