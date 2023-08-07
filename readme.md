@@ -1,4 +1,4 @@
-ImageBoard Brasil ![logo]
+ImageBoard ![logo]
 ======
 
 ### Tecnologias utilizadas
@@ -53,6 +53,13 @@ php8 artisan migrate
 php8 artisan db:seed
 ```
 
+Inserir imagens para o ícone e logo em:
+
+```
+/storage/res/logo-ib.png
+/storage/res/icon-ib.png
+```
+
 Iniciar a aplicação usando o Artisan:
 
 
@@ -60,4 +67,4 @@ Iniciar a aplicação usando o Artisan:
 php8 artisan serve
 ```
 
-[logo]: /icon-ibbr.png "Icon"
+[logo]: /icon-ib.png "Icon"

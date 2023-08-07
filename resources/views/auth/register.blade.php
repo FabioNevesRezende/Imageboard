@@ -1,7 +1,7 @@
 @extends('main')
 
 
-@section('titulo', 'Imageboard Brasil')
+@section('titulo', $nomeib)
 
 @section('stylesheets')
     <link rel="stylesheet" href="/css/style.css" >

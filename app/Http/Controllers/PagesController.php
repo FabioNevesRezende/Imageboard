@@ -17,7 +17,8 @@ class PagesController extends Controller
         $noticias = NoticiaController::getAll();
         return view('pages.indice')
                 ->with('regras', $regras)
-                ->with('noticias', $noticias);
+                ->with('noticias', $noticias)
+                ->with('nomeib', ConfiguracaoController::getAll()->nomeib);
     }
     
     public function getBoard($siglaBoard){
@@ -89,14 +90,15 @@ class PagesController extends Controller
     public function getCatalogo(){
         $this->setaBiscoito();
         $posts = PostController::pegaPostsCatalogo();
-        return view('pages.catalogo')
+        return view('pages.catalogo')->with('nomeib', ConfiguracaoController::getAll()->nomeib)
         ->withPosts($posts);
     }
     
     public function getLogin(){
         $this->setaBiscoito();
         if($this->temBiscoitoAdmin()){
-            return view('auth.login');
+            return view('auth.login')
+            ->with('nomeib', ConfiguracaoController::getAll()->nomeib);
         } else abort(404);
     }
     

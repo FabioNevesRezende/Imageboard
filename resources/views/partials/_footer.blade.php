@@ -2,7 +2,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 text-center footer-text">
-            <img src="/storage/res/logo-ibbr.png">
+            <img src="/storage/res/logo-ib.png">
             @if($configuracaos->url_repo)
                 <p>Este é um projeto de Código Aberto.</p>
                 <p>Confira <a href="{{ $configuracaos->url_repo }}" target="_blank">aqui</a> e contribua!</p>

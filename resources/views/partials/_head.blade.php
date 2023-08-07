@@ -14,7 +14,7 @@
     crossorigin="anonymous"></script> 
 
     <link rel="icon" type="image/png" 
-    href="/storage/res/icon-ibbr.png"/>
+    href="/storage/res/icon-ib.png"/>
     
     @yield('stylesheets')
 
